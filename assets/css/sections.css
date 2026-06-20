@@ -1,0 +1,515 @@
+/* ═══════════════════════════════════════════════════════
+   CÓMO FUNCIONA - 3 PASOS
+   ═══════════════════════════════════════════════════════ */
+
+.how-it-works-section {
+  background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+  padding: 100px 0;
+  position: relative;
+}
+
+.how-it-works-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 40px;
+  max-width: 1200px;
+  margin: 60px auto;
+  padding: 0 20px;
+}
+
+.how-step {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(20px);
+  border: 2px solid rgba(3, 188, 137, 0.2);
+  border-radius: 25px;
+  padding: 50px 30px;
+  text-align: center;
+  transition: all 0.4s ease;
+}
+
+.how-step:hover {
+  border-color: rgba(3, 188, 137, 0.5);
+  transform: translateY(-10px);
+  box-shadow: 0 20px 50px rgba(3, 188, 137, 0.2);
+}
+
+.step-icon {
+  width: 120px;
+  height: 120px;
+  margin: 0 auto 30px;
+  background: linear-gradient(135deg, rgba(3, 188, 137, 0.2) 0%, rgba(4, 217, 158, 0.1) 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 3px solid rgba(3, 188, 137, 0.3);
+}
+
+.step-icon svg {
+  width: 60px;
+  height: 60px;
+  color: #03bc89;
+}
+
+.step-number {
+  font-size: 3rem;
+  font-weight: 900;
+  color: #03bc89;
+  margin-bottom: 20px;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.how-step h3 {
+  font-size: 1.5rem;
+  color: #FFFFFF;
+  margin-bottom: 15px;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.how-step p {
+  font-size: 0.95rem;
+  color: #B0B0B0;
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+.step-features {
+  list-style: none;
+  padding: 0;
+  margin: 20px 0;
+  text-align: left;
+}
+
+.step-features li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0;
+  color: #E0E0E0;
+  font-size: 0.9rem;
+}
+
+.step-features li::before {
+  content: '✓';
+  color: #03bc89;
+  font-weight: bold;
+}
+
+/* ═══════════════════════════════════════════════════════
+   COBERTURA - MAPA Y CIUDADES
+   ═══════════════════════════════════════════════════════ */
+
+.cobertura-section {
+  background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+  padding: 100px 0;
+  position: relative;
+}
+
+.texas-map-container {
+  max-width: 600px;
+  margin: 40px auto;
+  padding: 30px;
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(20px);
+  border-radius: 20px;
+  border: 2px solid rgba(3, 188, 137, 0.3);
+}
+
+.texas-map-container img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 15px;
+}
+
+.cities-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 25px;
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 0 20px;
+}
+
+.city-card {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(20px);
+  border: 2px solid rgba(3, 188, 137, 0.2);
+  border-radius: 20px;
+  padding: 30px;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.city-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(3, 188, 137, 0.05) 0%, transparent 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: -1;
+}
+
+.city-card:hover::before {
+  opacity: 1;
+}
+
+.city-card:hover {
+  border-color: rgba(3, 188, 137, 0.5);
+  transform: translateY(-5px);
+  box-shadow: 0 15px 40px rgba(3, 188, 137, 0.2);
+}
+
+.city-card h3 {
+  font-size: 1.8rem;
+  color: #03bc89;
+  margin-bottom: 10px;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.city-clients {
+  font-size: 1.1rem;
+  color: #FFFFFF;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.city-desc {
+  font-size: 0.95rem;
+  color: #B0B0B0;
+  margin-bottom: 15px;
+}
+
+.city-features {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.city-features .feature-tag {
+  background: rgba(3, 188, 137, 0.1);
+  color: #03bc89;
+  padding: 6px 12px;
+  border-radius: 15px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border: 1px solid rgba(3, 188, 137, 0.3);
+}
+
+/* ═══════════════════════════════════════════════════════
+   TESTIMONIOS - SLIDER
+   ═══════════════════════════════════════════════════════ */
+
+.testimonios-section {
+  background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+  padding: 100px 0;
+  position: relative;
+}
+
+.testimonios-slider-wrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.testimonios-slider {
+  position: relative;
+}
+
+.testimonios-group {
+  display: none;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+  animation: fadeIn 0.5s ease;
+}
+
+.testimonios-group.active {
+  display: grid;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.testimonial-card {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(20px);
+  border: 2px solid rgba(3, 188, 137, 0.2);
+  border-radius: 20px;
+  padding: 40px 30px;
+  text-align: center;
+  transition: all 0.4s ease;
+}
+
+.testimonial-card:hover {
+  border-color: rgba(3, 188, 137, 0.5);
+  transform: translateY(-10px);
+  box-shadow: 0 20px 50px rgba(3, 188, 137, 0.2);
+}
+
+.testimonial-avatar {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 20px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 3px solid #03bc89;
+  box-shadow: 0 0 20px rgba(3, 188, 137, 0.4);
+}
+
+.testimonial-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.testimonial-stars {
+  color: #FFD700;
+  font-size: 1.2rem;
+  margin-bottom: 20px;
+  letter-spacing: 3px;
+}
+
+.testimonial-text {
+  font-size: 0.95rem;
+  color: #E0E0E0;
+  line-height: 1.7;
+  margin-bottom: 25px;
+  font-style: italic;
+}
+
+.testimonial-author {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #03bc89;
+  margin-bottom: 5px;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.testimonial-location {
+  font-size: 0.85rem;
+  color: #999999;
+}
+
+.slider-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  margin-top: 50px;
+}
+
+.slider-btn {
+  width: 50px;
+  height: 50px;
+  background: rgba(3, 188, 137, 0.1);
+  border: 2px solid rgba(3, 188, 137, 0.3);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: #03bc89;
+}
+
+.slider-btn:hover {
+  background: #03bc89;
+  color: #FFFFFF;
+  transform: scale(1.1);
+}
+
+.slider-dots {
+  display: flex;
+  gap: 10px;
+}
+
+.slider-dot {
+  width: 12px;
+  height: 12px;
+  background: rgba(3, 188, 137, 0.3);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.slider-dot.active {
+  background: #03bc89;
+  width: 30px;
+  border-radius: 6px;
+}
+
+/* ═══════════════════════════════════════════════════════
+   CONTACTO - TARJETAS
+   ═══════════════════════════════════════════════════════ */
+
+.contacto-section-premium {
+  background: #FFFFFF;
+  padding: 100px 0;
+  position: relative;
+}
+
+.contacto-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: center;
+  max-width: 1200px;
+  margin: 60px auto;
+  padding: 0 20px;
+}
+
+.contacto-imagen-wrapper {
+  display: flex;
+  justify-content: center;
+}
+
+.contacto-imagen-frame {
+  position: relative;
+  border-radius: 25px;
+  overflow: hidden;
+  max-width: 500px;
+  border: 3px solid rgba(3, 188, 137, 0.3);
+  box-shadow: 0 20px 60px rgba(3, 188, 137, 0.3);
+}
+
+.contacto-imagen-frame img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.contacto-info-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.contacto-card {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 25px;
+  background: #FFFFFF;
+  border-radius: 15px;
+  border: 2px solid rgba(3, 188, 137, 0.2);
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+}
+
+.contacto-card:hover {
+  transform: translateX(10px);
+  border-color: #03bc89;
+  box-shadow: 0 10px 30px rgba(3, 188, 137, 0.2);
+}
+
+.contacto-card-icon {
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(135deg, rgba(3, 188, 137, 0.1) 0%, rgba(4, 217, 158, 0.05) 100%);
+  border-radius: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border: 2px solid rgba(3, 188, 137, 0.3);
+  padding: 10px;
+}
+
+.contacto-card-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.contacto-card-content {
+  flex-grow: 1;
+}
+
+.card-title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #03bc89;
+  margin-bottom: 5px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.card-link {
+  display: block;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #000000;
+  text-decoration: none;
+  margin-bottom: 3px;
+  transition: color 0.3s ease;
+}
+
+.card-link:hover {
+  color: #03bc89;
+}
+
+.card-note {
+  font-size: 0.85rem;
+  color: #666666;
+  margin: 0;
+}
+
+.card-highlight {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: #03bc89;
+  margin-bottom: 3px;
+  font-family: 'Montserrat', sans-serif;
+}
+
+/* ═══════════════════════════════════════════════════════
+   RESPONSIVE MÓVIL
+   ═══════════════════════════════════════════════════════ */
+
+@media (max-width: 768px) {
+  .how-it-works-grid {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+  
+  .cities-grid {
+    grid-template-columns: 1fr !important;
+    gap: 20px !important;
+  }
+  
+  .testimonios-group {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  
+  .contacto-grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+  
+  .contacto-imagen-frame {
+    max-width: 350px;
+  }
+  
+  .contacto-info-wrapper {
+    gap: 15px !important;
+  }
+  
+  .contacto-card {
+    padding: 18px !important;
+  }
+}

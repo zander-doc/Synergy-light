@@ -347,6 +347,78 @@ const DB = {
     return prospect;
   },
 
+  // ═══════════════════════════════════════════════════════
+  // GENERADOR AUTOMÁTICO DE ID DE CLIENTE
+  // ═══════════════════════════════════════════════════════
+
+  generateClientId(name, address, startDate) {
+    // 1. Extraer iniciales del nombre (máximo 2 palabras)
+    const nameParts = name.trim().split(/\s+/);
+    let initials = '';
+    
+    if (nameParts.length >= 2) {
+      // Tomar primera letra del primer nombre y primera letra del apellido
+      initials = nameParts[0].charAt(0).toUpperCase() + nameParts[1].charAt(0).toUpperCase();
+    } else if (nameParts.length === 1) {
+      // Si solo hay una palabra, tomar primeras 2 letras
+      initials = nameParts[0].substring(0, 2).toUpperCase();
+    } else {
+      initials = 'CL'; // Default
+    }
+    
+    // 2. Extraer código de fecha (día del mes)
+    const date = startDate ? new Date(startDate) : new Date();
+    const day = date.getDate().toString().padStart(2, '0');
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const year = date.getFullYear().toString().substr(-2);
+    
+    // 3. Extraer código de ubicación (primeras 2 letras de la ciudad/ZIP)
+    let locationCode = '';
+    if (address) {
+      // Buscar patrón de ciudad o ZIP code
+      const zipMatch = address.match(/\b(\d{5})\b/);
+      if (zipMatch) {
+        // Usar primeros 2 dígitos del ZIP
+        locationCode = zipMatch[1].substring(0, 2);
+      } else {
+        // Usar primeras 2 letras de la dirección
+        const words = address.split(/\s+/);
+        if (words.length >= 3) {
+          // Asumir que la ciudad está después de la calle
+          const city = words[2] || words[0];
+          locationCode = city.substring(0, 2).toUpperCase();
+        } else {
+          locationCode = address.substring(0, 2).toUpperCase();
+        }
+      }
+    } else {
+      locationCode = 'TX'; // Default Texas
+    }
+    
+    // 4. Generar ID final: RV-21-TX-26
+    const clientId = `${initials}-${day}-${locationCode}-${year}`;
+    
+    return clientId;
+  },
+
+  checkClientIdExists(clientId) {
+    const clients = this.getClients();
+    return clients.some(c => c.clientId === clientId);
+  },
+
+  makeClientIdUnique(baseId) {
+    let uniqueId = baseId;
+    let counter = 1;
+    
+    while (this.checkClientIdExists(uniqueId)) {
+      // Si ya existe, agregar sufijo numérico
+      uniqueId = `${baseId}-${counter}`;
+      counter++;
+    }
+    
+    return uniqueId;
+  },
+
   // ESTADÍSTICAS
   getStats() {
     const clients = this.getClients();

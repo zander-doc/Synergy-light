@@ -52,12 +52,18 @@
       <h2>Nuevo Cliente</h2>
       <form id="newClientForm">
         <div class="form-group">
-          <label>ID Cliente</label>
-          <input type="text" id="clientId" required>
-        </div>
-        <div class="form-group">
           <label>Nombre</label>
-          <input type="text" id="clientName" required>
+          <input type="text" id="clientName" required placeholder="Ej: Roberto Villegas Rodríguez">
+          <small style="color: #03bc89; margin-top: 5px; display: block;">
+            <i class="fas fa-info-circle"></i> El ID se generará automáticamente
+          </small>
+        </div>
+        <div class="form-group" id="autoIdGroup" style="display: none;">
+          <label>ID Cliente (Auto-generado)</label>
+          <input type="text" id="clientId" readonly style="background: rgba(3, 188, 137, 0.1); border-color: #03bc89; color: #03bc89; font-weight: bold;">
+          <small style="color: #B0B0B0; margin-top: 5px; display: block;">
+            Formato: Iniciales-Código Fecha-Lugar
+          </small>
         </div>
         <div class="form-group">
           <label>Dirección</label>
@@ -267,6 +273,67 @@
       localStorage.removeItem('adminRole');
       window.location.href = 'admin.html';
     }
+
+    // ═══════════════════════════════════════════════════════
+    // AUTO-GENERAR ID CUANDO SE ESCRIBE EL NOMBRE
+    // ═══════════════════════════════════════════════════════
+
+    const clientNameInput = document.getElementById('clientName');
+    const clientIdInput = document.getElementById('clientId');
+    const clientAddressInput = document.getElementById('clientAddress');
+    const startDateInput = document.getElementById('startDate');
+    const autoIdGroup = document.getElementById('autoIdGroup');
+
+    // Función para generar ID
+    function generateAndShowId() {
+      const name = clientNameInput.value.trim();
+      const address = clientAddressInput.value.trim();
+      const startDate = startDateInput ? startDateInput.value : new Date().toISOString().split('T')[0];
+      
+      if (name.length >= 3) { // Mínimo 3 caracteres para generar
+        const baseId = DB.generateClientId(name, address, startDate);
+        const uniqueId = DB.makeClientIdUnique(baseId);
+        
+        clientIdInput.value = uniqueId;
+        autoIdGroup.style.display = 'block';
+        
+        // Animación de entrada
+        autoIdGroup.style.animation = 'fadeIn 0.3s ease';
+      } else {
+        autoIdGroup.style.display = 'none';
+      }
+    }
+
+    // Escuchar cambios en nombre, dirección y fecha
+    if (clientNameInput) {
+      clientNameInput.addEventListener('input', generateAndShowId);
+      clientNameInput.addEventListener('change', generateAndShowId);
+    }
+
+    if (clientAddressInput) {
+      clientAddressInput.addEventListener('input', generateAndShowId);
+      clientAddressInput.addEventListener('change', generateAndShowId);
+    }
+
+    if (startDateInput) {
+      startDateInput.addEventListener('change', generateAndShowId);
+    }
+
+    // Agregar animación CSS
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(-10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+    `;
+    document.head.appendChild(style);
 
     // Cargar clientes al iniciar
     window.addEventListener('load', loadClients);

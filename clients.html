@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Clientes - Synergy Light</title>
+  <link rel="icon" type="image/webp" href="fivicon.webp">
+  <link rel="stylesheet" href="assets/css/admin.css">
+  <script src="assets/js/database.js"></script>
+</head>
+<body>
+  <div class="dashboard-container">
+    <aside class="sidebar">
+      <h2>Synergy Light</h2>
+      <nav>
+        <a href="dashboard.html">Dashboard</a>
+        <a href="clients.html" class="active">Clientes</a>
+        <a href="invoices.html">Facturas</a>
+        <a href="#" onclick="logout()">Cerrar Sesión</a>
+      </nav>
+    </aside>
+    
+    <main class="main-content">
+      <header class="header">
+        <h1>Gestión de Clientes</h1>
+        <button class="btn-primary" onclick="openNewClientModal()">+ Nuevo Cliente</button>
+      </header>
+      
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>ID Cliente</th>
+              <th>Nombre</th>
+              <th>Teléfono</th>
+              <th>Contrato</th>
+              <th>Status</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="clientsTableBody">
+            <!-- Se llena con JavaScript -->
+          </tbody>
+        </table>
+      </div>
+    </main>
+  </div>
+
+  <!-- Modal Nuevo Cliente -->
+  <div id="newClientModal" class="modal" style="display: none;">
+    <div class="modal-content">
+      <h2>Nuevo Cliente</h2>
+      <form id="newClientForm">
+        <div class="form-group">
+          <label>ID Cliente</label>
+          <input type="text" id="clientId" required>
+        </div>
+        <div class="form-group">
+          <label>Nombre</label>
+          <input type="text" id="clientName" required>
+        </div>
+        <div class="form-group">
+          <label>Dirección</label>
+          <input type="text" id="clientAddress" required>
+        </div>
+        <div class="form-group">
+          <label>Teléfono</label>
+          <input type="tel" id="clientPhone" required>
+        </div>
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" id="clientEmail">
+        </div>
+        <div class="form-group">
+          <label>Tipo de Contrato</label>
+          <select id="contractType" required>
+            <option value="TARIFA FIJA">TARIFA FIJA</option>
+            <option value="TARIFA KWH">TARIFA KWH</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>SSID</label>
+          <input type="text" id="ssid" required>
+        </div>
+        <div class="form-group">
+          <label>Fecha de Inicio</label>
+          <input type="date" id="startDate" required>
+        </div>
+        <div class="form-group">
+          <label>Agente de Ventas</label>
+          <select id="salesAgent" required>
+            <option value="AGENTE CARMEN VARGAS">AGENTE CARMEN VARGAS</option>
+            <option value="AGENTE EMMA GARCIA">AGENTE EMMA GARCIA</option>
+            <option value="AGENTE LUCY HERNANDEZ">AGENTE LUCY HERNANDEZ</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Método de Pago</label>
+          <select id="paymentMethod" required>
+            <option value="ZELLE">ZELLE</option>
+            <option value="CASHAPP">CASHAPP</option>
+            <option value="LINK DE PAGO">LINK DE PAGO</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Depósito</label>
+          <input type="number" id="deposit" value="50" required>
+        </div>
+        <div class="form-group">
+          <label>Status</label>
+          <select id="status" required>
+            <option value="ACTIVO">ACTIVO</option>
+            <option value="POR VENCER">POR VENCER</option>
+            <option value="VENCIDO">VENCIDO</option>
+            <option value="SIN CONEXIÓN">SIN CONEXIÓN</option>
+            <option value="POR DESCONECTAR">POR DESCONECTAR</option>
+          </select>
+        </div>
+        <button type="submit" class="btn-primary">Guardar Cliente</button>
+        <button type="button" class="btn-secondary" onclick="closeNewClientModal()">Cancelar</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // Verificar autenticación
+    if (localStorage.getItem('adminLoggedIn') !== 'true') {
+      window.location.href = 'admin.html';
+    }
+
+    // Cargar clientes
+    function loadClients() {
+      const clients = DB.getClients();
+      const tbody = document.getElementById('clientsTableBody');
+      tbody.innerHTML = '';
+      
+      clients.forEach(client => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${client.clientId}</td>
+          <td>${client.name}</td>
+          <td>${client.phone}</td>
+          <td>${client.contractType}</td>
+          <td class="status ${getStatusClass(client.status)}">${client.status}</td>
+          <td>
+            <button onclick="editClient('${client.id}')" class="btn-sm">✏️</button>
+            <button onclick="deleteClient('${client.id}')" class="btn-sm btn-danger">🗑️</button>
+            <button onclick="sendWhatsApp('${client.phone}', '${client.name}')" class="btn-sm">💬</button>
+          </td>
+        `;
+        tbody.appendChild(row);
+      });
+    }
+
+    function getStatusClass(status) {
+      switch(status) {
+        case 'ACTIVO': return 'success';
+        case 'POR VENCER': return 'warning';
+        case 'VENCIDO': return 'danger';
+        case 'SIN CONEXIÓN': return 'secondary';
+        case 'POR DESCONECTAR': return 'danger';
+        default: return '';
+      }
+    }
+
+    function openNewClientModal() {
+      document.getElementById('newClientModal').style.display = 'flex';
+    }
+
+    function closeNewClientModal() {
+      document.getElementById('newClientModal').style.display = 'none';
+      document.getElementById('newClientForm').reset();
+      // Restaurar comportamiento original del formulario
+      document.getElementById('newClientForm').onsubmit = handleNewClientSubmit;
+    }
+
+    function handleNewClientSubmit(e) {
+      e.preventDefault();
+      
+      const client = {
+        clientId: document.getElementById('clientId').value,
+        name: document.getElementById('clientName').value,
+        address: document.getElementById('clientAddress').value,
+        phone: document.getElementById('clientPhone').value,
+        email: document.getElementById('clientEmail').value,
+        contractType: document.getElementById('contractType').value,
+        ssid: document.getElementById('ssid').value,
+        startDate: document.getElementById('startDate').value,
+        endDate: document.getElementById('startDate').value, // Simplificado: misma fecha
+        salesAgent: document.getElementById('salesAgent').value,
+        paymentMethod: document.getElementById('paymentMethod').value,
+        deposit: parseFloat(document.getElementById('deposit').value),
+        status: document.getElementById('status').value
+      };
+      
+      DB.saveClient(client);
+      closeNewClientModal();
+      loadClients();
+      alert('Cliente guardado exitosamente');
+    }
+
+    document.getElementById('newClientForm').addEventListener('submit', handleNewClientSubmit);
+
+    function editClient(id) {
+      const clients = DB.getClients();
+      const client = clients.find(c => c.id === id);
+      if (client) {
+        // Llenar formulario con datos del cliente
+        document.getElementById('clientId').value = client.clientId;
+        document.getElementById('clientName').value = client.name;
+        document.getElementById('clientAddress').value = client.address;
+        document.getElementById('clientPhone').value = client.phone;
+        document.getElementById('clientEmail').value = client.email || '';
+        document.getElementById('contractType').value = client.contractType;
+        document.getElementById('ssid').value = client.ssid;
+        document.getElementById('startDate').value = new Date(client.startDate).toISOString().split('T')[0];
+        document.getElementById('salesAgent').value = client.salesAgent;
+        document.getElementById('paymentMethod').value = client.paymentMethod;
+        document.getElementById('deposit').value = client.deposit;
+        document.getElementById('status').value = client.status;
+        
+        openNewClientModal();
+        
+        // Cambiar comportamiento del formulario para actualizar
+        document.getElementById('newClientForm').onsubmit = function(e) {
+          e.preventDefault();
+          const updatedData = {
+            clientId: document.getElementById('clientId').value,
+            name: document.getElementById('clientName').value,
+            address: document.getElementById('clientAddress').value,
+            phone: document.getElementById('clientPhone').value,
+            email: document.getElementById('clientEmail').value,
+            contractType: document.getElementById('contractType').value,
+            ssid: document.getElementById('ssid').value,
+            startDate: document.getElementById('startDate').value,
+            salesAgent: document.getElementById('salesAgent').value,
+            paymentMethod: document.getElementById('paymentMethod').value,
+            deposit: parseFloat(document.getElementById('deposit').value),
+            status: document.getElementById('status').value
+          };
+          
+          DB.updateClient(id, updatedData);
+          closeNewClientModal();
+          loadClients();
+          alert('Cliente actualizado exitosamente');
+        };
+      }
+    }
+
+    function deleteClient(id) {
+      if (confirm('¿Está seguro de eliminar este cliente?')) {
+        DB.deleteClient(id);
+        loadClients();
+      }
+    }
+
+    function sendWhatsApp(phone, name) {
+      const cleanPhone = phone.replace(/\D/g, '');
+      const message = `Hola ${name}, le contactamos de Synergy Light`;
+      const url = `https://wa.me/1${cleanPhone}?text=${encodeURIComponent(message)}`;
+      window.open(url, '_blank');
+    }
+
+    function logout() {
+      localStorage.removeItem('adminLoggedIn');
+      localStorage.removeItem('adminEmail');
+      localStorage.removeItem('adminRole');
+      window.location.href = 'admin.html';
+    }
+
+    // Cargar clientes al iniciar
+    window.addEventListener('load', loadClients);
+  </script>
+</body>
+</html>

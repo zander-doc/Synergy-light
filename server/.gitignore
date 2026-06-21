@@ -1,0 +1,50 @@
+# Dependencias
+node_modules/
+package-lock.json
+yarn.lock
+
+# Variables de entorno
+.env
+.env.local
+.env.production
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Testing
+coverage/
+.nyc_output/
+
+# Build
+dist/
+build/
+
+# MongoDB
+*.mongodb
+*.db
+
+# Uploads
+uploads/
+temp/
+
+# Certificados SSL
+*.pem
+*.key
+*.crt
+
+# PM2
+.pm2/

@@ -1,31 +1,24 @@
-// Base de datos local con localStorage
+// ═══════════════════════════════════════════════════════
+// BASE DE DATOS LOCAL - SYNERGY LIGHT
+// Migración completa desde Excel
+// ═══════════════════════════════════════════════════════
+
 const DB = {
-  // Inicializar datos de ejemplo
   init() {
-    if (!localStorage.getItem('synergy_clients')) {
-      localStorage.setItem('synergy_clients', JSON.stringify([]));
-    }
-    if (!localStorage.getItem('synergy_invoices')) {
-      localStorage.setItem('synergy_invoices', JSON.stringify([]));
-    }
-    if (!localStorage.getItem('synergy_prospects')) {
-      localStorage.setItem('synergy_prospects', JSON.stringify([]));
-    }
-    if (!localStorage.getItem('synergy_users')) {
-      // Usuario admin por defecto
-      const defaultUser = {
-        email: 'admin@synergylight.com',
-        password: 'SynergyLight2026!Admin',
-        role: 'admin'
-      };
-      localStorage.setItem('synergy_users', JSON.stringify([defaultUser]));
+    if (!localStorage.getItem('synergy_initialized')) {
+      this.migrateClients();
+      this.migrateInvoices();
+      this.migrateProspects();
+      localStorage.setItem('synergy_initialized', 'true');
+      console.log('✅ Base de datos inicializada con éxito');
     }
   },
 
-  // CLIENTES - Migrar desde Excel BASE DE DATOS
+  // MIGRAR CLIENTES DESDE EXCEL (BASE DE DATOS)
   migrateClients() {
     const clients = [
       {
+        id: '1',
         clientId: 'RVIX-E010-2',
         name: 'Roberto Villegas Rodríguez',
         address: '2405 Covina Ave McAllen Texas 78503',
@@ -41,6 +34,7 @@ const DB = {
         status: 'ACTIVO'
       },
       {
+        id: '2',
         clientId: 'CDEX-E010-2',
         name: 'Cassandra De La Garza',
         address: '1754 Calle Rancho Gr, San Benito Tx 78586',
@@ -56,6 +50,7 @@ const DB = {
         status: 'POR DESCONECTAR'
       },
       {
+        id: '3',
         clientId: 'PHAX-E010-2',
         name: 'Paul Haley',
         address: '1563 Sandy Ln Apt 121, Fort Worth, TX, 76112',
@@ -71,6 +66,7 @@ const DB = {
         status: 'POR DESCONECTAR'
       },
       {
+        id: '4',
         clientId: 'JGOX-E010-2',
         name: 'Joann Gonzales',
         address: '4702 Old Brownsville Rd Apt 1201 Corpus Christi, TX, 78405',
@@ -86,6 +82,7 @@ const DB = {
         status: 'SIN CONEXIÓN'
       },
       {
+        id: '5',
         clientId: 'OMUX-E010-2',
         name: 'Oswaldo Muedano Hernandez',
         address: '2109 Logan Ave Laredo, TX, 78040',
@@ -99,56 +96,98 @@ const DB = {
         paymentMethod: 'LINK DE PAGO',
         deposit: 75,
         status: 'SIN CONEXIÓN'
+      },
+      {
+        id: '6',
+        clientId: 'JCAX-E010-2',
+        name: 'Juana Carolina',
+        address: '2208 17th St Plano, TX, 75074',
+        phone: '3469175008',
+        email: 'zavalacaro25@gmail.com',
+        contractType: 'TARIFA FIJA',
+        ssid: '10443720003247500',
+        startDate: '2025-12-06',
+        endDate: '2026-01-05',
+        salesAgent: 'AGENTE CARMEN ORTIZ',
+        paymentMethod: 'ZELLE',
+        deposit: 75,
+        status: 'SIN CONEXIÓN'
+      },
+      {
+        id: '7',
+        clientId: 'JBAX-E010-2',
+        name: 'Jovan Barron',
+        address: '2209 bringhurst houston tx 77026',
+        phone: '8323065314',
+        email: 'Barronjovan4@yahoo.com',
+        contractType: 'TARIFA KWH',
+        ssid: '1008901023804050000000',
+        startDate: '2025-10-14',
+        endDate: '2025-11-13',
+        salesAgent: 'AGENTE CARMEN ORTIZ',
+        paymentMethod: 'LINK DE PAGO',
+        deposit: 50,
+        status: 'SIN CONEXIÓN'
+      },
+      {
+        id: '8',
+        clientId: 'DHEX-E010-2',
+        name: 'Domingo Hernández',
+        address: '5401 Rampart St Apt 251 Houston, TX, 7708',
+        phone: '7138574052',
+        email: 'Marbellahernandez1214@gmail.com',
+        contractType: 'TARIFA KWH',
+        ssid: '1008901016190893862100',
+        startDate: '2025-09-24',
+        endDate: '2025-10-24',
+        salesAgent: 'AGENTE CARMEN ORTIZ',
+        paymentMethod: 'LINK DE PAGO',
+        deposit: 50,
+        status: 'SIN CONEXIÓN'
+      },
+      {
+        id: '9',
+        clientId: 'MG X-E010-2',
+        name: 'Maria G Almanza',
+        address: '1418 Madero Ave Laredo TX 78043',
+        phone: '9564151905',
+        email: 'lupiita1288@gmail.com',
+        contractType: 'TARIFA KWH',
+        ssid: '10032789422527230',
+        startDate: '2025-09-23',
+        endDate: '2025-10-23',
+        salesAgent: 'AGENTE CARMEN ORTIZ',
+        paymentMethod: 'LINK DE PAGO',
+        deposit: 50,
+        status: 'SIN CONEXIÓN'
+      },
+      {
+        id: '10',
+        clientId: 'AGOM-J107-2',
+        name: 'Ariel Gonzalez',
+        address: '29321 Waller Spring Creek Rd Waller, TX, 77484',
+        phone: '8328013492',
+        email: 'aqualifepooservice@gmail.com',
+        contractType: 'TARIFA KWH',
+        ssid: '1008901023813681440103',
+        startDate: '2025-09-22',
+        endDate: '2025-10-22',
+        salesAgent: 'AGENTE CARMEN ORTIZ',
+        paymentMethod: 'LINK DE PAGO',
+        deposit: 50,
+        status: 'SIN CONEXIÓN'
       }
     ];
 
-    const existingClients = this.getClients();
-    if (existingClients.length === 0) {
-      clients.forEach(client => {
-        client.id = Date.now().toString() + Math.random().toString(36).substr(2, 9);
-        client.createdAt = new Date().toISOString();
-        existingClients.push(client);
-      });
-      localStorage.setItem('synergy_clients', JSON.stringify(existingClients));
-      console.log(`✅ ${clients.length} clientes migrados exitosamente`);
-    }
-  },
-
-  // Clientes
-  getClients() {
-    return JSON.parse(localStorage.getItem('synergy_clients') || '[]');
-  },
-
-  saveClient(client) {
-    const clients = this.getClients();
-    client.id = client.id || Date.now().toString();
-    client.createdAt = new Date().toISOString();
-    clients.push(client);
     localStorage.setItem('synergy_clients', JSON.stringify(clients));
-    return client;
+    console.log(`✅ ${clients.length} clientes migrados`);
   },
 
-  updateClient(id, updatedData) {
-    const clients = this.getClients();
-    const index = clients.findIndex(c => c.id === id);
-    if (index !== -1) {
-      clients[index] = { ...clients[index], ...updatedData };
-      localStorage.setItem('synergy_clients', JSON.stringify(clients));
-      return clients[index];
-    }
-    return null;
-  },
-
-  deleteClient(id) {
-    let clients = this.getClients();
-    clients = clients.filter(c => c.id !== id);
-    localStorage.setItem('synergy_clients', JSON.stringify(clients));
-  },
-
-  // FACTURAS - Migrar desde REGISTRO DE VENTAS
+  // MIGRAR FACTURAS DESDE EXCEL (REGISTRO DE VENTAS)
   migrateInvoices() {
     const invoices = [
       {
+        id: '1',
         invoiceNumber: '35',
         clientId: 'RVIX-E010-2',
         clientName: 'Roberto Villegas Rodríguez',
@@ -160,6 +199,7 @@ const DB = {
         status: 'PAGADA'
       },
       {
+        id: '2',
         invoiceNumber: '35',
         clientId: 'CDEX-E010-2',
         clientName: 'Cassandra De La Garza',
@@ -171,6 +211,7 @@ const DB = {
         status: 'PENDIENTE'
       },
       {
+        id: '3',
         invoiceNumber: '35',
         clientId: 'JGOX-E010-2',
         clientName: 'Joann Gonzales',
@@ -180,63 +221,158 @@ const DB = {
         fixedCosts: 45.00,
         total: 120.00,
         status: 'PAGADA'
+      },
+      {
+        id: '4',
+        invoiceNumber: '35',
+        clientId: 'OMUX-E010-2',
+        clientName: 'Oswaldo Muedano Hernandez',
+        issueDate: '2026-01-06',
+        dueDate: '2026-02-05',
+        income: 75.00,
+        fixedCosts: 45.00,
+        total: 120.00,
+        status: 'PAGADA'
       }
     ];
 
-    const existingInvoices = this.getInvoices();
-    if (existingInvoices.length === 0) {
-      invoices.forEach(invoice => {
-        invoice.id = Date.now().toString() + Math.random().toString(36).substr(2, 9);
-        invoice.createdAt = new Date().toISOString();
-        existingInvoices.push(invoice);
-      });
-      localStorage.setItem('synergy_invoices', JSON.stringify(existingInvoices));
-      console.log(`✅ ${invoices.length} facturas migradas exitosamente`);
-    }
+    localStorage.setItem('synergy_invoices', JSON.stringify(invoices));
+    console.log(`✅ ${invoices.length} facturas migradas`);
   },
 
-  // Facturas
+  // MIGRAR PROSPECTOS DESDE EXCEL (CLIENTES)
+  migrateProspects() {
+    const prospects = [
+      {
+        id: '1',
+        number: 1,
+        name: 'Abraham Isaac Hernandez',
+        phone: '9565298228',
+        contacted: 'PENDIENTE',
+        condition: 'LLAMARLO DE NUEVO ESTA INTERESADO'
+      },
+      {
+        id: '2',
+        number: 2,
+        name: 'Annabell Gillen',
+        phone: '9566390267',
+        contacted: 'PENDIENTE',
+        condition: 'NO QUIERE EL SERVICIO'
+      },
+      {
+        id: '3',
+        number: 3,
+        name: 'Juan Navarro',
+        phone: '8329235782',
+        contacted: 'PENDIENTE',
+        condition: 'NO LLAMARLO (NO INSISTIR)'
+      }
+    ];
+
+    localStorage.setItem('synergy_prospects', JSON.stringify(prospects));
+    console.log(`✅ ${prospects.length} prospectos migrados`);
+  },
+
+  // MÉTODOS CRUD CLIENTES
+  getClients() {
+    return JSON.parse(localStorage.getItem('synergy_clients') || '[]');
+  },
+
+  getClientById(id) {
+    const clients = this.getClients();
+    return clients.find(c => c.id === id);
+  },
+
+  saveClient(client) {
+    const clients = this.getClients();
+    if (!client.id) {
+      client.id = Date.now().toString();
+      client.createdAt = new Date().toISOString();
+      clients.push(client);
+    } else {
+      const index = clients.findIndex(c => c.id === client.id);
+      if (index !== -1) {
+        clients[index] = { ...clients[index], ...client };
+      }
+    }
+    localStorage.setItem('synergy_clients', JSON.stringify(clients));
+    return client;
+  },
+
+  deleteClient(id) {
+    let clients = this.getClients();
+    clients = clients.filter(c => c.id !== id);
+    localStorage.setItem('synergy_clients', JSON.stringify(clients));
+  },
+
+  // MÉTODOS CRUD FACTURAS
   getInvoices() {
     return JSON.parse(localStorage.getItem('synergy_invoices') || '[]');
   },
 
   saveInvoice(invoice) {
     const invoices = this.getInvoices();
-    invoice.id = invoice.id || Date.now().toString();
-    invoice.createdAt = new Date().toISOString();
-    invoices.push(invoice);
+    if (!invoice.id) {
+      invoice.id = Date.now().toString();
+      invoice.createdAt = new Date().toISOString();
+      invoices.push(invoice);
+    } else {
+      const index = invoices.findIndex(inv => inv.id === invoice.id);
+      if (index !== -1) {
+        invoices[index] = { ...invoices[index], ...invoice };
+      }
+    }
     localStorage.setItem('synergy_invoices', JSON.stringify(invoices));
     return invoice;
   },
 
-  // Prospectos
+  // MÉTODOS CRUD PROSPECTOS
   getProspects() {
     return JSON.parse(localStorage.getItem('synergy_prospects') || '[]');
   },
 
   saveProspect(prospect) {
     const prospects = this.getProspects();
-    prospect.id = prospect.id || Date.now().toString();
-    prospect.createdAt = new Date().toISOString();
-    prospects.push(prospect);
+    if (!prospect.id) {
+      prospect.id = Date.now().toString();
+      prospect.createdAt = new Date().toISOString();
+      prospects.push(prospect);
+    } else {
+      const index = prospects.findIndex(p => p.id === prospect.id);
+      if (index !== -1) {
+        prospects[index] = { ...prospects[index], ...prospect };
+      }
+    }
     localStorage.setItem('synergy_prospects', JSON.stringify(prospects));
     return prospect;
   },
 
-  // Usuarios
-  getUsers() {
-    return JSON.parse(localStorage.getItem('synergy_users') || '[]');
-  },
+  // ESTADÍSTICAS
+  getStats() {
+    const clients = this.getClients();
+    const invoices = this.getInvoices();
+    
+    const activeClients = clients.filter(c => c.status === 'ACTIVO').length;
+    const expiringClients = clients.filter(c => c.status === 'POR VENCER' || c.status === 'POR DESCONECTAR').length;
+    const totalRevenue = invoices.reduce((sum, inv) => sum + (parseFloat(inv.total) || 0), 0);
+    const pendingInvoices = invoices.filter(inv => inv.status === 'PENDIENTE').length;
+    const paidInvoices = invoices.filter(inv => inv.status === 'PAGADA').length;
 
-  validateUser(email, password) {
-    const users = this.getUsers();
-    return users.find(u => u.email === email && u.password === password);
+    return {
+      totalClients: clients.length,
+      activeClients,
+      expiringClients,
+      totalInvoices: invoices.length,
+      totalRevenue,
+      pendingInvoices,
+      paidInvoices
+    };
   }
 };
 
 // Inicializar al cargar
-document.addEventListener('DOMContentLoaded', () => {
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', () => DB.init());
+} else {
   DB.init();
-  DB.migrateClients();
-  DB.migrateInvoices();
-});
+}

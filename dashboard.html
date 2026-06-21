@@ -514,6 +514,7 @@
           <td>${client.contractType}</td>
           <td><span class="status-badge ${statusClass}">${statusText}</span></td>
           <td>
+            <button class="btn-action" onclick="createInvoice('${client.id}')" title="Crear Factura" style="background: linear-gradient(135deg, #03bc89 0%, #04d99e 100%); color: white; padding: 5px 10px; border-radius: 5px;">📄</button>
             <button class="btn-action" onclick="editClient('${client.id}')" title="Editar">✏️</button>
             <button class="btn-action" onclick="sendWhatsApp('${client.phone}', '${client.name}')" title="WhatsApp">💬</button>
             <button class="btn-action" onclick="deleteClient('${client.id}')" title="Eliminar">🗑️</button>
@@ -606,5 +607,365 @@
       loadRecentInvoices();
     });
   </script>
+
+  <!-- MODAL CREAR FACTURA -->
+  <div id="invoiceModal" class="modal" style="display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px);">
+    <div style="background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%); margin: 2% auto; padding: 30px; border: 2px solid #03bc89; border-radius: 20px; width: 90%; max-width: 900px; max-height: 90vh; overflow-y: auto;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; border-bottom: 2px solid #03bc89; padding-bottom: 20px;">
+        <h2 style="color: #03bc89; margin: 0;">
+          <i class="fas fa-file-invoice-dollar"></i> Generar Factura / Contrato
+        </h2>
+        <button onclick="closeInvoiceModal()" style="background: none; border: none; color: #B0B0B0; font-size: 2rem; cursor: pointer;">&times;</button>
+      </div>
+      
+      <form id="invoiceForm">
+        <!-- DATOS DEL CLIENTE -->
+        <div style="background: rgba(3, 188, 137, 0.05); padding: 20px; border-radius: 12px; margin-bottom: 25px; border: 2px solid rgba(3, 188, 137, 0.2);">
+          <h3 style="color: #03bc89; margin-bottom: 15px;">
+            <i class="fas fa-user"></i> Información del Cliente
+          </h3>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+            <div>
+              <label style="display: block; color: #B0B0B0; margin-bottom: 5px;">ID Cliente</label>
+              <input type="text" id="inv_clientId" readonly style="width: 100%; padding: 10px; background: rgba(3, 188, 137, 0.1); border: 2px solid #03bc89; border-radius: 8px; color: #03bc89;">
+            </div>
+            <div>
+              <label style="display: block; color: #B0B0B0; margin-bottom: 5px;">Nombre Completo</label>
+              <input type="text" id="inv_clientName" readonly style="width: 100%; padding: 10px; background: rgba(3, 188, 137, 0.1); border: 2px solid #03bc89; border-radius: 8px; color: #03bc89;">
+            </div>
+            <div style="grid-column: 1 / -1;">
+              <label style="display: block; color: #B0B0B0; margin-bottom: 5px;">Dirección</label>
+              <input type="text" id="inv_address" readonly style="width: 100%; padding: 10px; background: rgba(3, 188, 137, 0.1); border: 2px solid #03bc89; border-radius: 8px; color: #03bc89;">
+            </div>
+            <div>
+              <label style="display: block; color: #B0B0B0; margin-bottom: 5px;">Teléfono</label>
+              <input type="text" id="inv_phone" readonly style="width: 100%; padding: 10px; background: rgba(3, 188, 137, 0.1); border: 2px solid #03bc89; border-radius: 8px; color: #03bc89;">
+            </div>
+            <div>
+              <label style="display: block; color: #B0B0B0; margin-bottom: 5px;">Email</label>
+              <input type="email" id="inv_email" readonly style="width: 100%; padding: 10px; background: rgba(3, 188, 137, 0.1); border: 2px solid #03bc89; border-radius: 8px; color: #03bc89;">
+            </div>
+            <div>
+              <label style="display: block; color: #B0B0B0; margin-bottom: 5px;">SSID</label>
+              <input type="text" id="inv_ssid" readonly style="width: 100%; padding: 10px; background: rgba(3, 188, 137, 0.1); border: 2px solid #03bc89; border-radius: 8px; color: #03bc89;">
+            </div>
+            <div>
+              <label style="display: block; color: #B0B0B0; margin-bottom: 5px;">Tipo de Contrato</label>
+              <input type="text" id="inv_contractType" readonly style="width: 100%; padding: 10px; background: rgba(3, 188, 137, 0.1); border: 2px solid #03bc89; border-radius: 8px; color: #03bc89;">
+            </div>
+          </div>
+        </div>
+
+        <!-- DETALLES DE FACTURACIÓN -->
+        <div style="background: rgba(255, 255, 255, 0.03); padding: 20px; border-radius: 12px; margin-bottom: 25px; border: 2px solid rgba(3, 188, 137, 0.2);">
+          <h3 style="color: #03bc89; margin-bottom: 15px;">
+            <i class="fas fa-calculator"></i> Detalles de Facturación
+          </h3>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+            <div>
+              <label style="display: block; color: #B0B0B0; margin-bottom: 5px;">Número de Factura</label>
+              <input type="text" id="inv_number" required placeholder="Ej: FAC-001" style="width: 100%; padding: 10px; background: rgba(255,255,255,0.05); border: 2px solid rgba(3, 188, 137, 0.3); border-radius: 8px; color: white;">
+            </div>
+            <div>
+              <label style="display: block; color: #B0B0B0; margin-bottom: 5px;">Fecha de Emisión</label>
+              <input type="date" id="inv_issueDate" required style="width: 100%; padding: 10px; background: rgba(255,255,255,0.05); border: 2px solid rgba(3, 188, 137, 0.3); border-radius: 8px; color: white;">
+            </div>
+            <div>
+              <label style="display: block; color: #B0B0B0; margin-bottom: 5px;">Fecha de Vencimiento</label>
+              <input type="date" id="inv_dueDate" required style="width: 100%; padding: 10px; background: rgba(255,255,255,0.05); border: 2px solid rgba(3, 188, 137, 0.3); border-radius: 8px; color: white;">
+            </div>
+            <div>
+              <label style="display: block; color: #B0B0B0; margin-bottom: 5px;">Método de Pago</label>
+              <select id="inv_paymentMethod" required style="width: 100%; padding: 10px; background: rgba(255,255,255,0.05); border: 2px solid rgba(3, 188, 137, 0.3); border-radius: 8px; color: white;">
+                <option value="ZELLE">ZELLE</option>
+                <option value="CASHAPP">CASHAPP</option>
+                <option value="LINK DE PAGO">LINK DE PAGO</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- MONTOS -->
+        <div style="background: rgba(255, 255, 255, 0.03); padding: 20px; border-radius: 12px; margin-bottom: 25px; border: 2px solid rgba(3, 188, 137, 0.2);">
+          <h3 style="color: #03bc89; margin-bottom: 15px;">
+            <i class="fas fa-dollar-sign"></i> Conceptos y Montos
+          </h3>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+            <div>
+              <label style="display: block; color: #B0B0B0; margin-bottom: 5px;">Ingreso (Income)</label>
+              <input type="number" step="0.01" id="inv_income" required placeholder="0.00" style="width: 100%; padding: 10px; background: rgba(255,255,255,0.05); border: 2px solid rgba(3, 188, 137, 0.3); border-radius: 8px; color: white;">
+            </div>
+            <div>
+              <label style="display: block; color: #B0B0B0; margin-bottom: 5px;">Costos Fijos (Fixed Costs)</label>
+              <input type="number" step="0.01" id="inv_fixedCosts" required placeholder="0.00" style="width: 100%; padding: 10px; background: rgba(255,255,255,0.05); border: 2px solid rgba(3, 188, 137, 0.3); border-radius: 8px; color: white;">
+            </div>
+            <div>
+              <label style="display: block; color: #B0B0B0; margin-bottom: 5px;">Depósito</label>
+              <input type="number" step="0.01" id="inv_deposit" value="50" required style="width: 100%; padding: 10px; background: rgba(255,255,255,0.05); border: 2px solid rgba(3, 188, 137, 0.3); border-radius: 8px; color: white;">
+            </div>
+            <div>
+              <label style="display: block; color: #03bc89; font-weight: bold; margin-bottom: 5px;">TOTAL</label>
+              <input type="number" step="0.01" id="inv_total" readonly style="width: 100%; padding: 10px; background: rgba(3, 188, 137, 0.2); border: 2px solid #03bc89; border-radius: 8px; color: #03bc89; font-weight: bold; font-size: 1.2rem;">
+            </div>
+          </div>
+        </div>
+
+        <!-- BOTONES -->
+        <div style="display: flex; gap: 15px; justify-content: flex-end; margin-top: 30px;">
+          <button type="button" onclick="closeInvoiceModal()" style="padding: 12px 24px; background: rgba(255,255,255,0.1); color: white; border: 2px solid rgba(255,255,255,0.2); border-radius: 12px; cursor: pointer; font-weight: bold;">Cancelar</button>
+          <button type="button" onclick="generateInvoicePDF()" style="padding: 12px 24px; background: linear-gradient(135deg, #03bc89 0%, #04d99e 100%); color: white; border: none; border-radius: 12px; cursor: pointer; font-weight: bold;">
+            <i class="fas fa-download"></i> Generar PDF
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // ═══════════════════════════════════════════════════════
+    // SISTEMA DE FACTURACIÓN PREMIUM
+    // ═══════════════════════════════════════════════════════
+
+    let currentInvoiceClient = null;
+
+    function createInvoice(clientId) {
+      const client = DB.getClientById(clientId);
+      if (!client) {
+        alert('Cliente no encontrado');
+        return;
+      }
+
+      currentInvoiceClient = client;
+
+      // Auto-llenar datos
+      document.getElementById('inv_clientId').value = client.clientId;
+      document.getElementById('inv_clientName').value = client.name;
+      document.getElementById('inv_address').value = client.address;
+      document.getElementById('inv_phone').value = client.phone;
+      document.getElementById('inv_email').value = client.email || '';
+      document.getElementById('inv_ssid').value = client.ssid;
+      document.getElementById('inv_contractType').value = client.contractType;
+      document.getElementById('inv_paymentMethod').value = client.paymentMethod || 'ZELLE';
+
+      // Número de factura automático
+      const invoices = DB.getInvoices();
+      const nextNumber = (invoices.length + 1).toString().padStart(3, '0');
+      document.getElementById('inv_number').value = `FAC-${nextNumber}`;
+
+      // Fechas
+      const today = new Date().toISOString().split('T')[0];
+      const dueDate = new Date();
+      dueDate.setDate(dueDate.getDate() + 30);
+      const dueDateStr = dueDate.toISOString().split('T')[0];
+
+      document.getElementById('inv_issueDate').value = today;
+      document.getElementById('inv_dueDate').value = dueDateStr;
+
+      // Calcular totales
+      const incomeInput = document.getElementById('inv_income');
+      const fixedCostsInput = document.getElementById('inv_fixedCosts');
+      const depositInput = document.getElementById('inv_deposit');
+      const totalInput = document.getElementById('inv_total');
+
+      function calculateTotal() {
+        const income = parseFloat(incomeInput.value) || 0;
+        const fixedCosts = parseFloat(fixedCostsInput.value) || 0;
+        const deposit = parseFloat(depositInput.value) || 0;
+        const total = income + fixedCosts + deposit;
+        totalInput.value = total.toFixed(2);
+      }
+
+      incomeInput.addEventListener('input', calculateTotal);
+      fixedCostsInput.addEventListener('input', calculateTotal);
+      depositInput.addEventListener('input', calculateTotal);
+
+      // Valores por defecto
+      if (client.contractType === 'TARIFA KWH') {
+        incomeInput.value = '50.00';
+        fixedCostsInput.value = '45.00';
+      } else {
+        incomeInput.value = '75.00';
+        fixedCostsInput.value = '45.00';
+      }
+      depositInput.value = client.deposit || '50';
+      
+      calculateTotal();
+      document.getElementById('invoiceModal').style.display = 'flex';
+    }
+
+    function closeInvoiceModal() {
+      document.getElementById('invoiceModal').style.display = 'none';
+      currentInvoiceClient = null;
+    }
+
+    function generateInvoicePDF() {
+      if (!currentInvoiceClient) return;
+
+      const invoiceData = {
+        number: document.getElementById('inv_number').value,
+        clientId: document.getElementById('inv_clientId').value,
+        clientName: document.getElementById('inv_clientName').value,
+        address: document.getElementById('inv_address').value,
+        phone: document.getElementById('inv_phone').value,
+        email: document.getElementById('inv_email').value,
+        ssid: document.getElementById('inv_ssid').value,
+        contractType: document.getElementById('inv_contractType').value,
+        issueDate: document.getElementById('inv_issueDate').value,
+        dueDate: document.getElementById('inv_dueDate').value,
+        paymentMethod: document.getElementById('inv_paymentMethod').value,
+        income: parseFloat(document.getElementById('inv_income').value) || 0,
+        fixedCosts: parseFloat(document.getElementById('inv_fixedCosts').value) || 0,
+        deposit: parseFloat(document.getElementById('inv_deposit').value) || 0,
+        total: parseFloat(document.getElementById('inv_total').value) || 0,
+        agent: currentInvoiceClient.salesAgent || 'AGENTE CARMEN VARGAS'
+      };
+
+      // Generar sellos
+      const stamps = StampGenerator.generateAllStamps();
+
+      // Guardar factura
+      const invoice = {
+        invoiceNumber: invoiceData.number,
+        clientId: invoiceData.clientId,
+        clientName: invoiceData.clientName,
+        issueDate: invoiceData.issueDate,
+        dueDate: invoiceData.dueDate,
+        income: invoiceData.income,
+        fixedCosts: invoiceData.fixedCosts,
+        deposit: invoiceData.deposit,
+        total: invoiceData.total,
+        status: 'PENDIENTE',
+        paymentMethod: invoiceData.paymentMethod
+      };
+
+      DB.saveInvoice(invoice);
+
+      // Generar HTML del PDF
+      const pdfWindow = window.open('', '_blank');
+      pdfWindow.document.write(`
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <title>Factura ${invoiceData.number}</title>
+          <style>
+            @media print { body { margin: 0; } .invoice-container { border: 3px solid #03bc89; } }
+            body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background: #f5f5f5; }
+            .invoice-container { max-width: 800px; margin: 0 auto; background: white; border: 3px solid #03bc89; }
+            .header { background: linear-gradient(to bottom, #e0e0e0 0%, #e0e0e0 60%, #000000 60%, #000000 100%); padding: 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 5px solid #ff0000; }
+            .logo-section img { max-width: 300px; }
+            .payment-receipt { text-align: right; color: #03bc89; font-size: 24px; font-weight: bold; }
+            .website { text-align: right; color: #03bc89; font-size: 14px; margin-top: 5px; }
+            .website a { color: #03bc89; }
+            .client-info { background: #e8f5e9; padding: 20px; margin: 20px; border-radius: 8px; }
+            .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+            .info-label { font-weight: bold; }
+            .agent-section { text-align: right; }
+            .tarifa { text-align: right; font-weight: bold; color: #03bc89; margin-bottom: 20px; }
+            table { width: 100%; border-collapse: collapse; margin: 20px; }
+            th { background: #03bc89; color: white; padding: 10px; text-align: left; }
+            td { padding: 10px; border-bottom: 1px solid #ddd; }
+            .amounts-section { display: flex; justify-content: flex-end; margin: 20px; }
+            .amounts-box { background: #f5f5f5; padding: 20px; border: 2px solid #03bc89; min-width: 250px; }
+            .amount-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #ddd; }
+            .amount-row.total { font-size: 20px; font-weight: bold; color: #03bc89; border-top: 3px solid #03bc89; margin-top: 10px; padding-top: 15px; }
+            .stamps-section { display: flex; justify-content: space-between; margin: 30px 20px; padding: 20px; }
+            .stamp img { max-width: 220px; opacity: 0.9; }
+            .signature-section { display: flex; justify-content: space-between; margin: 40px 20px; }
+            .signature-box { text-align: center; width: 40%; border-top: 2px solid #000; padding-top: 10px; }
+            .signature-box img { max-width: 250px; }
+            .footer { background: #000; color: white; padding: 20px; text-align: center; margin-top: 30px; }
+            .footer-note { background: #d4edda; padding: 15px; margin: 20px; border-left: 5px solid #03bc89; font-weight: bold; text-align: center; }
+          </style>
+        </head>
+        <body>
+          <div class="invoice-container">
+            <div class="header">
+              <div class="logo-section">
+                <img src="assets/images/logo/synergy-light.webp" alt="Synergy Light">
+              </div>
+              <div>
+                <div class="payment-receipt">PAYMENT RECEIPT</div>
+                <div class="website"><a href="https://synergylightservises.com" target="_blank">synergylightservises.com</a></div>
+              </div>
+            </div>
+            
+            <div class="client-info">
+              <div class="info-grid">
+                <div><span class="info-label">ID-CLIENT:</span> ${invoiceData.clientId}</div>
+                <div class="agent-section"><span class="info-label">AGENTE:</span> ${invoiceData.agent}</div>
+                <div><span class="info-label">NOMBRE:</span> ${invoiceData.clientName}</div>
+                <div class="tarifa">${invoiceData.contractType}</div>
+                <div style="grid-column: 1 / -1;"><span class="info-label">DIRECCION:</span> ${invoiceData.address}</div>
+                <div><span class="info-label">FECHA/REC:</span> ${new Date(invoiceData.issueDate).toLocaleDateString()}</div>
+                <div><span class="info-label">N° FACTURI:</span> ${invoiceData.number}</div>
+                <div><span class="info-label">TELEFONO:</span> ${invoiceData.phone}</div>
+                <div><span class="info-label">FECHA/CTO:</span> ${new Date(invoiceData.dueDate).toLocaleDateString()}</div>
+                <div><span class="info-label">SSID:</span> ${invoiceData.ssid}</div>
+              </div>
+            </div>
+
+            <table>
+              <thead><tr><th>CODIGO</th><th>DESCRIPCION</th><th>CANTIDAD</th><th>P.UNIT</th><th>P.TOTAL</th></tr></thead>
+              <tbody>
+                <tr><td>TFA00dep3-5</td><td>Depósito</td><td>1</td><td>FIJA</td><td>USD$ ${invoiceData.deposit.toFixed(2)}</td></tr>
+                <tr><td></td><td>Ingreso</td><td>1</td><td>FIJA</td><td>USD$ ${invoiceData.income.toFixed(2)}</td></tr>
+                <tr><td></td><td>Costos Fijos</td><td>1</td><td>FIJA</td><td>USD$ ${invoiceData.fixedCosts.toFixed(2)}</td></tr>
+              </tbody>
+            </table>
+
+            <div class="amounts-section">
+              <div class="amounts-box">
+                <div class="amount-row"><span>Depósito:</span><span>USD$ ${invoiceData.deposit.toFixed(2)}</span></div>
+                <div class="amount-row"><span>Ingreso:</span><span>USD$ ${invoiceData.income.toFixed(2)}</span></div>
+                <div class="amount-row"><span>Costos Fijos:</span><span>USD$ ${invoiceData.fixedCosts.toFixed(2)}</span></div>
+                <div class="amount-row total"><span>TOTAL PAGADO:</span><span>USD$ ${invoiceData.total.toFixed(2)}</span></div>
+              </div>
+            </div>
+
+            <div class="stamps-section">
+              <div class="stamp"><img src="${stamps.pagoRecibido}" alt="PAGO RECIBIDO"></div>
+              <div class="stamp"><img src="${stamps.revisado}" alt="REVISADO"></div>
+            </div>
+
+            <div class="signature-section">
+              <div class="signature-box">
+                <img src="${stamps.firmaMick}" alt="Firma">
+              </div>
+              <div class="signature-box">
+                <div style="height: 80px;"></div>
+                <div style="font-weight: bold;">${invoiceData.clientName}</div>
+                <div style="font-size: 12px; color: #666;">Cliente</div>
+              </div>
+            </div>
+
+            <div class="footer-note">
+              SE ENVIARÁ NOTIFICACIONES A LOS 3 DÍAS PARA VENCERSE LA CONEXIÓN<br>
+              NOTIFICATIONS WILL BE SENT 3 DAYS AFTER THE CONNECTION EXPIRES
+            </div>
+
+            <div class="footer">
+              <p>Participe de nuestro sistema de Referidos y disfrutarás de tu renovación con el 100% de descuento</p>
+              <p style="font-style: italic;">*Ciertas condiciones aplican*</p>
+              <p><a href="https://synergylightservises.com" style="color: #03bc89;">synergylightservises.com</a></p>
+            </div>
+          </div>
+          <script>window.onload = function() { setTimeout(function() { window.print(); }, 500); }<\/script>
+        </body>
+        </html>
+      `);
+      pdfWindow.document.close();
+
+      closeInvoiceModal();
+      loadStats();
+      loadRecentInvoices();
+      alert('Factura generada exitosamente');
+    }
+
+    window.onclick = function(event) {
+      const modal = document.getElementById('invoiceModal');
+      if (event.target === modal) closeInvoiceModal();
+    }
+  </script>
+  <script src="assets/js/stamps.js"></script>
 </body>
 </html>

@@ -151,7 +151,10 @@
           <td>
             <button onclick="editClient('${client.id}')" class="btn-sm">✏️</button>
             <button onclick="deleteClient('${client.id}')" class="btn-sm btn-danger">🗑️</button>
-            <button onclick="sendWhatsApp('${client.phone}', '${client.name}')" class="btn-sm">💬</button>
+            <div class="whatsapp-menu">
+            <button class="btn-sm" onclick="openWhatsAppMenu('${c.phone}', '${c.name}', '${c.clientId}')">💬</button>
+            </div>
+
           </td>
         `;
         tbody.appendChild(row);

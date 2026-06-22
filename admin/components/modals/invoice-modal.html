@@ -1,0 +1,38 @@
+<div id="invoiceModal" class="modal" style="display:none;">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>Nueva Factura</h3>
+      <button class="close-modal" id="closeInvoiceModal">&times;</button>
+    </div>
+
+    <form id="invoiceForm" class="modal-body">
+
+      <div class="form-group">
+        <label>Cliente</label>
+        <select id="invoiceClient" required></select>
+      </div>
+
+      <div class="form-group">
+        <label>Ingreso</label>
+        <input type="number" id="invoiceIncome" required>
+      </div>
+
+      <div class="form-group">
+        <label>Costos Fijos</label>
+        <input type="number" id="invoiceFixed" required>
+      </div>
+
+      <div class="form-group">
+        <label>Depósito</label>
+        <input type="number" id="invoiceDeposit" required>
+      </div>
+
+      <div class="form-group">
+        <label>Total</label>
+        <input type="number" id="invoiceTotal" readonly>
+      </div>
+
+      <button type="submit" class="btn-primary">Guardar Factura</button>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Facturación – Synergy Light</title>
+
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/modules/invoices.css">
+</head>
+
+<body>
+
+  <div class="admin-container">
+
+    <!-- Sidebar -->
+    <aside id="sidebar"></aside>
+
+    <!-- Contenido -->
+    <main class="main-content">
+
+      <!-- Header -->
+      <header id="header"></header>
+
+      <section class="section-header">
+        <h2>Facturación</h2>
+        <button class="btn-primary" id="btnNewInvoice">+ Nueva Factura</button>
+      </section>
+
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Factura #</th>
+            <th>Cliente</th>
+            <th>Monto</th>
+            <th>Fecha</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody id="invoicesTableBody">
+          <!-- JS insertará filas -->
+        </tbody>
+      </table>
+
+    </main>
+  </div>
+
+  <!-- JS -->
+  <script src="js/modules/auth.js"></script>
+  <script src="js/main.js"></script>
+  <script>
+    requireAuth();
+    loadGlobalComponents();
+  </script>
+  <script src="js/utils.js"></script>
+  <script src="js/modules/generator.js"></script>
+  <script src="js/modules/pdf/pdf-generator.js"></script>
+  <script src="js/modules/invoices.js"></script>
+  
+  <!-- DIAGNÓSTICO -->
+  <script>
+    console.log('=== DIAGNÓSTICO invoices.html ===');
+    console.log('utils.js cargado:', typeof openWhatsAppMenu !== 'undefined');
+    console.log('generator.js cargado:', typeof generateInvoiceNumber !== 'undefined');
+    console.log('pdf-generator.js cargado:', typeof generateInvoicePDF !== 'undefined');
+    console.log('invoices.js cargado:', typeof renderInvoices !== 'undefined');
+    console.log('localStorage invoices:', localStorage.getItem('invoices'));
+    
+    window.addEventListener('error', (e) => {
+      console.error('ERROR GLOBAL:', e.message, 'en', e.filename, ':', e.lineno);
+    });
+  </script>
+
+</body>
+</html>

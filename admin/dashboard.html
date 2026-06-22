@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard – Synergy Light</title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+  <link rel="stylesheet" href="css/components.css">
+</head>
+
+<body>
+
+  <div class="admin-container">
+
+    <!-- Sidebar dinámico -->
+    <aside id="sidebar"></aside>
+
+    <!-- Contenido principal -->
+    <main class="main-content">
+
+      <!-- Header dinámico -->
+      <header id="header"></header>
+
+      <!-- Título -->
+      <section class="section-header">
+        <h2>Panel Administrativo</h2>
+        <div>
+          <button class="btn-primary" onclick="window.location.href='clients.html?new=1'" style="margin-right:10px;">+ Nuevo Cliente</button>
+          <span id="adminUser" class="admin-user">Administrador</span>
+        </div>
+      </section>
+
+      <!-- KPIs -->
+      <section class="kpi-grid">
+        <div class="kpi-card">
+          <h3>Clientes Activos</h3>
+          <p id="totalClients">0</p>
+        </div>
+
+        <div class="kpi-card">
+          <h3>Facturas Emitidas</h3>
+          <p id="totalInvoices">0</p>
+        </div>
+
+        <div class="kpi-card">
+          <h3>Ingresos Totales</h3>
+          <p id="totalRevenue">$0.00</p>
+        </div>
+
+        <div class="kpi-card">
+          <h3>Por Vencer</h3>
+          <p id="expiringClients">0</p>
+        </div>
+      </section>
+
+      <!-- Últimos Clientes -->
+      <section class="table-section">
+        <div class="section-header">
+          <h2>Últimos Clientes</h2>
+          <button class="btn-primary" onclick="window.location.href='clients.html'">Ver Todos</button>
+        </div>
+
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>ID Cliente</th>
+              <th>Nombre</th>
+              <th>Teléfono</th>
+              <th>Contrato</th>
+              <th>Status</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="recentClientsBody">
+            <!-- JS insertará filas -->
+          </tbody>
+        </table>
+      </section>
+
+      <!-- Facturas Recientes -->
+      <section class="table-section">
+        <div class="section-header">
+          <h2>Facturas Recientes</h2>
+          <button class="btn-primary" onclick="window.location.href='invoices.html'">Ver Todas</button>
+        </div>
+
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Factura #</th>
+              <th>Cliente</th>
+              <th>Monto</th>
+              <th>Fecha</th>
+              <th>Estado</th>
+            </tr>
+          </thead>
+          <tbody id="recentInvoicesBody">
+            <!-- JS insertará filas -->
+          </tbody>
+        </table>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- JS -->
+  <script src="js/main.js"></script>
+  <script src="js/modules/auth.js"></script>
+  <script>
+    requireAuth();
+    loadGlobalComponents();
+  </script>
+  <script src="js/utils.js"></script>
+  <script src="js/dashboard.js"></script>
+  
+  <!-- DIAGNÓSTICO -->
+  <script>
+    console.log('=== DIAGNÓSTICO dashboard.html ===');
+    console.log('utils.js cargado:', typeof openWhatsAppMenu !== 'undefined');
+    console.log('dashboard.js cargado:', typeof loadDashboard !== 'undefined');
+    console.log('localStorage clients:', localStorage.getItem('clients'));
+    
+    window.addEventListener('error', (e) => {
+      console.error('ERROR GLOBAL:', e.message, 'en', e.filename, ':', e.lineno);
+    });
+  </script>
+
+</body>
+</html>

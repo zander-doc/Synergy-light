@@ -1,0 +1,12 @@
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.data-table td .btn-sm {
+  padding: 4px 8px;
+  margin-right: 4px;
+  cursor: pointer;
+}

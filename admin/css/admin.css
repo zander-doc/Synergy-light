@@ -1,153 +1,59 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
-  min-height: 100vh;
+.login-body {
   display: flex;
   align-items: center;
   justify-content: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
 }
 
 .login-container {
   width: 100%;
-  max-width: 450px;
-  padding: 20px;
-}
-
-.login-box {
+  max-width: 420px;
+  padding: 30px;
   background: rgba(255, 255, 255, 0.03);
   backdrop-filter: blur(20px);
   border: 2px solid rgba(3, 188, 137, 0.3);
   border-radius: 20px;
-  padding: 40px;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
 }
 
-.login-header {
+.login-title {
   text-align: center;
-  margin-bottom: 30px;
-}
-
-.login-header h1 {
   color: #03bc89;
   font-size: 2rem;
-  margin-bottom: 10px;
   font-weight: 700;
+  margin-bottom: 5px;
 }
 
-.login-header h2 {
+.login-subtitle {
+  text-align: center;
   color: #FFFFFF;
-  font-size: 1.3rem;
+  font-size: 1.1rem;
   font-weight: 400;
+  margin-bottom: 30px;
 }
 
 .login-form {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 18px;
 }
 
-.form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.form-group label {
-  color: #B0B0B0;
+.forgot-link {
+  text-align: center;
+  color: #03bc89;
   font-size: 0.9rem;
   font-weight: 500;
-}
-
-.form-group input {
-  padding: 12px 15px;
-  background: rgba(255, 255, 255, 0.05);
-  border: 2px solid rgba(3, 188, 137, 0.3);
-  border-radius: 10px;
-  color: #FFFFFF;
-  font-size: 1rem;
-  transition: all 0.3s ease;
-}
-
-.form-group input:focus {
-  outline: none;
-  border-color: #03bc89;
-  box-shadow: 0 0 15px rgba(3, 188, 137, 0.3);
-  background: rgba(255, 255, 255, 0.08);
-}
-
-.password-wrapper {
-  position: relative;
-  display: flex;
-  align-items: center;
-}
-
-.password-wrapper input {
-  width: 100%;
-  padding-right: 45px;
-}
-
-.toggle-password {
-  position: absolute;
-  right: 12px;
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 5px;
-  color: #03bc89;
-  transition: all 0.3s ease;
-}
-
-.toggle-password:hover {
-  color: #04d99e;
-  transform: scale(1.1);
-}
-
-.eye-icon, .eye-off-icon {
-  width: 20px;
-  height: 20px;
-}
-
-.form-options {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 0.9rem;
-}
-
-.remember-me {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: #B0B0B0;
-  cursor: pointer;
-}
-
-.remember-me input[type="checkbox"] {
-  width: 16px;
-  height: 16px;
-  cursor: pointer;
-  accent-color: #03bc89;
-}
-
-.forgot-password {
-  color: #03bc89;
   text-decoration: none;
-  font-weight: 500;
   transition: all 0.3s ease;
 }
 
-.forgot-password:hover {
+.forgot-link:hover {
   color: #04d99e;
   text-decoration: underline;
 }
 
-.btn-login {
+.login-btn {
   padding: 14px;
   background: linear-gradient(135deg, #03bc89 0%, #04d99e 100%);
   color: #FFFFFF;
@@ -157,26 +63,16 @@ body {
   font-weight: 700;
   cursor: pointer;
   transition: all 0.3s ease;
-  margin-top: 10px;
+  width: 100%;
 }
 
-.btn-login:hover {
+.login-btn:hover {
   transform: translateY(-2px);
   box-shadow: 0 10px 30px rgba(3, 188, 137, 0.4);
 }
 
-.btn-login:active {
+.login-btn:active {
   transform: translateY(0);
-}
-
-.error-message {
-  background: rgba(255, 68, 68, 0.1);
-  border: 2px solid rgba(255, 68, 68, 0.3);
-  color: #ff4444;
-  padding: 12px;
-  border-radius: 10px;
-  font-size: 0.9rem;
-  text-align: center;
 }
 
 /* Modal */
@@ -269,21 +165,16 @@ body {
 }
 
 @media (max-width: 480px) {
-  .login-box {
-    padding: 30px 20px;
+  .login-container {
+    padding: 20px;
+    margin: 20px;
   }
-  
-  .login-header h1 {
+
+  .login-title {
     font-size: 1.5rem;
   }
-  
-  .login-header h2 {
-    font-size: 1.1rem;
-  }
-  
-  .form-options {
-    flex-direction: column;
-    gap: 10px;
-    align-items: flex-start;
+
+  .login-subtitle {
+    font-size: 1rem;
   }
 }

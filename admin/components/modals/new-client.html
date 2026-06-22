@@ -1,0 +1,59 @@
+<div id="newClientModal" class="modal" style="display:none;">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>Nuevo Cliente</h3>
+      <button class="close-modal" id="closeNewClient">&times;</button>
+    </div>
+
+    <form id="newClientForm" class="modal-body">
+
+      <div class="form-group">
+        <label>Nombre</label>
+        <input type="text" id="clientName" required>
+      </div>
+
+      <div class="form-group">
+        <label>Teléfono</label>
+        <input type="text" id="clientPhone" required>
+      </div>
+
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" id="clientEmail">
+      </div>
+
+      <div class="form-group">
+        <label>Dirección</label>
+        <input type="text" id="clientAddress">
+      </div>
+
+      <div class="form-group">
+        <label>Tarifa</label>
+        <select id="clientTariff">
+          <option value="FIJA">FIJA</option>
+          <option value="VARIABLE">VARIABLE</option>
+          <option value="PREMIUM">PREMIUM</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Tipo de Contrato</label>
+        <select id="clientContract">
+          <option>Residencial</option>
+          <option>Comercial</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Status</label>
+        <select id="clientStatus">
+          <option>ACTIVO</option>
+          <option>POR VENCER</option>
+          <option>VENCIDO</option>
+        </select>
+      </div>
+
+      <button type="submit" class="btn-primary">Guardar Cliente</button>
+    </form>
+  </div>
+</div>

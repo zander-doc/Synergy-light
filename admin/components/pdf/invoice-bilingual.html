@@ -1,0 +1,27 @@
+<img src="../assets/img/banner_factura.webp" style="width:100%;">
+
+<h2>Payment Receipt / Recibo de Pago</h2>
+
+<p><strong>Client:</strong> {{clientName}}</p>
+<p><strong>ID:</strong> {{clientId}}</p>
+<p><strong>Address:</strong> {{address}}</p>
+
+<p><strong>Invoice:</strong> {{invoiceNumber}}</p>
+<p><strong>Date:</strong> {{issueDate}}</p>
+<p><strong>Due Date:</strong> {{dueDate}}</p>
+
+<table>
+  <tr>
+    <th>Code / Código</th>
+    <th>Description / Descripción</th>
+    <th>Amount / Cantidad</th>
+    <th>Total</th>
+  </tr>
+  {{rows}}
+</table>
+
+<h3>Total: {{total}}</h3>
+<h4>In words / En letras: {{totalWords}}</h4>
+
+<p>Notifications will be sent 3 days before expiration.<br>
+Se enviarán notificaciones 3 días antes del vencimiento.</p>

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Clientes – Synergy Light</title>
+
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/modules/clients.css">
+</head>
+
+<body>
+
+  <div class="admin-container">
+
+    <!-- Sidebar -->
+    <aside id="sidebar"></aside>
+
+    <!-- Contenido -->
+    <main class="main-content">
+
+      <!-- Header -->
+      <header id="header"></header>
+
+      <section class="section-header">
+        <h2>Clientes</h2>
+        <button class="btn-primary" id="btnNewClient">+ Nuevo Cliente</button>
+      </section>
+
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Teléfono</th>
+            <th>Contrato</th>
+            <th>Status</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody id="clientsTableBody">
+          <!-- JS insertará filas -->
+        </tbody>
+      </table>
+
+    </main>
+  </div>
+
+  <!-- JS -->
+  <script src="js/modules/auth.js"></script>
+  <script src="js/main.js"></script>
+  <script>
+    requireAuth();
+    loadGlobalComponents();
+  </script>
+  <script src="js/utils.js"></script>
+  <script src="js/modules/generator.js"></script>
+  <script src="js/modules/clients.js"></script>
+  
+  <!-- DIAGNÓSTICO -->
+  <script>
+    console.log('=== DIAGNÓSTICO clients.html ===');
+    console.log('utils.js cargado:', typeof openWhatsAppMenu !== 'undefined');
+    console.log('generator.js cargado:', typeof generateClientId !== 'undefined');
+    console.log('clients.js cargado:', typeof renderClients !== 'undefined');
+    console.log('localStorage clients:', localStorage.getItem('clients'));
+    
+    // Verificar si hay errores
+    window.addEventListener('error', (e) => {
+      console.error('ERROR GLOBAL:', e.message, 'en', e.filename, ':', e.lineno);
+    });
+  </script>
+
+</body>
+</html>

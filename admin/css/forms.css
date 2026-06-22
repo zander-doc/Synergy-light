@@ -1,0 +1,78 @@
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+}
+
+.form-group label {
+  color: #B0B0B0;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.form-group input,
+.form-group select {
+  padding: 12px 15px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 2px solid rgba(3, 188, 137, 0.3);
+  border-radius: 10px;
+  color: #FFFFFF;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  width: 100%;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: #03bc89;
+  box-shadow: 0 0 15px rgba(3, 188, 137, 0.3);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.password-group {
+  position: relative;
+}
+
+.password-group input {
+  padding-right: 45px;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  cursor: pointer;
+  font-size: 1.2rem;
+  user-select: none;
+}
+
+.remember-group {
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+}
+
+.remember-group input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: #03bc89;
+  cursor: pointer;
+}
+
+.remember-group label {
+  cursor: pointer;
+  color: #B0B0B0;
+}
+
+.error-message {
+  background: rgba(255, 68, 68, 0.1);
+  border: 2px solid rgba(255, 68, 68, 0.3);
+  color: #ff4444;
+  padding: 12px;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  text-align: center;
+  width: 100%;
+}

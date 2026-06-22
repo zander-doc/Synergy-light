@@ -211,7 +211,7 @@
         localStorage.setItem('adminLoggedIn', 'true');
         localStorage.setItem('adminEmail', email);
         localStorage.setItem('adminRole', user.role);
-        window.location.href = 'dashboard.html';
+window.location.href = 'panelclient.html';
       } else {
         errorMessage.textContent = 'Email o contraseña incorrectos';
         errorMessage.style.display = 'block';
@@ -221,7 +221,7 @@
 
     // Verificar si ya está logueado
     if (localStorage.getItem('adminLoggedIn') === 'true') {
-      window.location.href = 'dashboard.html';
+window.location.href = 'panelclient.html';
     }
   </script>
 </body>

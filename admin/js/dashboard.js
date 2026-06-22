@@ -1,44 +1,14 @@
 // ===============================
-// VERIFICAR TOKEN (si usas login real)
-// ===============================
-async function verifyToken() {
-  const token = localStorage.getItem("token") || sessionStorage.getItem("token");
-  if (!token) return false;
-
-  try {
-    const res = await fetch("/api/auth/verify", {
-      headers: { "Authorization": `Bearer ${token}` }
-    });
-
-    return res.ok;
-  } catch (error) {
-    console.error("Error verificando token:", error);
-    return false;
-  }
-}
-
-// ===============================
 // CARGAR DASHBOARD
 // ===============================
 async function loadDashboard() {
-  console.log("📊 Cargando dashboard...");
+  console.log('📊 Cargando dashboard...');
 
-  // Si no hay backend, usa datos de prueba
-  const useMockData = true;
+  // Usar datos de localStorage (reales)
+  const clients = JSON.parse(localStorage.getItem("clients") || "[]");
+  const invoices = JSON.parse(localStorage.getItem("invoices") || "[]");
 
-  let clients = [];
-  let invoices = [];
-
-  if (useMockData) {
-    clients = mockClients();
-    invoices = mockInvoices();
-  } else {
-    const token = localStorage.getItem("token") || sessionStorage.getItem("token");
-    const headers = { "Authorization": `Bearer ${token}` };
-
-    clients = await fetch("/api/clients", { headers }).then(r => r.json());
-    invoices = await fetch("/api/invoices", { headers }).then(r => r.json());
-  }
+  console.log('📊 Datos cargados:', clients.length, 'clientes,', invoices.length, 'facturas');
 
   renderKPIs(clients, invoices);
   renderRecentClients(clients);
@@ -49,13 +19,17 @@ async function loadDashboard() {
 // RENDER KPIs
 // ===============================
 function renderKPIs(clients, invoices) {
-  const expiring = clients.filter(c => c.status === "POR VENCER").length;
+  const activeClients = clients.filter(c => c.status === "ACTIVO").length;
+  const totalInvoices = invoices.length;
   const totalRevenue = invoices.reduce((sum, inv) => sum + inv.total, 0);
+  const expiringClients = clients.filter(c => c.status === "POR DESCONECTAR" || c.status === "POR VENCER").length;
 
-  document.getElementById("totalClients").textContent = clients.length;
-  document.getElementById("totalInvoices").textContent = invoices.length;
+  document.getElementById("totalClients").textContent = activeClients;
+  document.getElementById("totalInvoices").textContent = totalInvoices;
   document.getElementById("totalRevenue").textContent = `$${totalRevenue.toFixed(2)}`;
-  document.getElementById("expiringClients").textContent = expiring;
+  document.getElementById("expiringClients").textContent = expiringClients;
+
+  console.log('✅ KPIs actualizados:', { activeClients, totalInvoices, totalRevenue: `$${totalRevenue.toFixed(2)}`, expiringClients });
 }
 
 // ===============================
@@ -63,9 +37,16 @@ function renderKPIs(clients, invoices) {
 // ===============================
 function renderRecentClients(clients) {
   const tbody = document.getElementById("recentClientsBody");
+  if (!tbody) {
+    console.error('❌ No se encontró recentClientsBody');
+    return;
+  }
+  
   tbody.innerHTML = "";
 
-  clients.slice(0, 5).forEach(client => {
+  const recent = clients.slice(-5).reverse();
+
+  recent.forEach(client => {
     const row = document.createElement("tr");
     row.innerHTML = `
       <td>${client.clientId}</td>
@@ -76,10 +57,13 @@ function renderRecentClients(clients) {
       <td>
         <button class="btn-sm" onclick="editClient('${client.clientId}')">✏️</button>
         <button class="btn-sm" onclick="openWhatsAppMenu('${client.phone}', '${client.name}', '${client.clientId}')">💬</button>
+        <button class="btn-sm" onclick="createInvoice('${client.clientId}')">📄</button>
       </td>
     `;
     tbody.appendChild(row);
   });
+
+  console.log('✅ Tabla de clientes recientes renderizada');
 }
 
 // ===============================
@@ -87,9 +71,16 @@ function renderRecentClients(clients) {
 // ===============================
 function renderRecentInvoices(invoices) {
   const tbody = document.getElementById("recentInvoicesBody");
+  if (!tbody) {
+    console.error('❌ No se encontró recentInvoicesBody');
+    return;
+  }
+  
   tbody.innerHTML = "";
 
-  invoices.slice(0, 5).forEach(inv => {
+  const recent = invoices.slice(-5).reverse();
+
+  recent.forEach(inv => {
     const row = document.createElement("tr");
     row.innerHTML = `
       <td>${inv.invoiceNumber}</td>
@@ -100,6 +91,8 @@ function renderRecentInvoices(invoices) {
     `;
     tbody.appendChild(row);
   });
+
+  console.log('✅ Tabla de facturas recientes renderizada');
 }
 
 // ===============================
@@ -108,18 +101,24 @@ function renderRecentInvoices(invoices) {
 function getStatusClass(status) {
   switch (status) {
     case "ACTIVO": return "success";
+    case "POR DESCONECTAR": return "warning";
     case "POR VENCER": return "warning";
+    case "SIN CONEXIÓN": return "danger";
     case "VENCIDO": return "danger";
     default: return "secondary";
   }
 }
 
 function editClient(id) {
-  window.location.href = `/admin/clients.html?edit=${id}`;
+  window.location.href = `clients.html?edit=${id}`;
+}
+
+function createInvoice(clientId) {
+  window.location.href = `invoices.html?client=${clientId}`;
 }
 
 // ===============================
-// MOCK DATA (para pruebas sin backend)
+// MOCK DATA (fallback si no hay datos)
 // ===============================
 function mockClients() {
   return [

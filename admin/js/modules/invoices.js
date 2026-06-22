@@ -124,8 +124,9 @@ function renderInvoices() {
       <td>${new Date(inv.issueDate).toLocaleDateString()}</td>
       <td class="status ${inv.status === "PAGADA" ? "success" : "warning"}">${inv.status}</td>
       <td>
-        <button class="btn-sm" onclick="downloadInvoice('${inv.invoiceNumber}')">📄</button>
-        <button class="btn-sm" onclick="openWhatsAppMenu('${inv.phone}', '${inv.clientName}', '${inv.clientId}', '${inv.invoiceNumber}')">💬</button>
+        <button class="btn-sm" onclick="downloadInvoice('${inv.invoiceNumber}')" title="Descargar PDF">📄</button>
+        <button class="btn-sm" onclick="sendInvoiceEmail('${inv.clientEmail || 'cliente@email.com'}', '${inv.clientName}', '${inv.invoiceNumber}', '${inv.total}')" title="Enviar por Email">📧</button>
+        <button class="btn-sm" onclick="sendInvoiceWhatsApp('${inv.phone || '1234567890'}', '${inv.clientName}', '${inv.invoiceNumber}', '${inv.total}')" title="Enviar por WhatsApp">💬</button>
       </td>
     `;
     tbody.appendChild(row);
@@ -160,3 +161,107 @@ function downloadInvoice(invoiceNumber) {
 
   generateInvoicePDF(invoice);
 }
+
+// ===============================
+// ENVIAR FACTURA POR EMAIL
+// ===============================
+
+function sendInvoiceEmail(clientEmail, clientName, invoiceNumber, total) {
+  console.log('📧 Enviando factura por email:', {clientEmail, clientName, invoiceNumber, total});
+  
+  const synergyEmail = 'synergylightservices@gmail.com';
+  const subject = `Factura ${invoiceNumber} - Synergy Light`;
+  const body = `Estimado/a ${clientName},
+
+Esperamos que se encuentre bien.
+
+Adjunto encontrará su factura ${invoiceNumber} de Synergy Light.
+
+DETALLES DE LA FACTURA:
+━━━━━━━━━━━━━━━━━━━━━━
+📄 Número: ${invoiceNumber}
+💰 Monto Total: $${total}
+📅 Fecha de Emisión: ${new Date().toLocaleDateString()}
+━━━━━━━━━━━━━━━━━━━━━━
+
+MÉTODOS DE PAGO ACEPTADOS:
+✓ ZELLE
+✓ CASHAPP
+✓ LINK DE PAGO
+
+Por favor, realice el pago antes de la fecha de vencimiento para evitar interrupciones en el servicio.
+
+Si tiene alguna pregunta, no dude en contactarnos:
+━━━━━━━━━━━━━━━━━━━━━━
+📞 +1 (409) 655-2420
+✉️ synergylightservices@gmail.com
+🌐 https://synergylightservices.com
+━━━━━━━━━━━━━━━━━━━━━━
+
+Gracias por su preferencia.
+
+Saludos cordiales,
+
+Synergy Light
+Ilumina Tu Vida
+synergylightservices@gmail.com`;
+
+  const mailtoUrl = `mailto:${synergyEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  window.open(mailtoUrl, '_blank');
+  
+  // Mostrar confirmación
+  alert(`✅ Se ha abierto su cliente de correo para enviar la factura ${invoiceNumber} a ${clientName}`);
+}
+
+// ===============================
+// ENVIAR FACTURA POR WHATSAPP
+// ===============================
+
+function sendInvoiceWhatsApp(phone, clientName, invoiceNumber, total) {
+  console.log('📱 Enviando factura por WhatsApp:', {phone, clientName, invoiceNumber, total});
+  
+  const synergyPhone = '14096552420'; // +1 (409) 655-2420
+  const message = `Hola ${clientName},
+
+Le enviamos su factura de Synergy Light.
+
+📄 FACTURA #${invoiceNumber}
+💰 Monto: $${total}
+📅 Fecha: ${new Date().toLocaleDateString()}
+
+━━━━━━━━━━━━━━━━━━━━━━
+
+MÉTODOS DE PAGO:
+✓ ZELLE
+✓ CASHAPP
+✓ LINK DE PAGO
+
+Por favor, realice el pago antes de la fecha de vencimiento.
+
+Gracias por su preferencia.
+
+━━━━━━━━━━━━━━━━━━━━━━
+
+Synergy Light
+📞 +1 (409) 655-2420
+✉️ synergylightservices@gmail.com`;
+
+  const encodedMessage = encodeURIComponent(message);
+  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+  
+  let whatsappUrl;
+  if (isMobile) {
+    whatsappUrl = `https://wa.me/${synergyPhone}?text=${encodedMessage}`;
+  } else {
+    whatsappUrl = `https://web.whatsapp.com/send?phone=${synergyPhone}&text=${encodedMessage}`;
+  }
+  
+  window.open(whatsappUrl, '_blank');
+  
+  // Mostrar confirmación
+  alert(`✅ Se ha abierto WhatsApp para enviar la factura ${invoiceNumber} a ${clientName}`);
+}
+
+// Hacer funciones globales
+window.sendInvoiceEmail = sendInvoiceEmail;
+window.sendInvoiceWhatsApp = sendInvoiceWhatsApp;

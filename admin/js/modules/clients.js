@@ -78,7 +78,7 @@ function openWhatsAppMenu(phone, clientName, clientId) {
   console.log('💬 Abriendo WhatsApp para:', clientName);
   
   // Número correcto de Synergy Light
-  const synergyPhone = '14096552420'; // +1 (409) 280-0661
+  const synergyPhone = '14092800661'; // +1 (409) 280-0661
   
   // Mensaje personalizado
   const message = `Hola ${clientName}, le contactamos de Synergy Light. ¿En qué podemos ayudarle?`;

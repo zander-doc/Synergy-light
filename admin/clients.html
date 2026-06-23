@@ -884,40 +884,445 @@
     }
     
     function guardarFactura(client) {
+      const invoices = JSON.parse(localStorage.getItem('invoices') || '[]');
+      
+      // Generar número correlativo de 4 dígitos
+      let nextNumber = 1;
+      if (invoices.length > 0) {
+        const lastInvoice = invoices.reduce((max, inv) => {
+          const num = parseInt(inv.invoiceNumber) || 0;
+          return num > max ? num : max;
+        }, 0);
+        nextNumber = lastInvoice + 1;
+      }
+      const invoiceNumber = nextNumber.toString().padStart(4, '0');
+      
       const facturaData = {
-        invoiceNumber: document.getElementById('facturaNumero')?.value || '',
-        clientId: document.getElementById('facturaClientId')?.value || client.clientId,
+        invoiceNumber: invoiceNumber,
+        clientId: client.clientId,
         clientName: client.name,
-        issueDate: document.getElementById('facturaFecha')?.value || '',
+        clientAddress: client.address,
+        clientPhone: client.phone,
+        clientEmail: client.email,
+        clientSSID: client.ssid,
+        contractType: client.contractType,
+        salesAgent: client.salesAgent,
+        issueDate: document.getElementById('facturaFecha')?.value || new Date().toISOString().split('T')[0],
         dueDate: document.getElementById('facturaFechaVenc')?.value || '',
         income: parseFloat(document.getElementById('facturaIngreso')?.value) || 0,
         fixedCosts: parseFloat(document.getElementById('facturaCostos')?.value) || 0,
         deposit: parseFloat(document.getElementById('facturaDeposito')?.value) || 0,
         total: parseFloat(document.getElementById('facturaTotal')?.value) || 0,
         status: document.getElementById('facturaStatus')?.value || 'PENDIENTE',
-        paymentMethod: document.getElementById('facturaMetodoPago')?.value || ''
+        paymentMethod: document.getElementById('facturaMetodoPago')?.value || '',
+        createdAt: new Date().toISOString()
       };
       
-      if (!facturaData.invoiceNumber || !facturaData.clientId) {
-        alert('❌ Por favor complete los campos obligatorios');
-        return;
-      }
-      
-      const invoices = JSON.parse(localStorage.getItem('invoices') || '[]');
       invoices.push(facturaData);
       localStorage.setItem('invoices', JSON.stringify(invoices));
       
-      alert('✅ Factura guardada exitosamente\nNúmero: ' + facturaData.invoiceNumber);
+      // Generar PDF con formato exacto
+      generarPDFFactura(facturaData);
+      
+      alert('✅ Factura guardada exitosamente\nNúmero: ' + invoiceNumber);
       
       cerrarModalFactura();
       console.log('Factura guardada:', facturaData);
     }
     
+    function generarPDFFactura(factura) {
+      // Calcular fecha de recibo (3 días después de emisión)
+      const issueDate = new Date(factura.issueDate);
+      const receiptDate = new Date(issueDate);
+      receiptDate.setDate(receiptDate.getDate() + 3);
+      
+      // Formatear fechas
+      const formatDate = (dateStr) => {
+        const date = new Date(dateStr);
+        const months = ['January', 'February', 'March', 'April', 'May', 'June', 
+                        'July', 'August', 'September', 'October', 'November', 'December'];
+        return `${months[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`;
+      };
+      
+      const formatCurrency = (amount) => {
+        return '$' + parseFloat(amount).toFixed(2);
+      };
+      
+      // Código de servicio único
+      const serviceCode = 'TFA00dep3-5';
+      
+      // Contenido HTML del PDF
+      const pdfContent = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="UTF-8">
+          <title>Payment Receipt - Factura ${factura.invoiceNumber}</title>
+          <style>
+            @media print {
+              body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+              @page { margin: 0; size: auto; }
+            }
+            body {
+              font-family: 'Arial', sans-serif;
+              margin: 0;
+              padding: 20px;
+              background: white;
+            }
+            .invoice-container {
+              max-width: 800px;
+              margin: 0 auto;
+              background: white;
+            }
+            .header {
+              background: linear-gradient(to bottom, #0a0a0a 0%, #1a1a1a 100%);
+              padding: 20px;
+              text-align: center;
+              border-bottom: 5px solid #03bc89;
+            }
+            .logo {
+              color: #03bc89;
+              font-size: 42px;
+              font-weight: bold;
+              margin: 0;
+              letter-spacing: 2px;
+            }
+            .tagline {
+              color: white;
+              font-size: 14px;
+              margin: 5px 0;
+            }
+            .payment-receipt-title {
+              color: white;
+              font-size: 18px;
+              font-weight: bold;
+              margin: 10px 0;
+            }
+            .website {
+              color: #03bc89;
+              font-size: 12px;
+              text-decoration: underline;
+            }
+            .client-section {
+              background: #e8f5e9;
+              padding: 20px;
+              margin: 20px 0;
+              border: 2px solid #03bc89;
+            }
+            .info-grid {
+              display: grid;
+              grid-template-columns: 1fr 1fr;
+              gap: 10px;
+              margin-bottom: 15px;
+            }
+            .info-label {
+              font-weight: bold;
+              color: #000;
+            }
+            .info-value {
+              color: #333;
+            }
+            .agent-info {
+              text-align: right;
+              margin-bottom: 10px;
+            }
+            .contract-type {
+              text-align: right;
+              font-weight: bold;
+              color: #03bc89;
+              font-size: 16px;
+              margin: 10px 0;
+            }
+            .invoice-number {
+              text-align: right;
+              font-weight: bold;
+              margin: 10px 0;
+            }
+            .items-table {
+              width: 100%;
+              border-collapse: collapse;
+              margin: 20px 0;
+              background: #e8f5e9;
+            }
+            .items-table th {
+              background: #000;
+              color: white;
+              padding: 10px;
+              text-align: left;
+              border: 1px solid #03bc89;
+            }
+            .items-table td {
+              padding: 10px;
+              border: 1px solid #03bc89;
+              color: #000;
+            }
+            .amounts-section {
+              display: flex;
+              justify-content: space-between;
+              align-items: flex-start;
+              margin: 20px 0;
+              padding: 20px;
+              background: #e8f5e9;
+              border: 2px solid #03bc89;
+            }
+            .stamps {
+              flex: 1;
+            }
+            .stamp-box {
+              display: inline-block;
+              padding: 10px;
+              margin: 5px;
+              border: 3px solid #03bc89;
+              border-radius: 10px;
+              transform: rotate(-5deg);
+            }
+            .stamp-revisado {
+              color: #ff0000;
+              font-size: 24px;
+              font-weight: bold;
+              border: 3px solid #ff0000;
+              padding: 10px 20px;
+              transform: rotate(-10deg);
+              display: inline-block;
+            }
+            .stamp-pago {
+              color: #03bc89;
+              font-size: 18px;
+              font-weight: bold;
+              border: 3px solid #03bc89;
+              padding: 10px;
+              transform: rotate(5deg);
+              display: inline-block;
+            }
+            .totals-box {
+              flex: 0 0 250px;
+              background: white;
+              border: 2px solid #03bc89;
+              padding: 15px;
+            }
+            .total-row {
+              display: flex;
+              justify-content: space-between;
+              padding: 8px 0;
+              border-bottom: 1px solid #ddd;
+            }
+            .total-final {
+              font-size: 20px;
+              font-weight: bold;
+              color: #03bc89;
+              border-top: 3px solid #03bc89;
+              margin-top: 10px;
+              padding-top: 15px;
+            }
+            .footer-section {
+              margin: 30px 0;
+              padding: 20px;
+              background: #000;
+              color: white;
+              text-align: center;
+            }
+            .notification-box {
+              background: #d4edda;
+              border-left: 5px solid #03bc89;
+              padding: 15px;
+              margin: 20px 0;
+              font-weight: bold;
+              text-align: center;
+            }
+            .signature-section {
+              display: flex;
+              justify-content: space-between;
+              margin: 40px 0;
+              padding: 20px;
+            }
+            .signature-box {
+              text-align: center;
+              width: 40%;
+              border-top: 2px solid #000;
+              padding-top: 10px;
+            }
+            .terms {
+              margin: 30px 0;
+              padding: 20px;
+              background: #f5f5f5;
+              border-left: 4px solid #03bc89;
+              font-size: 11px;
+            }
+            .terms h4 {
+              color: #03bc89;
+              margin-bottom: 10px;
+            }
+          </style>
+        </head>
+        <body>
+          <div class="invoice-container">
+            <!-- HEADER -->
+            <div class="header">
+              <h1 class="logo">SYNERGY LIGHT</h1>
+              <p class="tagline">ILUMINA TU VIDA</p>
+              <p class="payment-receipt-title">PAYMENT RECEIPT</p>
+              <p class="website">SYNERGYLIGHTSERVICES.COM</p>
+            </div>
+
+            <!-- CLIENT INFORMATION -->
+            <div class="client-section">
+              <div class="agent-info">
+                <strong>AGENTE:</strong> ${factura.salesAgent || 'AGENTE CARMEN VARGAS'}
+              </div>
+              
+              <div class="info-grid">
+                <div>
+                  <span class="info-label">ID-CLIENT:</span>
+                  <span class="info-value">${factura.clientId}</span>
+                </div>
+                <div class="contract-type">
+                  ${factura.contractType}
+                </div>
+                <div>
+                  <span class="info-label">NOMBRE:</span>
+                  <span class="info-value">${factura.clientName}</span>
+                </div>
+                <div class="invoice-number">
+                  <strong>N° FACTUR RECIBO-</strong> ${factura.invoiceNumber}
+                </div>
+                <div style="grid-column: 1 / -1;">
+                  <span class="info-label">DIRECCION:</span>
+                  <span class="info-value">${factura.clientAddress}</span>
+                </div>
+                <div>
+                  <span class="info-label">FECHA/REC:</span>
+                  <span class="info-value">${formatDate(receiptDate)}</span>
+                </div>
+                <div>
+                  <span class="info-label">FECHA/COI:</span>
+                  <span class="info-value">${formatDate(factura.dueDate)}</span>
+                </div>
+                <div>
+                  <span class="info-label">TELEFON:</span>
+                  <span class="info-value">(+1)${factura.clientPhone}</span>
+                </div>
+                <div>
+                  <span class="info-label">SSID:</span>
+                  <span class="info-value">${factura.clientSSID}</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- ITEMS TABLE -->
+            <table class="items-table">
+              <thead>
+                <tr>
+                  <th>CODIGO</th>
+                  <th>DESCRIPCION</th>
+                  <th>CANTIDAD</th>
+                  <th>P.UNIT</th>
+                  <th>P.TOTAL</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>${serviceCode}</td>
+                  <td>Depósito</td>
+                  <td>1</td>
+                  <td>FIJA</td>
+                  <td>USD$/ ${factura.deposit.toFixed(2)}</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <!-- AMOUNTS AND STAMPS -->
+            <div class="amounts-section">
+              <div class="stamps">
+                <div class="stamp-box">
+                  <div style="text-align: center; font-size: 14px; font-weight: bold; color: #03bc89;">
+                    PAGO<br>RECIBIDO
+                  </div>
+                </div>
+                <div class="stamp-revisado">REVISADO</div>
+              </div>
+              
+              <div class="totals-box">
+                <div class="total-row">
+                  <span>Ingresos:</span>
+                  <span>USD$/ ${formatCurrency(factura.income)}</span>
+                </div>
+                <div class="total-row">
+                  <span>Cargos Fijos:</span>
+                  <span>USD$/ ${formatCurrency(factura.fixedCosts)}</span>
+                </div>
+                <div class="total-row">
+                  <span>Depósito:</span>
+                  <span>USD$/ ${formatCurrency(factura.deposit)}</span>
+                </div>
+                <div class="total-row total-final">
+                  <span>TOTAL PAGADO:</span>
+                  <span>USD$/ ${formatCurrency(factura.total)}</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- NOTIFICATION -->
+            <div class="notification-box">
+              SE ENVIARÁ NOTIFICACIONES A LOS 3 DÍAS PARA VENCERSE LA CONEXIÓN<br>
+              NOTIFICATIONS WILL BE SENT 3 DAYS AFTER THE CONNECTION EXPIRES
+            </div>
+
+            <!-- SIGNATURES -->
+            <div class="signature-section">
+              <div class="signature-box">
+                <div style="height: 60px;"></div>
+                <div style="font-weight: bold;">${factura.clientName}</div>
+                <div style="font-size: 12px; color: #666;">Client</div>
+              </div>
+              <div class="signature-box">
+                <div style="height: 60px; font-style: italic; font-size: 24px; color: #000080;">
+                  Mick Edwards
+                </div>
+                <div style="font-size: 12px; color: #666;">Supplier</div>
+              </div>
+            </div>
+
+            <!-- TERMS -->
+            <div class="terms">
+              <h4>CONTRATO DE SERVICIO DE SUMINISTRO ELÉCTRICO</h4>
+              <p><strong>1. Purpose:</strong> Synergy Light agrees to supply electricity to the Customer at the property located at the address indicated above.</p>
+              <p><strong>2. Consumption Rate Plan per kWh:</strong> Energy Charge: 10.0039¢ per kWh, Base Charge: $4.95/month, AEP Texas Central Delivery Charges: $3.21/month and 6.0380¢ per kWh, with a $50.00 deposit.</p>
+              <p><strong>3. Term:</strong> 12 months, automatically renewable unless either party notifies termination.</p>
+              <p><strong>4. Refund Policy:</strong> Notify incorrect charges within 15 days. Synergy Light may deduct up to 10% for administrative expenses.</p>
+              <p style="font-size: 9px; margin-top: 10px;"><i>Texas Business and Commerce Code</i></p>
+            </div>
+
+            <!-- FOOTER -->
+            <div class="footer-section">
+              <p style="margin: 10px 0;">Participe de nuestro sistema de Referidos y disfrutarás de tu renovación con el 100% de descuento</p>
+              <p style="font-style: italic; font-size: 12px; margin: 10px 0;">*Ciertas condiciones aplican*</p>
+              <p style="margin: 10px 0; color: #03bc89;">synergylightservices.com</p>
+            </div>
+          </div>
+
+          <script>
+            window.onload = function() {
+              setTimeout(function() {
+                window.print();
+              }, 500);
+            }
+          <\/script>
+        </body>
+        </html>
+      `;
+      
+      // Abrir ventana nueva con el PDF
+      const printWindow = window.open('', '_blank');
+      printWindow.document.write(pdfContent);
+      printWindow.document.close();
+    }
+
     // Hacer funciones globales
     window.abrirModalFactura = abrirModalFactura;
     window.cerrarModalFactura = cerrarModalFactura;
     window.calcularTotalFactura = calcularTotalFactura;
     window.guardarFactura = guardarFactura;
+    window.generarPDFFactura = generarPDFFactura;
   </script>
 </body>
 </html>

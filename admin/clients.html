@@ -413,6 +413,11 @@
 
   <script>
     // ===============================
+    // VARIABLE GLOBAL PARA MODO EDICIÓN
+    // ===============================
+    let clienteEditandoId = null;
+    
+    // ===============================
     // FUNCIONES GLOBALES
     // ===============================
     
@@ -515,6 +520,35 @@
       
       const clientes = JSON.parse(localStorage.getItem('clients') || '[]');
       
+      // MODO EDICIÓN
+      if (clienteEditandoId) {
+        const index = clientes.findIndex(c => c.clientId === clienteEditandoId);
+        if (index !== -1) {
+          clientes[index] = {
+            clientId: clienteEditandoId,
+            name: nombre,
+            phone: telefono,
+            email: email,
+            address: direccion,
+            contractType: contrato,
+            ssid: ssid,
+            salesAgent: agente,
+            paymentMethod: pago,
+            deposit: deposito,
+            startDate: fechaInicio,
+            endDate: fechaFin,
+            status: status
+          };
+          localStorage.setItem('clients', JSON.stringify(clientes));
+          alert('✅ Cliente actualizado exitosamente\n\nID: ' + clienteEditandoId + '\nNombre: ' + nombre);
+          clienteEditandoId = null;
+          cerrarModalCliente();
+          cargarClientes();
+        }
+        return;
+      }
+      
+      // MODO CREACIÓN
       const existeMismoNombre = clientes.find(c => 
         c.name.toLowerCase() === nombre.toLowerCase() && 
         c.phone === telefono
@@ -591,6 +625,8 @@
     // ===============================
     
     function editarCliente(clientId) {
+      console.log('✏️ Editando cliente:', clientId);
+      
       const clientes = JSON.parse(localStorage.getItem('clients') || '[]');
       const client = clientes.find(c => c.clientId === clientId);
       
@@ -599,7 +635,13 @@
         return;
       }
       
+      // Establecer modo edición
+      clienteEditandoId = clientId;
+      
+      // Actualizar título
       document.getElementById('modalTitle').textContent = '✏️ Editar Cliente';
+      
+      // Rellenar TODOS los campos
       document.getElementById('clienteId').value = client.clientId;
       document.getElementById('clienteNombre').value = client.name;
       document.getElementById('clienteTelefono').value = client.phone;
@@ -614,40 +656,11 @@
       document.getElementById('clienteFechaFin').value = client.endDate;
       document.getElementById('clienteStatus').value = client.status;
       
+      // Mostrar modal
       document.getElementById('modalCliente').style.display = 'block';
       document.body.style.overflow = 'hidden';
       
-      const form = document.getElementById('formCliente');
-      const oldOnSubmit = form.onsubmit;
-      
-      form.onsubmit = function(e) {
-        e.preventDefault();
-        
-        const updatedClient = {
-          clientId: client.clientId,
-          name: document.getElementById('clienteNombre').value.trim(),
-          phone: document.getElementById('clienteTelefono').value.trim(),
-          email: document.getElementById('clienteEmail').value.trim(),
-          address: document.getElementById('clienteDireccion').value.trim(),
-          contractType: document.getElementById('clienteContrato').value,
-          ssid: document.getElementById('clienteSsid').value.trim(),
-          salesAgent: document.getElementById('clienteAgente').value,
-          paymentMethod: document.getElementById('clientePago').value,
-          deposit: parseFloat(document.getElementById('clienteDeposito').value) || 50,
-          startDate: document.getElementById('clienteFechaInicio').value,
-          endDate: document.getElementById('clienteFechaFin').value,
-          status: document.getElementById('clienteStatus').value
-        };
-        
-        const index = clientes.findIndex(c => c.clientId === clientId);
-        if (index !== -1) {
-          clientes[index] = updatedClient;
-          localStorage.setItem('clients', JSON.stringify(clientes));
-          alert('✅ Cliente actualizado exitosamente');
-          cerrarModalCliente();
-          cargarClientes();
-        }
-      };
+      console.log('✅ Modal de edición abierto con datos cargados');
     }
     
     // ===============================
@@ -678,7 +691,7 @@
     // ===============================
     
     function enviarWhatsApp(phone, name) {
-      const synergyPhone = '14096552420'; // +1 (409) 655-2420
+      const synergyPhone = '14092800661'; // +1 (409) 280-0661
       const message = `Hola ${name}, le contactamos de Synergy Light. ¿En qué podemos ayudarle?`;
       const encodedMessage = encodeURIComponent(message);
       const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);

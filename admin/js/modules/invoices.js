@@ -220,7 +220,7 @@ synergylightservices@gmail.com`;
 function sendInvoiceWhatsApp(phone, clientName, invoiceNumber, total) {
   console.log('📱 Enviando factura por WhatsApp:', {phone, clientName, invoiceNumber, total});
   
-  const synergyPhone = '14096552420'; // +1 (409) 655-2420
+  const synergyPhone = '14092800661'; // +1 (409) 280-0661
   const message = `Hola ${clientName},
 
 Le enviamos su factura de Synergy Light.

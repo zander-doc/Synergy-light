@@ -78,7 +78,7 @@ function openWhatsAppMenu(phone, clientName, clientId) {
   console.log('💬 Abriendo WhatsApp para:', clientName);
   
   // Número correcto de Synergy Light
-  const synergyPhone = '14096552420'; // +1 (409) 655-2420
+  const synergyPhone = '14096552420'; // +1 (409) 280-0661
   
   // Mensaje personalizado
   const message = `Hola ${clientName}, le contactamos de Synergy Light. ¿En qué podemos ayudarle?`;
@@ -146,7 +146,7 @@ https://synergylightservices.com`;
 function sendInvoiceWhatsApp(phone, clientName, invoiceNumber, total) {
   console.log('📱 Enviando factura por WhatsApp a:', phone);
   
-  const synergyPhone = '14096552420';
+  const synergyPhone = '+1 (409) 280-0661';
   const message = `Hola ${clientName},
 
 Le enviamos su factura ${invoiceNumber} de Synergy Light.
@@ -159,7 +159,7 @@ Métodos de pago: ZELLE, CASHAPP, LINK DE PAGO
 Gracias por su preferencia.
 
 Synergy Light
-📞 +1 (409) 655-2420`;
+📞 +1 (409) 280-0661`;
 
   const encodedMessage = encodeURIComponent(message);
   const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);

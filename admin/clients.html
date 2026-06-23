@@ -388,6 +388,12 @@
     </div>
   </div>
 
+  <!-- Scripts externos para sistema de facturación unificado -->
+  <script src="js/utils.js"></script>
+  <script src="js/modules/generator.js"></script>
+  <script src="js/modules/pdf/pdf-generator.js"></script>
+  <script src="js/modules/invoices.js"></script>
+
   <script>
     function abrirModalNuevoCliente() {
       document.getElementById('modalTitle').textContent = '➕ Nuevo Cliente';
@@ -543,7 +549,7 @@
           '<div><span class="status-badge ' + statusClass + '">' + client.status + '</span></div>' +
           '<div style="display: flex; gap: 5px; justify-content: center;">' +
           '<button class="btn-action btn-edit" onclick="editarCliente(\'' + client.clientId + '\')" title="Editar">✏️</button>' +
-          '<button class="btn-action btn-factura" onclick="abrirModalFactura(\'' + client.clientId + '\')" title="Generar Factura">📄</button>' +
+          '<button class="btn-action btn-factura" onclick="abrirFacturaDesdeCliente(\'' + client.clientId + '\')" title="Generar Factura">📄</button>' +
           '<button class="btn-action btn-whatsapp" onclick="enviarWhatsApp(\'' + client.phone + '\', \'' + client.name + '\')" title="WhatsApp">💬</button>' +
           '<button class="btn-action btn-email" onclick="enviarEmail(\'' + client.email + '\', \'' + client.name + '\')" title="Email">📧</button>' +
           '<button class="btn-action btn-delete" onclick="eliminarCliente(\'' + client.clientId + '\')" title="Eliminar">🗑️</button>' +
@@ -661,9 +667,9 @@
       window.open(mailtoUrl, '_blank');
     }
     
-    function abrirModalFactura(clientId) {
-      console.log('📄 Generando factura para:', clientId);
-      window.location.href = 'invoices.html?new=1&client=' + encodeURIComponent(clientId);
+    function abrirFacturaDesdeCliente(clientId) {
+      const url = 'invoices.html?client=' + encodeURIComponent(clientId);
+      window.location.href = url;
     }
     
     window.addEventListener('load', function() {
@@ -679,8 +685,64 @@
     window.enviarWhatsApp = enviarWhatsApp;
     window.enviarEmail = enviarEmail;
     window.generarIdCliente = generarIdCliente;
-    window.abrirModalFactura = abrirModalFactura;
+    window.abrirFacturaDesdeCliente = abrirFacturaDesdeCliente;
     window.cargarClientes = cargarClientes;
+    
+    // Función mejorada para enviar email con mejor formato
+    function enviarEmailMejorado(email, name, facturaData) {
+      if (!email) {
+        alert('⚠️ Este cliente no tiene email registrado');
+        return;
+      }
+      
+      const synergyEmail = 'synergylightservices@gmail.com';
+      const subject = 'Factura #' + facturaData.invoiceNumber + ' - Synergy Light - Servicio de Energía';
+      
+      const body = '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n' +
+        '           SYNERGY LIGHT - ILUMINA TU VIDA\n' +
+        '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n' +
+        'Estimado/a ' + name + ',\n\n' +
+        'Reciba un cordial saludo de parte de Synergy Light.\n\n' +
+        'Por medio del presente correo, le hacemos llegar su factura correspondiente al servicio de energía eléctrica.\n\n' +
+        '════════════════════════════════════════════\n' +
+        '              DETALLES DE FACTURACIÓN\n' +
+        '════════════════════════════════════════════\n\n' +
+        '📄 Número de Factura: ' + facturaData.invoiceNumber + '\n' +
+        '💰 Monto Total a Pagar: $' + facturaData.total.toFixed(2) + '\n' +
+        '📅 Fecha de Emisión: ' + new Date(facturaData.issueDate).toLocaleDateString('es-ES', {year: 'numeric', month: 'long', day: 'numeric'}) + '\n' +
+        '📆 Fecha Límite de Pago: ' + new Date(facturaData.dueDate).toLocaleDateString('es-ES', {year: 'numeric', month: 'long', day: 'numeric'}) + '\n' +
+        '💳 Método de Pago Seleccionado: ' + facturaData.paymentMethod + '\n\n' +
+        '════════════════════════════════════════════\n' +
+        '                 MÉTODOS DE PAGO\n' +
+        '════════════════════════════════════════════\n\n' +
+        '✓ ZELLE\n' +
+        '✓ CASHAPP\n' +
+        '✓ LINK DE PAGO\n\n' +
+        '════════════════════════════════════════════\n' +
+        '                 INFORMACIÓN IMPORTANTE\n' +
+        '════════════════════════════════════════════\n\n' +
+        '• Por favor, realice el pago antes de la fecha de vencimiento para evitar interrupciones en el servicio.\n' +
+        '• Conserve este comprobante para cualquier aclaración.\n' +
+        '• Si ya realizó el pago, haga caso omiso a este mensaje.\n\n' +
+        '════════════════════════════════════════════\n' +
+        '                 CONTACTO Y SOPORTE\n' +
+        '════════════════════════════════════════════\n\n' +
+        '📞 Teléfono: +1 (409) 280-0661\n' +
+        '✉️ Email: synergylightservices@gmail.com\n' +
+        '🌐 Sitio Web: synergylightservices.com\n\n' +
+        'Si tiene alguna pregunta, duda o requiere asistencia, nuestro equipo está a su disposición para ayudarle.\n\n' +
+        'Agradecemos su confianza en Synergy Light.\n\n' +
+        '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n' +
+        'Atentamente,\n\n' +
+        'Equipo de Synergy Light\n' +
+        'Ilumina Tu Vida\n' +
+        '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n' +
+        'Este es un mensaje automático, por favor no responda directamente a este correo.\n' +
+        'Para cualquier consulta, utilice los canales de contacto mencionados arriba.';
+      
+      const mailtoUrl = 'mailto:' + email + '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+      window.open(mailtoUrl, '_blank');
+    }
   </script>
 </body>
 </html>

@@ -7,9 +7,60 @@
 
     <form id="invoiceForm" class="modal-body">
 
+      <!-- DATOS DEL CLIENTE -->
       <div class="form-group">
         <label>Cliente</label>
         <select id="invoiceClient" required></select>
+      </div>
+
+      <div class="form-group">
+        <label>Dirección</label>
+        <input type="text" id="invoiceAddress" readonly>
+      </div>
+
+      <div class="form-group">
+        <label>Teléfono</label>
+        <input type="text" id="invoicePhone" readonly>
+      </div>
+
+      <div class="form-group">
+        <label>Email</label>
+        <input type="text" id="invoiceEmail" readonly>
+      </div>
+
+      <div class="form-group">
+        <label>Tarifa</label>
+        <input type="text" id="invoiceTariff" readonly>
+      </div>
+
+      <!-- DATOS DE FACTURA -->
+      <div class="form-group">
+        <label>N° Factura</label>
+        <input type="text" id="invoiceNumber" readonly>
+      </div>
+
+      <div class="form-group">
+        <label>Fecha de Emisión</label>
+        <input type="date" id="invoiceIssueDate" readonly>
+      </div>
+
+      <div class="form-group">
+        <label>Fecha de Vencimiento</label>
+        <input type="date" id="invoiceDueDate" readonly>
+      </div>
+
+      <!-- SERVICIO / PRODUCTO -->
+      <div class="form-group">
+        <label>Servicio / Producto</label>
+        <select id="invoiceService">
+          <option value="">Seleccione un servicio</option>
+          <option value="TFC0001c" data-price="120">TFC0001c — Tarifa Conexión — $120</option>
+          <option value="TFT0002t" data-price="100">TFT0002t — Tarifa Fija Casa — $100</option>
+          <option value="TFA0003a" data-price="120">TFA0003a — Tarifa Fija Apartamento — $120</option>
+          <option value="TFA00dep9-0" data-price="90">TFA00dep9-0 — Depósito — $90</option>
+          <option value="TFA00dep9-5" data-price="95">TFA00dep9-5 — Depósito — $95</option>
+          <option value="DESC" data-price="-30">Descuento -30%</option>
+        </select>
       </div>
 
       <div class="form-group">
@@ -33,6 +84,7 @@
       </div>
 
       <button type="submit" class="btn-primary">Guardar Factura</button>
+
     </form>
   </div>
 </div>

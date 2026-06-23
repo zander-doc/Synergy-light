@@ -1,3 +1,5 @@
+console.log("📌 invoices.js cargado correctamente");
+
 // ===============================
 // CARGAR MODAL NUEVA FACTURA
 // ===============================
@@ -6,7 +8,7 @@ async function loadInvoiceModal() {
   try {
     const modalHTML = await fetch("components/modals/invoice-modal.html").then(r => r.text());
     console.log('✅ Modal factura cargado');
-    document.body.insertAdjacentHTML("beforeend", modalHTML);
+    document.querySelector(".main-content").insertAdjacentHTML("beforeend", modalHTML);
     initInvoiceModal();
     console.log('✅ Modal factura inicializado');
   } catch (error) {
@@ -18,13 +20,59 @@ async function loadInvoiceModal() {
 // INICIALIZAR MODAL
 // ===============================
 function initInvoiceModal() {
+  console.log('🔵 Inicializando modal...');
+  
   const modal = document.getElementById("invoiceModal");
+  console.log('  Modal encontrado:', modal !== null);
+  
   const btnOpen = document.getElementById("btnNewInvoice");
+  console.log('  btnOpen encontrado:', btnOpen !== null, btnOpen);
+  
   const btnClose = document.getElementById("closeInvoiceModal");
+  console.log('  btnClose encontrado:', btnClose !== null);
+  
   const form = document.getElementById("invoiceForm");
+  console.log('  Form encontrado:', form !== null);
+  
+  if (!modal || !btnOpen || !btnClose || !form) {
+    console.error('❌ Elementos del modal no encontrados:', {
+      modal, btnOpen, btnClose, form
+    });
+    return;
+  }
 
+  // Autocompletar datos del cliente cuando se seleccione
+  document.getElementById("invoiceClient").addEventListener("change", function() {
+    const clients = JSON.parse(localStorage.getItem("clients") || "[]");
+    const client = clients.find(c => c.clientId === this.value);
+    if (client) {
+      document.getElementById("invoiceAddress").value = client.address || "";
+      document.getElementById("invoicePhone").value = client.phone || "";
+      document.getElementById("invoiceEmail").value = client.email || "";
+      document.getElementById("invoiceTariff").value = client.contractType || "";
+    }
+  });
+  
+  // Autocompletar precio según servicio
+  document.getElementById("invoiceService").addEventListener("change", function() {
+    const price = this.options[this.selectedIndex].dataset.price;
+    if (price) {
+      document.getElementById("invoiceIncome").value = price;
+      calculateTotal();
+    }
+  });
+  
   btnOpen.addEventListener("click", () => {
     loadClientsInSelect();
+    
+    // Autocompletar número de factura y fechas
+    document.getElementById("invoiceNumber").value = generateInvoiceNumber();
+    const today = new Date().toISOString().split("T")[0];
+    document.getElementById("invoiceIssueDate").value = today;
+    const due = new Date();
+    due.setDate(due.getDate() + 30);
+    document.getElementById("invoiceDueDate").value = due.toISOString().split("T")[0];
+    
     modal.style.display = "flex";
   });
 
@@ -83,14 +131,23 @@ function saveInvoice(e) {
   const client = clients.find(c => c.clientId === clientId);
   console.log('  Cliente seleccionado:', client);
 
+  const invoiceNumber = document.getElementById("invoiceNumber").value;
   const invoice = {
-    invoiceNumber: generateInvoiceNumber(),
+    invoiceNumber: invoiceNumber,
     clientId,
     clientName: client.name,
     phone: client.phone,
     total: parseFloat(document.getElementById("invoiceTotal").value),
     issueDate: new Date().toISOString(),
-    status: "PENDIENTE"
+    status: "PENDIENTE",
+    service: document.getElementById("invoiceService").value,
+    income: parseFloat(document.getElementById("invoiceIncome").value),
+    fixed: parseFloat(document.getElementById("invoiceFixed").value),
+    deposit: parseFloat(document.getElementById("invoiceDeposit").value),
+    clientEmail: client.email,
+    clientAddress: client.address,
+    clientPhone: client.phone,
+    tariff: client.contractType
   };
 
   console.log('  Factura a guardar:', invoice);
@@ -101,9 +158,6 @@ function saveInvoice(e) {
 
   renderInvoices();
   console.log('  ✅ Tabla renderizada');
-  
-  document.getElementById("invoiceModal").style.display = "none";
-  console.log('  ✅ Modal cerrado');
 }
 
 // ===============================
@@ -111,6 +165,10 @@ function saveInvoice(e) {
 // ===============================
 function renderInvoices() {
   const tbody = document.getElementById("invoicesTableBody");
+  if (!tbody) {
+    console.error('❌ invoicesTableBody no encontrado en el DOM');
+    return;
+  }
   tbody.innerHTML = "";
 
   const invoices = JSON.parse(localStorage.getItem("invoices") || "[]");

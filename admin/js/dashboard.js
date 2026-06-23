@@ -55,9 +55,6 @@ function renderRecentClients(clients) {
       <td>${client.contractType}</td>
       <td class="status ${getStatusClass(client.status)}">${client.status}</td>
       <td>
-        <button class="btn-sm" onclick="editClient('${client.clientId}')">✏️</button>
-        <button class="btn-sm" onclick="openWhatsAppMenu('${client.phone}', '${client.name}', '${client.clientId}')">💬</button>
-        <button class="btn-sm" onclick="createInvoice('${client.clientId}')">📄</button>
       </td>
     `;
     tbody.appendChild(row);

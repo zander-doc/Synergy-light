@@ -55,6 +55,9 @@ function renderRecentClients(clients) {
       <td>${client.contractType}</td>
       <td class="status ${getStatusClass(client.status)}">${client.status}</td>
       <td>
+        <button class="btn-action" onclick="editClient('${client.clientId}')" title="Editar">✏️</button>
+        <button class="btn-action" onclick="abrirModalFactura('${client.clientId}')" title="Generar Factura" style="background:rgba(3,188,137,0.2);color:#03bc89">📄</button>
+        <button class="btn-action" onclick="enviarWhatsApp('${client.phone}','${client.name}')" title="WhatsApp">💬</button>
       </td>
     `;
     tbody.appendChild(row);

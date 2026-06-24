@@ -326,8 +326,8 @@
         return;
       }
       
-      // Guardar en sessionStorage para que el template la lea
-      sessionStorage.setItem('facturaActual', JSON.stringify(factura));
+      // Guardar en localStorage para que el template la lea (compartido entre ventanas)
+      localStorage.setItem('facturaActual', JSON.stringify(factura));
       
       // Abrir el template en nueva ventana
       const templateURL = 'components/pdf/invoice-template.html';
@@ -335,6 +335,12 @@
       
       if (!nuevaVentana) {
         alert('⚠️ Por favor permite las ventanas emergentes para generar el PDF');
+      } else {
+        console.log('✅ Ventana de PDF abierta');
+        // Limpiar localStorage después de 5 segundos
+        setTimeout(() => {
+          localStorage.removeItem('facturaActual');
+        }, 5000);
       }
     }
     

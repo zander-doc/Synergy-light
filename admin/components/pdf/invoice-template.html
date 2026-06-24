@@ -510,19 +510,24 @@
     // CARGAR DATOS DE LA FACTURA
     // ===============================
     function cargarDatosFactura() {
-      // Intentar leer de sessionStorage (enviado desde ventas.html)
+      // Intentar leer de localStorage (compartido entre ventanas, enviado desde ventas.html)
       let facturaData = null;
       
       try {
-        const stored = sessionStorage.getItem('facturaActual');
+        const stored = localStorage.getItem('facturaActual');
         if (stored) {
           facturaData = JSON.parse(stored);
         }
       } catch (e) {
-        console.error('Error leyendo sessionStorage:', e);
+        console.error('Error leyendo localStorage:', e);
       }
       
-      // Si no hay datos, usar datos de ejemplo
+        // Si no hay datos en localStorage, intentar leer del objeto window.data (fallback)
+        if (!facturaData && typeof window.facturaData !== 'undefined') {
+          facturaData = window.facturaData;
+        }
+        
+        // Si no hay datos, usar datos de ejemplo
       if (!facturaData) {
         facturaData = {
           invoiceNumber: '5235',

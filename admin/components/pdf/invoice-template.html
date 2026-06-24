@@ -1,23 +1,582 @@
-<div id="invoicePDF" style="padding: 40px; font-family: Arial;">
-  
-  <h1 style="text-align:center; color:#00ff88;">Synergy Light</h1>
-  <h2 style="text-align:center;">Factura</h2>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Payment Receipt - Synergy Light</title>
+  <style>
+    @media print {
+      @page { margin: 0; size: auto; }
+      body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .no-print { display: none !important; }
+    }
+    
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: 'Arial', sans-serif;
+      background: #f5f5f5;
+      padding: 20px;
+    }
+    
+    .receipt-container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: white;
+      box-shadow: 0 0 20px rgba(0,0,0,0.1);
+    }
+    
+    /* HEADER NEGRO */
+    .header {
+      background: #000;
+      padding: 20px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 5px solid #03bc89;
+    }
+    .logo-section h1 {
+      color: #03bc89;
+      font-size: 42px;
+      font-weight: bold;
+      letter-spacing: 2px;
+      margin: 0;
+    }
+    .logo-section .tagline {
+      color: white;
+      font-size: 14px;
+      margin-top: 5px;
+    }
+    .payment-section {
+      text-align: right;
+      color: white;
+    }
+    .payment-section h2 {
+      color: #03bc89;
+      font-size: 24px;
+      margin-bottom: 5px;
+    }
+    .payment-section .website {
+      color: #03bc89;
+      font-size: 12px;
+      text-decoration: underline;
+    }
+    
+    /* BLOQUE VERDE CON DATOS */
+    .client-block {
+      background: #e8f5e9;
+      padding: 25px 30px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      border-bottom: 2px solid #03bc89;
+    }
+    .client-block .info-item {
+      font-size: 13px;
+      line-height: 1.6;
+    }
+    .client-block .info-label {
+      font-weight: bold;
+      color: #000;
+    }
+    .client-block .info-value {
+      color: #333;
+    }
+    .client-block .right-align {
+      text-align: right;
+    }
+    .client-block .agent-name {
+      font-weight: bold;
+      color: #000;
+      font-size: 14px;
+    }
+    .client-block .contract-type {
+      text-align: right;
+      font-weight: bold;
+      color: #03bc89;
+      font-size: 16px;
+    }
+    
+    /* TABLA DE CONCEPTOS */
+    .items-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 0;
+    }
+    .items-table thead th {
+      background: #000;
+      color: white;
+      padding: 12px 15px;
+      text-align: left;
+      font-size: 13px;
+      font-weight: bold;
+      border: 1px solid #333;
+    }
+    .items-table tbody td {
+      padding: 12px 15px;
+      border: 1px solid #ddd;
+      font-size: 13px;
+      background: #e8f5e9;
+    }
+    .items-table .total-row {
+      background: #000 !important;
+      color: white;
+      font-weight: bold;
+    }
+    .items-table .total-row td {
+      background: #000 !important;
+      color: white;
+      border-color: #03bc89;
+    }
+    .items-table .total-amount {
+      color: #03bc89;
+      font-weight: bold;
+      text-align: right;
+    }
+    
+    /* SECCIÓN SON + SELLOS + TOTALES */
+    .bottom-section {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 20px;
+      padding: 25px 30px;
+      background: #e8f5e9;
+      border-top: 2px solid #03bc89;
+    }
+    .son-section {
+      font-size: 13px;
+    }
+    .son-section .son-label {
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+    .son-section .son-text {
+      font-size: 18px;
+      font-weight: bold;
+      color: #000;
+      margin: 10px 0;
+    }
+    .stamps {
+      display: flex;
+      gap: 15px;
+      margin-top: 15px;
+      align-items: center;
+    }
+    .stamp-box {
+      border: 3px solid #03bc89;
+      padding: 8px 15px;
+      border-radius: 8px;
+      transform: rotate(-5deg);
+      display: inline-block;
+    }
+    .stamp-pago {
+      color: #03bc89;
+      font-weight: bold;
+      font-size: 14px;
+    }
+    .stamp-revisado {
+      color: #ff0000;
+      font-weight: bold;
+      font-size: 20px;
+      border: 3px solid #ff0000;
+      padding: 8px 20px;
+      transform: rotate(-10deg);
+      display: inline-block;
+    }
+    .signature {
+      font-style: italic;
+      font-size: 24px;
+      color: #000080;
+      margin-left: 10px;
+    }
+    
+    .totals-box {
+      background: white;
+      border: 2px solid #03bc89;
+      padding: 15px;
+    }
+    .totals-box .total-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px solid #ddd;
+      font-size: 13px;
+    }
+    .totals-box .total-row .label {
+      background: #ff0000;
+      color: white;
+      padding: 3px 8px;
+      font-size: 11px;
+      font-weight: bold;
+    }
+    .totals-box .total-row .label.green {
+      background: #03bc89;
+    }
+    .totals-box .total-final {
+      font-size: 16px;
+      font-weight: bold;
+      color: #000;
+      border-top: 2px solid #03bc89;
+      margin-top: 10px;
+      padding-top: 10px;
+    }
+    
+    /* NOTA */
+    .note-section {
+      padding: 15px 30px;
+      background: #e8f5e9;
+      font-size: 13px;
+    }
+    .note-section .note-label {
+      font-weight: bold;
+    }
+    
+    /* TEXTO LEGAL */
+    .legal-text {
+      padding: 20px 30px;
+      font-size: 11px;
+      text-align: center;
+      background: white;
+    }
+    .legal-text .referral {
+      font-style: italic;
+      margin-bottom: 10px;
+    }
+    .legal-text .notification {
+      font-weight: bold;
+      margin: 10px 0;
+    }
+    
+    /* FOOTER NEGRO */
+    .footer {
+      background: #000;
+      color: white;
+      padding: 20px 30px;
+      font-size: 11px;
+      text-align: center;
+    }
+    .footer p {
+      margin: 8px 0;
+    }
+    .footer .notification-bold {
+      font-weight: bold;
+      margin-top: 15px;
+    }
+    
+    /* BOTONES DE ACCIÓN (no se imprimen) */
+    .action-buttons {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      display: flex;
+      gap: 10px;
+      z-index: 1000;
+    }
+    .btn-action {
+      padding: 12px 20px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 14px;
+      transition: all 0.3s ease;
+    }
+    .btn-print {
+      background: #03bc89;
+      color: white;
+    }
+    .btn-print:hover {
+      background: #04d99e;
+      transform: translateY(-2px);
+    }
+    .btn-close {
+      background: #ff4444;
+      color: white;
+    }
+    .btn-close:hover {
+      background: #ff6666;
+    }
+  </style>
+</head>
+<body>
+  <!-- BOTONES DE ACCIÓN -->
+  <div class="action-buttons no-print">
+    <button class="btn-action btn-print" onclick="window.print()">🖨️ Imprimir / Guardar PDF</button>
+    <button class="btn-action btn-close" onclick="window.close()">✖ Cerrar</button>
+  </div>
 
-  <hr style="margin:20px 0;">
+  <div class="receipt-container">
+    <!-- HEADER -->
+    <div class="header">
+      <div class="logo-section">
+        <h1>SYNERGY LIGHT</h1>
+        <div class="tagline">ILUMINA TU VIDA</div>
+      </div>
+      <div class="payment-section">
+        <h2>PAYMENT RECEIPT</h2>
+        <div class="website">SYNERGYLIGHTSERVISES.COM</div>
+      </div>
+    </div>
 
-  <h3>Datos del Cliente</h3>
-  <p><strong>Nombre:</strong> {{clientName}}</p>
-  <p><strong>ID Cliente:</strong> {{clientId}}</p>
+    <!-- DATOS DEL CLIENTE -->
+    <div class="client-block">
+      <div>
+        <div class="info-item">
+          <span class="info-label">ID-CLIENT</span> 
+          <span class="info-value" id="field-clientId">RVIX-E010-2</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">NOMBRE:</span> 
+          <span class="info-value" id="field-name">Roberto Villegas Rodríguez</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">DIRECCION</span> 
+          <span class="info-value" id="field-address">2405 Covina Ave McAllen Texas 78503</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">FECHA/EN</span> 
+          <span class="info-value" id="field-issueDate">May 27, 2026</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">CORREO</span> 
+          <span class="info-value" id="field-email">0</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">TELEFONO</span> 
+          <span class="info-value" id="field-phone">(+1)95-6490922</span>
+        </div>
+      </div>
+      <div class="right-align">
+        <div class="info-item agent-name" id="field-agent">AGENTE CARMEN VARGAS</div>
+        <div class="info-item contract-type" id="field-contract">TARIFA KWH</div>
+        <div class="info-item">
+          <span class="info-label">N° FACTUR RECIBO-</span> 
+          <span class="info-value" id="field-invoiceNumber">5235</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">FECHA/COI</span> 
+          <span class="info-value" id="field-dueDate">June 27, 2026</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">SSID</span> 
+          <span class="info-value" id="field-ssid">10032789473331500</span>
+        </div>
+      </div>
+    </div>
 
-  <h3>Detalles de Facturación</h3>
-  <p><strong>Factura #:</strong> {{invoiceNumber}}</p>
-  <p><strong>Fecha:</strong> {{issueDate}}</p>
-  <p><strong>Total:</strong> ${{total}}</p>
+    <!-- TABLA DE CONCEPTOS -->
+    <table class="items-table">
+      <thead>
+        <tr>
+          <th>CODIGO</th>
+          <th>DESCRIPCION</th>
+          <th>CANTIDAD</th>
+          <th>P.UNIT</th>
+          <th>P.TOTAL</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>TFA00dep3-5</td>
+          <td>Depósito</td>
+          <td>1</td>
+          <td>FIJA</td>
+          <td class="total-amount">USD$/ <span id="field-deposit">95,00</span></td>
+        </tr>
+        <tr class="total-row">
+          <td colspan="4"></td>
+          <td class="total-amount" style="color:#03bc89">USD$/ <span id="field-total">95,00</span></td>
+        </tr>
+      </tbody>
+    </table>
 
-  <hr style="margin:20px 0;">
+    <!-- SON + SELLOS + TOTALES -->
+    <div class="bottom-section">
+      <div class="son-section">
+        <div class="son-label">SON:</div>
+        <div class="son-text" id="field-sonText">Noventa y cinco exactos</div>
+        <div class="stamps">
+          <div class="stamp-box stamp-pago">
+            🛒 PAGO<br>RECIBIDO
+          </div>
+          <div class="stamp-revisado">REVISADO</div>
+          <div class="signature">M.E.</div>
+        </div>
+      </div>
+      
+      <div class="totals-box">
+        <div class="total-row">
+          <span class="label">INGRESO NETO:</span>
+          <span>USD$/ <span id="field-income">50,00</span></span>
+        </div>
+        <div class="total-row">
+          <span class="label green">CARGOS 22%:</span>
+          <span>USD$/ <span id="field-fixedCosts">45,00</span></span>
+        </div>
+        <div class="total-row total-final">
+          <span>TOTAL PAGADO:</span>
+          <span>USD$/ <span id="field-totalPaid">95,00</span></span>
+        </div>
+      </div>
+    </div>
 
-  <p style="text-align:center; font-size:12px;">
-    Synergy Light – Ahorro energético para Texas  
-  </p>
+    <!-- NOTA -->
+    <div class="note-section">
+      <span class="note-label">Nota:</span>
+      <span id="field-note"></span>
+    </div>
 
-</div>
+    <!-- TEXTO LEGAL -->
+    <div class="legal-text">
+      <p class="referral">Participe de nuestro sistema de Referidos y disfrutarás de tu renovación con el 100% de descuento</p>
+      <p style="font-style:italic">"ciertas condiciones aplica"</p>
+      <p class="notification">SE ENVIARÁ NOTIFICACIONES A LOS 3 DÍAS PARA VENCERSE LA CONEXIÓN</p>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="footer">
+      <p>Los planes de luz economica y sin depósito (prepagada) ofrecen SERVICIO DE ENERGIA DOMESTICA, que pueden ser de hasta 24 días, aunque es posible contratar el servicio por tan solo 1mes. Por otra parte, estas compañías no realizan una verificación de tu historial crediticio, por lo que te ahorras ese trámite.</p>
+      <p class="notification-bold">SE ENVIARÁ NOTIFICACIONES A LOS 3 DÍAS PARA VENCERSE LA CONEXIÓN</p>
+      <p class="notification-bold">NOTIFICATIONS WILL BE SENT 3 DAYS AFTER THE CONNECTION EXPIRES</p>
+    </div>
+  </div>
+
+  <script>
+    // ===============================
+    // FUNCIÓN: NÚMERO A TEXTO EN ESPAÑOL
+    // ===============================
+    function numeroATexto(numero) {
+      const unidades = ['', 'un', 'dos', 'tres', 'cuatro', 'cinco', 'seis', 'siete', 'ocho', 'nueve'];
+      const especiales = ['diez', 'once', 'doce', 'trece', 'catorce', 'quince', 'dieciseis', 'diecisiete', 'dieciocho', 'diecinueve'];
+      const decenas = ['', 'diez', 'veinte', 'treinta', 'cuarenta', 'cincuenta', 'sesenta', 'setenta', 'ochenta', 'noventa'];
+      const centenas = ['', 'ciento', 'doscientos', 'trescientos', 'cuatrocientos', 'quinientos', 'seiscientos', 'setecientos', 'ochocientos', 'novecientos'];
+      
+      let num = Math.floor(numero);
+      let centavos = Math.round((numero - num) * 100);
+      
+      let texto = '';
+      
+      if (num === 0) return 'cero';
+      if (num === 100) return 'cien';
+      
+      if (num >= 100) {
+        texto += centenas[Math.floor(num / 100)] + ' ';
+        num = num % 100;
+      }
+      
+      if (num >= 10 && num <= 19) {
+        texto += especiales[num - 10];
+      } else {
+        if (num >= 20) {
+          texto += decenas[Math.floor(num / 10)];
+          num = num % 10;
+          if (num > 0) texto += ' y ';
+        }
+        if (num > 0) {
+          texto += unidades[num];
+        }
+      }
+      
+      texto = texto.trim();
+      texto = texto.charAt(0).toUpperCase() + texto.slice(1);
+      
+      if (centavos > 0) {
+        texto += ' con ' + centavos + '/100';
+      } else {
+        texto += ' exactos';
+      }
+      
+      return texto;
+    }
+    
+    // ===============================
+    // FORMATEAR FECHA
+    // ===============================
+    function formatDate(dateStr) {
+      if (!dateStr) return '';
+      const date = new Date(dateStr);
+      const months = ['January', 'February', 'March', 'April', 'May', 'June', 
+                      'July', 'August', 'September', 'October', 'November', 'December'];
+      return months[date.getMonth()] + ' ' + date.getDate() + ', ' + date.getFullYear();
+    }
+    
+    // ===============================
+    // FORMATEAR MONEDA
+    // ===============================
+    function formatMoney(amount) {
+      return parseFloat(amount).toFixed(2).replace('.', ',');
+    }
+    
+    // ===============================
+    // CARGAR DATOS DE LA FACTURA
+    // ===============================
+    function cargarDatosFactura() {
+      // Intentar leer de sessionStorage (enviado desde ventas.html)
+      let facturaData = null;
+      
+      try {
+        const stored = sessionStorage.getItem('facturaActual');
+        if (stored) {
+          facturaData = JSON.parse(stored);
+        }
+      } catch (e) {
+        console.error('Error leyendo sessionStorage:', e);
+      }
+      
+      // Si no hay datos, usar datos de ejemplo
+      if (!facturaData) {
+        facturaData = {
+          invoiceNumber: '5235',
+          clientId: 'RVIX-E010-2',
+          name: 'Roberto Villegas Rodríguez',
+          address: '2405 Covina Ave McAllen Texas 78503',
+          phone: '956490922',
+          email: '0',
+          contractType: 'TARIFA KWH',
+          salesAgent: 'AGENTE CARMEN VARGAS',
+          ssid: '10032789473331500',
+          issueDate: '2026-05-27',
+          dueDate: '2026-06-27',
+          income: 50,
+          fixedCosts: 45,
+          deposit: 95,
+          total: 95
+        };
+      }
+      
+      // Rellenar campos
+      document.getElementById('field-clientId').textContent = facturaData.clientId || '';
+      document.getElementById('field-name').textContent = facturaData.name || '';
+      document.getElementById('field-address').textContent = facturaData.address || '';
+      document.getElementById('field-issueDate').textContent = formatDate(facturaData.issueDate);
+      document.getElementById('field-email').textContent = facturaData.email || '0';
+      document.getElementById('field-phone').textContent = '(+1)' + (facturaData.phone || '');
+      document.getElementById('field-agent').textContent = facturaData.salesAgent || 'AGENTE CARMEN VARGAS';
+      document.getElementById('field-contract').textContent = facturaData.contractType || '';
+      document.getElementById('field-invoiceNumber').textContent = facturaData.invoiceNumber || '';
+      document.getElementById('field-dueDate').textContent = formatDate(facturaData.dueDate);
+      document.getElementById('field-ssid').textContent = facturaData.ssid || '';
+      
+      // Montos
+      document.getElementById('field-deposit').textContent = formatMoney(facturaData.deposit || facturaData.total);
+      document.getElementById('field-total').textContent = formatMoney(facturaData.total);
+      document.getElementById('field-income').textContent = formatMoney(facturaData.income);
+      document.getElementById('field-fixedCosts').textContent = formatMoney(facturaData.fixedCosts);
+      document.getElementById('field-totalPaid').textContent = formatMoney(facturaData.total);
+      
+      // SON: número a texto
+      const sonText = numeroATexto(facturaData.total);
+      document.getElementById('field-sonText').textContent = sonText;
+      
+      console.log('✅ Factura cargada:', facturaData);
+    }
+    
+    // Cargar al iniciar
+    window.addEventListener('load', function() {
+      cargarDatosFactura();
+      
+      // Auto-imprimir después de 1 segundo (opcional)
+      // setTimeout(() => window.print(), 1000);
+    });
+  </script>
+</body>
+</html>

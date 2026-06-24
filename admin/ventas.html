@@ -316,7 +316,26 @@
     }
     
     function descargarPDF(numeroFactura) {
-      alert('📄 Descargando factura #' + numeroFactura + ' - Función en desarrollo');
+      console.log('📄 Generando PDF para factura:', numeroFactura);
+      
+      const invoices = JSON.parse(localStorage.getItem('invoices') || '[]');
+      const factura = invoices.find(inv => inv.invoiceNumber === numeroFactura);
+      
+      if (!factura) {
+        alert('❌ Factura no encontrada: ' + numeroFactura);
+        return;
+      }
+      
+      // Guardar en sessionStorage para que el template la lea
+      sessionStorage.setItem('facturaActual', JSON.stringify(factura));
+      
+      // Abrir el template en nueva ventana
+      const templateURL = 'components/pdf/invoice-template.html';
+      const nuevaVentana = window.open(templateURL, '_blank', 'width=900,height=700');
+      
+      if (!nuevaVentana) {
+        alert('⚠️ Por favor permite las ventanas emergentes para generar el PDF');
+      }
     }
     
     function enviarEmailFactura(email, nombre, numero) {

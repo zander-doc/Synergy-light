@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registros de Ventas - Synergy Light</title>
+  <link rel="icon" type="image/webp" href="../fivicon.webp">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+      color: #FFFFFF;
+      min-height: 100vh;
+    }
+    .dashboard-container { display: flex; min-height: 100vh; }
+    .sidebar {
+      width: 260px;
+      background: rgba(255, 255, 255, 0.02);
+      backdrop-filter: blur(20px);
+      border-right: 2px solid rgba(3, 188, 137, 0.2);
+      padding: 30px 0;
+      position: fixed;
+      height: 100vh;
+    }
+    .sidebar-header { text-align: center; padding: 0 20px 30px; border-bottom: 1px solid rgba(3, 188, 137, 0.2); margin-bottom: 30px; }
+    .sidebar-header h2 { color: #03bc89; font-size: 1.5rem; }
+    .sidebar-nav { display: flex; flex-direction: column; gap: 5px; padding: 0 15px; }
+    .nav-item {
+      display: flex; align-items: center; gap: 15px;
+      padding: 15px 20px; color: #B0B0B0; text-decoration: none;
+      border-radius: 12px; transition: all 0.3s ease;
+    }
+    .nav-item:hover { background: rgba(3, 188, 137, 0.1); color: #FFFFFF; }
+    .nav-item.active { background: linear-gradient(135deg, rgba(3, 188, 137, 0.2) 0%, rgba(4, 217, 158, 0.1) 100%); color: #03bc89; border: 1px solid rgba(3, 188, 137, 0.3); }
+    .main-content { margin-left: 260px; flex: 1; padding: 30px; }
+    
+    .header-section {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 30px; padding-bottom: 20px;
+      border-bottom: 2px solid rgba(3, 188, 137, 0.2);
+    }
+    .header-section h1 { color: #03bc89; font-size: 2rem; }
+    
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+    .stat-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 2px solid rgba(3, 188, 137, 0.2);
+      border-radius: 15px;
+      padding: 20px;
+      text-align: center;
+    }
+    .stat-card h3 { color: #03bc89; font-size: 2rem; margin-bottom: 5px; }
+    .stat-card p { color: #B0B0B0; font-size: 0.9rem; }
+    
+    .search-box {
+      margin-bottom: 25px;
+    }
+    .search-box input {
+      width: 100%;
+      padding: 15px 20px;
+      background: rgba(42, 42, 42, 0.8);
+      border: 2px solid rgba(3, 188, 137, 0.3);
+      border-radius: 10px;
+      color: white;
+      font-size: 1rem;
+    }
+    .search-box input:focus {
+      outline: none;
+      border-color: #03bc89;
+      box-shadow: 0 0 15px rgba(3, 188, 137, 0.3);
+    }
+    
+    .actions-bar {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 25px;
+      flex-wrap: wrap;
+    }
+    .btn-action-premium {
+      padding: 12px 24px;
+      background: linear-gradient(135deg, #03bc89 0%, #04d99e 100%);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .btn-action-premium:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(3, 188, 137, 0.4);
+    }
+    .btn-secondary {
+      background: rgba(102, 102, 102, 0.8);
+    }
+    
+    .table-container {
+      background: rgba(255, 255, 255, 0.03);
+      border: 2px solid rgba(3, 188, 137, 0.2);
+      border-radius: 15px;
+      overflow: hidden;
+    }
+    .table-header {
+      display: grid;
+      grid-template-columns: 1fr 1.5fr 1fr 1fr 1fr 1fr 2fr;
+      gap: 15px;
+      padding: 15px 20px;
+      background: rgba(3, 188, 137, 0.1);
+      border-bottom: 2px solid rgba(3, 188, 137, 0.3);
+      font-weight: 700;
+      color: #03bc89;
+    }
+    .table-row {
+      display: grid;
+      grid-template-columns: 1fr 1.5fr 1fr 1fr 1fr 1fr 2fr;
+      gap: 15px;
+      padding: 15px 20px;
+      border-bottom: 1px solid rgba(3, 188, 137, 0.1);
+      align-items: center;
+      transition: all 0.3s ease;
+    }
+    .table-row:hover {
+      background: rgba(3, 188, 137, 0.05);
+    }
+    .status-badge {
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      display: inline-block;
+    }
+    .status-badge.active { background: rgba(3, 188, 137, 0.2); color: #03bc89; }
+    .status-badge.warning { background: rgba(255, 165, 0, 0.2); color: #FFA500; }
+    .status-badge.secondary { background: rgba(176, 176, 176, 0.2); color: #B0B0B0; }
+    
+    .btn-small {
+      padding: 6px 12px;
+      margin: 0 2px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      transition: all 0.3s ease;
+    }
+    .btn-pdf { background: rgba(255, 0, 0, 0.2); color: #ff0000; }
+    .btn-pdf:hover { background: rgba(255, 0, 0, 0.3); transform: scale(1.05); }
+    .btn-email { background: rgba(0, 102, 204, 0.2); color: #0066cc; }
+    .btn-email:hover { background: rgba(0, 102, 204, 0.3); transform: scale(1.05); }
+    .btn-whatsapp { background: rgba(37, 211, 102, 0.2); color: #25d366; }
+    .btn-whatsapp:hover { background: rgba(37, 211, 102, 0.3); transform: scale(1.05); }
+  </style>
+</head>
+<body>
+  <div class="dashboard-container">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <h2>Synergy Light</h2>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="dashboard.html" class="nav-item">📊 Dashboard</a>
+        <a href="invoices.html" class="nav-item">💰 Facturación</a>
+        <a href="#" class="nav-item">📄 Contratos</a>
+        <a href="ventas.html" class="nav-item active">💰 Registros de Ventas</a>
+        <a href="clients.html" class="nav-item">👥 Clientes</a>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <div class="header-section">
+        <h1>💰 Registros de Ventas</h1>
+      </div>
+      
+      <!-- ESTADÍSTICAS RÁPIDAS -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <h3 id="totalVentas">$0</h3>
+          <p>Total Ventas</p>
+        </div>
+        <div class="stat-card">
+          <h3 id="totalFacturas">0</h3>
+          <p>Facturas Emitidas</p>
+        </div>
+        <div class="stat-card">
+          <h3 id="clientesActivos">0</h3>
+          <p>Clientes Activos</p>
+        </div>
+        <div class="stat-card">
+          <h3 id="promedioFactura">$0</h3>
+          <p>Promedio por Factura</p>
+        </div>
+      </div>
+      
+      <!-- BUSCADOR RÁPIDO -->
+      <div class="search-box">
+        <input type="text" id="searchInput" placeholder="🔍 Buscar cliente o factura..." onkeyup="filtrarFacturas()">
+      </div>
+      
+      <!-- ACCIONES RÁPIDAS -->
+      <div class="actions-bar">
+        <button class="btn-action-premium" onclick="generarPDFGlobal()">📄 Generar PDF</button>
+        <button class="btn-action-premium btn-secondary" onclick="enviarEmailGlobal()">📧 Enviar Email</button>
+        <button class="btn-action-premium btn-secondary" onclick="enviarWhatsAppGlobal()">💬 Enviar WhatsApp</button>
+        <button class="btn-action-premium btn-secondary" onclick="exportarExcel()">📊 Exportar Excel</button>
+      </div>
+      
+      <!-- TABLA DE FACTURAS -->
+      <div class="table-container">
+        <div class="table-header">
+          <div>FACTURA #</div>
+          <div>CLIENTE</div>
+          <div>FECHA</div>
+          <div>INGRESO</div>
+          <div>COSTOS</div>
+          <div>TOTAL</div>
+          <div>ACCIONES</div>
+        </div>
+        <div id="ventasTableBody">
+          <!-- Las facturas se cargarán aquí -->
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    // Cargar facturas al iniciar
+    window.addEventListener('load', function() {
+      console.log('🚀 Cargando Registros de Ventas...');
+      cargarRegistrosVentas();
+    });
+    
+    function cargarRegistrosVentas() {
+      const invoices = JSON.parse(localStorage.getItem('invoices') || '[]');
+      const clients = JSON.parse(localStorage.getItem('clients') || '[]');
+      
+      // Calcular estadísticas
+      const totalVentas = invoices.reduce((sum, inv) => sum + inv.total, 0);
+      const uniqueClients = new Set(invoices.map(inv => inv.clientId)).size;
+      const promedio = invoices.length > 0 ? totalVentas / invoices.length : 0;
+      
+      document.getElementById('totalVentas').textContent = '$' + totalVentas.toFixed(2);
+      document.getElementById('totalFacturas').textContent = invoices.length;
+      document.getElementById('clientesActivos').textContent = uniqueClients;
+      document.getElementById('promedioFactura').textContent = '$' + promedio.toFixed(2);
+      
+      // Renderizar tabla
+      renderizarTablaVentas(invoices);
+    }
+    
+    function renderizarTablaVentas(invoices) {
+      const tbody = document.getElementById('ventasTableBody');
+      
+      if (invoices.length === 0) {
+        tbody.innerHTML = '<div style="text-align:center;padding:40px;color:#666;">No hay facturas registradas</div>';
+        return;
+      }
+      
+      // Ordenar por fecha (más reciente primero)
+      const sorted = [...invoices].sort((a, b) => new Date(b.issueDate) - new Date(a.issueDate));
+      
+      tbody.innerHTML = sorted.map(inv => {
+        let statusClass = 'warning';
+        if (inv.status === 'PAGADA') statusClass = 'active';
+        
+        return '<div class="table-row">' +
+          '<div>' + inv.invoiceNumber + '</div>' +
+          '<div>' + inv.clientName + '</div>' +
+          '<div>' + new Date(inv.issueDate).toLocaleDateString() + '</div>' +
+          '<div>$' + parseFloat(inv.income).toFixed(2) + '</div>' +
+          '<div>$' + parseFloat(inv.fixedCosts).toFixed(2) + '</div>' +
+          '<div style="font-weight:bold;color:#03bc89">$' + parseFloat(inv.total).toFixed(2) + '</div>' +
+          '<div style="display:flex;gap:5px;">' +
+          '<button class="btn-small btn-pdf" onclick="descargarPDF(\'' + inv.invoiceNumber + '\')" title="Descargar PDF">📄</button>' +
+          '<button class="btn-small btn-email" onclick="enviarEmailFactura(\'' + inv.clientEmail + '\', \'' + inv.clientName + '\', \'' + inv.invoiceNumber + '\')" title="Enviar Email">📧</button>' +
+          '<button class="btn-small btn-whatsapp" onclick="enviarWhatsAppFactura(\'' + inv.clientPhone + '\', \'' + inv.clientName + '\', \'' + inv.invoiceNumber + '\', \'' + inv.total + '\')" title="Enviar WhatsApp">💬</button>' +
+          '</div>' +
+          '</div>';
+      }).join('');
+    }
+    
+    function filtrarFacturas() {
+      const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+      const invoices = JSON.parse(localStorage.getItem('invoices') || '[]');
+      
+      const filtered = invoices.filter(inv => 
+        inv.clientName.toLowerCase().includes(searchTerm) ||
+        inv.invoiceNumber.toLowerCase().includes(searchTerm)
+      );
+      
+      renderizarTablaVentas(filtered);
+    }
+    
+    function generarPDFGlobal() {
+      alert('📄 Generar PDF - Función en desarrollo');
+    }
+    
+    function enviarEmailGlobal() {
+      alert('📧 Enviar Email - Función en desarrollo');
+    }
+    
+    function enviarWhatsAppGlobal() {
+      alert('💬 Enviar WhatsApp - Función en desarrollo');
+    }
+    
+    function exportarExcel() {
+      alert('📊 Exportar Excel - Función en desarrollo');
+    }
+    
+    function descargarPDF(numeroFactura) {
+      alert('📄 Descargando factura #' + numeroFactura + ' - Función en desarrollo');
+    }
+    
+    function enviarEmailFactura(email, nombre, numero) {
+      if (!email) {
+        alert('⚠️ El cliente no tiene email registrado');
+        return;
+      }
+      
+      const subject = 'Factura #' + numero + ' - Synergy Light';
+      const body = 'Estimado/a ' + nombre + ',\n\nAdjuntamos su factura #' + numero + '.\n\nGracias por su preferencia.\n\nSynergy Light';
+      
+      window.open('mailto:' + email + '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body), '_blank');
+    }
+    
+    function enviarWhatsAppFactura(telefono, nombre, numero, total) {
+      const synergyPhone = '14092800661';
+      const message = 'Hola ' + nombre + ',\n\nLe enviamos su factura #' + numero + ' de Synergy Light.\n\nMonto: $' + total + '\n\nGracias por su preferencia.';
+      
+      const url = 'https://web.whatsapp.com/send?phone=' + synergyPhone + '&text=' + encodeURIComponent(message);
+      window.open(url, '_blank');
+    }
+  </script>
+</body>
+</html>

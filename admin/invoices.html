@@ -26,10 +26,10 @@
 
       <section class="section-header">
         <h2>Facturación</h2>
-        <button class="btn-primary" id="btnNewInvoice">+ Nueva Factura</button>
+        <button id="btnNewInvoice" class="btn-primary" onclick="abrirModalFactura()">+ Nueva Factura</button>
       </section>
 
-      <table class="data-table">
+      <table id="invoicesTable" class="data-table">
         <thead>
           <tr>
             <th>Factura #</th>
@@ -63,6 +63,22 @@
   <script>console.log("📌 invoices.html - Antes de cargar invoices.js");</script>
   <script src="js/modules/invoices.js"></script>
   <script>console.log("📌 invoices.html - Después de cargar invoices.js");</script>
+
+  <!-- Inicializar tabla -->
+  <script>
+  window.addEventListener('load', function() {
+    console.log('🚀 Página de facturación cargada');
+    
+    // Renderizar tabla inicial
+    setTimeout(function() {
+      if (typeof renderizarTablaFacturas === 'function') {
+        renderizarTablaFacturas();
+      } else {
+        console.error('❌ renderizarTablaFacturas no está disponible');
+      }
+    }, 500);
+  });
+  </script>
   
   <!-- DIAGNÓSTICO -->
   <script>

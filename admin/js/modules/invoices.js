@@ -325,6 +325,7 @@ function renderizarTablaFacturas() {
       '<button class="btn-action" onclick="descargarFactura(\'' + inv.invoiceNumber + '\')" title="Descargar PDF">📄</button>' +
       '<button class="btn-action" onclick="enviarFacturaEmail(\'' + inv.clientEmail + '\', \'' + inv.clientName + '\', \'' + inv.invoiceNumber + '\')" title="Enviar Email">📧</button>' +
       '<button class="btn-action" onclick="enviarFacturaWhatsApp(\'' + inv.clientPhone + '\', \'' + inv.clientName + '\', \'' + inv.invoiceNumber + '\', \'' + inv.total + '\')" title="Enviar WhatsApp">💬</button>' +
+      '<button class="btn-action btn-delete" onclick="eliminarFactura(\'' + inv.invoiceNumber + '\')" title="Eliminar">🗑️</button>' +
       '</td>' +
       '</tr>';
   }).join('');
@@ -332,8 +333,46 @@ function renderizarTablaFacturas() {
   console.log('✅ Tabla de facturas renderizada correctamente');
 }
 
+// ========================
+// ELIMINAR FACTURA
+// ========================
+function eliminarFactura(numeroFactura) {
+  // Confirmar eliminación
+  if (!confirm('⚠️ ¿Estás seguro de eliminar la factura #' + numeroFactura + '?\n\nEsta acción no se puede deshacer.')) {
+    return;
+  }
+  
+  console.log('🗑️ Eliminando factura:', numeroFactura);
+  
+  // Obtener facturas
+  const invoices = JSON.parse(localStorage.getItem('invoices') || '[]');
+  
+  // Filtrar factura a eliminar
+  const antes = invoices.length;
+  const filteredInvoices = invoices.filter(inv => inv.invoiceNumber !== numeroFactura);
+  
+  if (filteredInvoices.length === antes) {
+    alert('❌ Factura no encontrada: ' + numeroFactura);
+    return;
+  }
+  
+  // Guardar en localStorage
+  localStorage.setItem('invoices', JSON.stringify(filteredInvoices));
+  
+  console.log('✅ Factura eliminada:', numeroFactura);
+  alert('✅ Factura #' + numeroFactura + ' eliminada exitosamente');
+  
+  // Recargar tabla
+  if (typeof renderizarTablaFacturas === 'function') {
+    renderizarTablaFacturas();
+  } else {
+    location.reload();
+  }
+}
+
 // Hacer funciones globales
 window.loadInvoiceModal = loadInvoiceModal;
+window.eliminarFactura = eliminarFactura;
 window.abrirModalFactura = abrirModalFactura;
 window.cerrarModalFactura = cerrarModalFactura;
 window.autoRellenarFactura = autoRellenarFactura;

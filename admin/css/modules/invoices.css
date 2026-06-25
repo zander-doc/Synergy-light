@@ -10,3 +10,13 @@
   margin-right: 4px;
   cursor: pointer;
 }
+
+.btn-delete {
+  background: rgba(255, 68, 68, 0.2) !important;
+  color: #ff4444 !important;
+}
+
+.btn-delete:hover {
+  background: rgba(255, 68, 68, 0.3) !important;
+  transform: scale(1.05);
+}

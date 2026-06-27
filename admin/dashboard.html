@@ -10,6 +10,7 @@
   <link rel="stylesheet" href="css/layout.css">
   <link rel="stylesheet" href="css/dashboard.css">
   <link rel="stylesheet" href="css/components.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
 
 <body>
@@ -61,7 +62,7 @@
       <section class="table-section">
         <div class="section-header">
           <h2>Últimos Clientes</h2>
-          <button class="btn-primary" onclick="window.location.href='clients.html'">Ver Todos</button>
+          <button class="btn-primary" onclick="window.location.href='clients.html'" >Ver Todos</button>
         </div>
 
         <table class="data-table">
@@ -72,7 +73,8 @@
               <th>Teléfono</th>
               <th>Contrato</th>
               <th>Status</th>
-              <th>Acciones</th>
+              <th>FECHA CREACIÓN</th>
+              <th>AGENTE</th>
             </tr>
           </thead>
           <tbody id="recentClientsBody">
@@ -85,7 +87,7 @@
       <section class="table-section">
         <div class="section-header">
           <h2>Facturas Recientes</h2>
-          <button class="btn-primary" onclick="window.location.href='invoices.html'">Ver Todas</button>
+          <button class="btn-primary" onclick="window.location.href='invoices.html'" >Ver Todas</button>
         </div>
 
         <table class="data-table">

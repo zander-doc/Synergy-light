@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Registros de Ventas - Synergy Light</title>
   <link rel="icon" type="image/webp" href="../fivicon.webp">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+  <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
@@ -167,11 +170,26 @@
         <h2>Synergy Light</h2>
       </div>
       <nav class="sidebar-nav">
-        <a href="dashboard.html" class="nav-item">📊 Dashboard</a>
-        <a href="invoices.html" class="nav-item">💰 Facturación</a>
-        <a href="#" class="nav-item">📄 Contratos</a>
-        <a href="ventas.html" class="nav-item active">💰 Registros de Ventas</a>
-        <a href="clients.html" class="nav-item">👥 Clientes</a>
+        <a href="dashboard.html" class="nav-item">
+          <img src="assets/icons/Dashboard.webp" alt="Dashboard" class="nav-icon" style="width:20px;height:20px;">
+          Dashboard
+        </a>
+        <a href="invoices.html" class="nav-item">
+          <img src="assets/icons/facturacion.webp" alt="Facturación" class="nav-icon" style="width:20px;height:20px;">
+          Facturación
+        </a>
+        <a href="contratos.html" class="nav-item">
+          <img src="assets/icons/contratos.webp" alt="Contratos" class="nav-icon" onerror="this.src='assets/icons/facturacion.webp'" style="width:20px;height:20px;">
+          Contratos
+        </a>
+        <a href="ventas.html" class="nav-item active">
+          <img src="assets/icons/Registros-de-Ventas.webp" alt="Registros de Ventas" class="nav-icon" style="width:20px;height:20px;">
+          Registros de Ventas
+        </a>
+        <a href="clients.html" class="nav-item">
+          <img src="assets/icons/Clientes.webp" alt="Clientes" class="nav-icon" style="width:20px;height:20px;">
+          Clientes
+        </a>
       </nav>
     </aside>
 
@@ -207,9 +225,10 @@
       
       <!-- ACCIONES RÁPIDAS -->
       <div class="actions-bar">
-        <button class="btn-action-premium" onclick="generarPDFGlobal()">📄 Generar PDF</button>
-        <button class="btn-action-premium btn-secondary" onclick="enviarEmailGlobal()">📧 Enviar Email</button>
-        <button class="btn-action-premium btn-secondary" onclick="enviarWhatsAppGlobal()">💬 Enviar WhatsApp</button>
+        <button class="btn-action-premium" onclick="generarPDFFactura()" style="background:#03bc89;color:white;">📄 PDF FACTURA</button>
+        <button class="btn-action-premium btn-secondary" onclick="generarPDFContrato()" style="background:#0066cc;color:white;">📄 PDF CONT</button>
+        <button class="btn-action-premium btn-secondary" onclick="abrirModalEmail()">📧 Enviar Email</button>
+        <button class="btn-action-premium btn-secondary" onclick="abrirModalWhatsApp()">💬 Enviar WhatsApp</button>
         <button class="btn-action-premium btn-secondary" onclick="exportarExcel()">📊 Exportar Excel</button>
       </div>
       
@@ -232,6 +251,19 @@
   </div>
 
   <script>
+    // Inicializar EmailJS
+    (function() {
+      emailjs.init("HHgHnY4p5mVt21SLA");
+      console.log('✅ EmailJS inicializado');
+    })();
+    
+    // Configuración de EmailJS
+    const EMAILJS_CONFIG = {
+      serviceId: 'service_jm2h6p8',
+      templateId: 'template_o8eh1by',
+      publicKey: 'HHgHnY4p5mVt21SLA'
+    };
+    
     // Cargar facturas al iniciar
     window.addEventListener('load', function() {
       console.log('🚀 Cargando Registros de Ventas...');
@@ -279,9 +311,7 @@
           '<div>$' + parseFloat(inv.fixedCosts).toFixed(2) + '</div>' +
           '<div style="font-weight:bold;color:#03bc89">$' + parseFloat(inv.total).toFixed(2) + '</div>' +
           '<div style="display:flex;gap:5px;">' +
-          '<button class="btn-small btn-pdf" onclick="descargarPDF(\'' + inv.invoiceNumber + '\')" title="Descargar PDF">📄</button>' +
-          '<button class="btn-small btn-email" onclick="enviarEmailFactura(\'' + inv.clientEmail + '\', \'' + inv.clientName + '\', \'' + inv.invoiceNumber + '\')" title="Enviar Email">📧</button>' +
-          '<button class="btn-small btn-whatsapp" onclick="enviarWhatsAppFactura(\'' + inv.clientPhone + '\', \'' + inv.clientName + '\', \'' + inv.invoiceNumber + '\', \'' + inv.total + '\')" title="Enviar WhatsApp">💬</button>' +
+          '<button class="btn-small btn-pdf" onclick="descargarPDF(\'' + inv.invoiceNumber + '\')" title="Ver PDF">📄</button>' +
           '</div>' +
           '</div>';
       }).join('');
@@ -331,17 +361,463 @@
       document.getElementById('modalSelectorFacturas').style.display = 'none';
     }
     
-    function enviarEmailGlobal() {
-      alert('📧 Enviar Email - Función en desarrollo');
+    // ========================
+    // MODAL ENVIAR EMAIL
+    // ========================
+    function abrirModalEmail() {
+      console.log('📧 Abriendo modal de email...');
+      
+      const modal = document.getElementById('modalEmail');
+      modal.style.display = 'block';
+      document.body.style.overflow = 'hidden';
+      
+      // Cargar facturas en el select
+      const invoices = JSON.parse(localStorage.getItem('invoices') || '[]');
+      const clients = JSON.parse(localStorage.getItem('clients') || '[]');
+      const select = document.getElementById('emailFacturaSelect');
+      
+      select.innerHTML = '<option value="">Seleccione una factura...</option>';
+      
+      invoices.forEach(inv => {
+        const client = clients.find(c => c.clientId === inv.clientId);
+        const option = document.createElement('option');
+        option.value = inv.invoiceNumber;
+        option.textContent = '#' + inv.invoiceNumber + ' - ' + (client ? client.name : 'Sin nombre');
+        option.dataset.clientEmail = client ? client.email : '';
+        select.appendChild(option);
+      });
+      
+      // Auto-completar email cuando seleccione factura
+      select.onchange = function() {
+        const selected = this.options[this.selectedIndex];
+        if (selected && selected.dataset.clientEmail) {
+          document.getElementById('emailDestinatario').value = selected.dataset.clientEmail;
+        }
+      };
     }
     
-    function enviarWhatsAppGlobal() {
-      alert('💬 Enviar WhatsApp - Función en desarrollo');
+    function cerrarModalEmail() {
+      document.getElementById('modalEmail').style.display = 'none';
+      document.body.style.overflow = 'auto';
     }
+    
+    async function enviarEmailConPDF() {
+      const invoiceNumber = document.getElementById('emailFacturaSelect').value;
+      const destinatario = document.getElementById('emailDestinatario').value;
+      
+      if (!invoiceNumber || !destinatario) {
+        alert('⚠️ Por favor seleccione una factura y verifique el email');
+        return;
+      }
+      
+      // Validar email
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(destinatario)) {
+        alert('⚠️ El email no es válido');
+        return;
+      }
+      
+      try {
+        // Obtener datos
+        const invoices = JSON.parse(localStorage.getItem('invoices') || '[]');
+        const clients = JSON.parse(localStorage.getItem('clients') || '[]');
+        const invoice = invoices.find(inv => inv.invoiceNumber === invoiceNumber);
+        const client = clients.find(c => c.clientId === invoice.clientId);
+        
+        if (!invoice || !client) {
+          alert('❌ Factura o cliente no encontrados');
+          return;
+        }
+        
+        // Calcular fecha de corte
+        const issueDate = new Date(invoice.issueDate);
+        const dueDate = new Date(issueDate);
+        dueDate.setDate(dueDate.getDate() + 30);
+        
+        // MEJORA ANTI-SPAM: Asunto específico y profesional
+        const asunto = `Factura #${invoice.invoiceNumber} - ${client.name} - Synergy Light - ${issueDate.toLocaleDateString('es-ES', {year: 'numeric', month: '2-digit'})}`;
+        
+        // MEJORA ANTI-SPAM: Cuerpo detallado y profesional
+        const cuerpo = `
+        Hola ${client.name},
+        
+        Esperamos que te encuentres bien.
+        
+        Adjunto encontrarás tu factura de Synergy Light correspondiente al servicio de energía eléctrica.
+        
+        ═══════════════════════════════════════
+        DETALLES DE LA FACTURA
+        ═══════════════════════════════════════
+        
+        📋 Número de Factura: #${invoice.invoiceNumber}
+        👤 Cliente: ${client.name}
+        🆔 ID Cliente: ${client.clientId}
+        📅 Fecha de Emisión: ${issueDate.toLocaleDateString('es-ES')}
+        📅 Fecha de Corte: ${dueDate.toLocaleDateString('es-ES')}
+        💰 Total Pagado: $${parseFloat(invoice.total).toFixed(2)} USD
+        
+        ═══════════════════════════════════════
+        INFORMACIÓN DEL SERVICIO
+        ═══════════════════════════════════════
+        
+        🔌 Tipo de Tarifa: ${client.contractType || 'TARIFA KWH'}
+        👨‍💼 Agente: ${client.salesAgent || 'CARMEN VARGAS'}
+        📡 SSID: ${client.ssid || 'N/A'}
+        🏠 Dirección: ${client.address || 'N/A'}
+        
+        ═══════════════════════════════════════
+        INFORMACIÓN DE CONTACTO
+        ═══════════════════════════════════════
+        
+        Si tienes alguna pregunta o necesitas asistencia:
+        
+        📞 Teléfono: +1 (409) 280-0661
+        ✉️ Email: synergylightservices@gmail.com
+        🌐 Sitio web: synergylightservices.com
+        
+        📍 Dirección: 
+        Synergy Light Services
+        McAllen, Texas
+        
+        ═══════════════════════════════════════
+        
+        IMPORTANTE:
+        • Esta factura es un documento oficial de Synergy Light
+        • Conserve este comprobante para sus registros
+        • Fecha límite de pago: ${dueDate.toLocaleDateString('es-ES')}
+        • Después de la fecha de corte se aplicarán recargos
+        
+        MÉTODO DE PAGO: ${invoice.paymentMethod || 'ZELLE'}
+        
+        ═══════════════════════════════════════
+        
+        Agradecemos su preferencia y confianza en Synergy Light.
+        
+        Estamos comprometidos en brindarte el mejor servicio de energía eléctrica.
+        
+        Saludos cordiales,
+        
+        ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        Synergy Light Team
+        Ilumina Tu Vida
+        ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        
+        ---
+        Este es un mensaje legítimo de Synergy Light Services.
+        Si recibiste este correo por error, por favor notifícanos inmediatamente a synergylightservices@gmail.com
+        
+        © ${new Date().getFullYear()} Synergy Light Services. Todos los derechos reservados.
+        `;
+        
+        // MEJORA ANTI-SPAM: Codificar correctamente
+        const mailtoLink = `mailto:${destinatario}?subject=${encodeURIComponent(asunto)}&body=${encodeURIComponent(cuerpo)}`;
+        
+        // Abrir cliente de correo
+        window.location.href = mailtoLink;
+        
+        // Generar y descargar PDF automáticamente
+        console.log('📄 Generando PDF...');
+        
+        const datosCodificados = btoa(unescape(encodeURIComponent(JSON.stringify(invoice))));
+        const templateURL = 'components/pdf/invoice-template.html?data=' + datosCodificados;
+        
+        // Abrir PDF en nueva pestaña
+        const nuevaVentana = window.open(templateURL, '_blank');
+        
+        if (nuevaVentana) {
+          // Esperar a que cargue
+          await new Promise(resolve => setTimeout(resolve, 2000));
+          
+          // Sugerir impresión/guardado
+          setTimeout(() => {
+            nuevaVentana.print();
+          }, 1000);
+        }
+        
+        // Cerrar modal
+        cerrarModalEmail();
+        
+        // Mensaje final
+        alert('✅ Se abrió tu cliente de correo\n\n📄 El PDF se abrió en otra pestaña\n\n💾 Pasos:\n1. Descarga el PDF\n2. Adjúntalo al email\n3. Envía el mensaje\n\n📧 Tips para evitar spam:\n• Verifica que el email sea correcto\n• El asunto es específico y profesional\n• El contenido incluye todos los detalles');
+        
+      } catch (error) {
+        console.error('❌ Error:', error);
+        alert('❌ Error: ' + error.message);
+      }
+    }
+    
+    // Hacer funciones globales
+    window.abrirModalEmail = abrirModalEmail;
+    window.cerrarModalEmail = cerrarModalEmail;
+    window.enviarEmailConPDF = enviarEmailConPDF;
+    
+    // ========================
+    // MODAL WHATSAPP
+    // ========================
+    
+    // Abrir modal WhatsApp
+    function abrirModalWhatsApp() {
+      console.log('💬 Abriendo modal de WhatsApp...');
+      
+      const modal = document.getElementById('modalWhatsApp');
+      modal.style.display = 'block';
+      document.body.style.overflow = 'hidden';
+      
+      // Cargar facturas
+      const invoices = JSON.parse(localStorage.getItem('invoices') || '[]');
+      const clients = JSON.parse(localStorage.getItem('clients') || '[]');
+      const select = document.getElementById('whatsappFacturaSelect');
+      
+      select.innerHTML = '<option value="">Seleccione una factura...</option>';
+      
+      invoices.forEach(inv => {
+        const client = clients.find(c => c.clientId === inv.clientId);
+        const option = document.createElement('option');
+        option.value = inv.invoiceNumber;
+        option.textContent = '#' + inv.invoiceNumber + ' - ' + (client ? client.name : 'Sin nombre');
+        option.dataset.clientId = inv.clientId;
+        select.appendChild(option);
+      });
+    }
+    
+    // Cerrar modal
+    function cerrarModalWhatsApp() {
+      document.getElementById('modalWhatsApp').style.display = 'none';
+      document.body.style.overflow = 'auto';
+    }
+    
+    // Cargar datos cuando selecciona factura
+    function cargarDatosWhatsApp() {
+      const invoiceNumber = document.getElementById('whatsappFacturaSelect').value;
+      
+      if (!invoiceNumber) return;
+      
+      const invoices = JSON.parse(localStorage.getItem('invoices') || '[]');
+      const clients = JSON.parse(localStorage.getItem('clients') || '[]');
+      const invoice = invoices.find(inv => inv.invoiceNumber === invoiceNumber);
+      const client = clients.find(c => c.clientId === invoice.clientId);
+      
+      if (client && client.phone) {
+        // Formatear teléfono (quitar espacios, guiones, etc.)
+        const telefonoLimpio = client.phone.replace(/[\s\-\(\)]/g, '');
+        document.getElementById('whatsappTelefono').value = telefonoLimpio;
+      }
+      
+      actualizarVistaPrevia();
+    }
+    
+    // Actualizar vista previa según tipo de mensaje
+    function actualizarVistaPrevia() {
+      const invoiceNumber = document.getElementById('whatsappFacturaSelect').value;
+      const tipoMensaje = document.querySelector('input[name="tipoMensaje"]:checked').value;
+      
+      if (!invoiceNumber) {
+        document.getElementById('whatsappVistaPrevia').textContent = 'Seleccione una factura para ver la vista previa...';
+        return;
+      }
+      
+      const invoices = JSON.parse(localStorage.getItem('invoices') || '[]');
+      const clients = JSON.parse(localStorage.getItem('clients') || '[]');
+      const invoice = invoices.find(inv => inv.invoiceNumber === invoiceNumber);
+      const client = clients.find(c => c.clientId === invoice.clientId);
+      
+      if (!invoice || !client) return;
+      
+      const issueDate = new Date(invoice.issueDate);
+      const dueDate = new Date(issueDate);
+      dueDate.setDate(dueDate.getDate() + 30);
+      
+      let mensaje = '';
+      
+      switch(tipoMensaje) {
+        case 'pdf':
+          mensaje = `Hola ${client.name},\n\nEsperamos que estés bien.\n\nTe enviamos tu factura #${invoice.invoiceNumber} de Synergy Light.\n\n📋 Detalles:\n💰 Total: $${parseFloat(invoice.total).toFixed(2)}\n📅 Emisión: ${issueDate.toLocaleDateString('es-ES')}\n📅 Vencimiento: ${dueDate.toLocaleDateString('es-ES')}\n\nPor favor, revisa el PDF adjunto.\n\nCualquier duda, estamos para servirte.\n\nSaludos,\nSynergy Light Team\n📞 +1 (409) 280-0661`;
+          break;
+          
+        case 'recordatorio':
+          mensaje = `Hola ${client.name},\n\n⏰ RECORDATORIO AMISTOSO\n\nTu factura #${invoice.invoiceNumber} de Synergy Light vence en 3 días.\n\n💰 Monto: $${parseFloat(invoice.total).toFixed(2)}\n📅 Fecha límite: ${dueDate.toLocaleDateString('es-ES')}\n\nPara evitar interrupciones en tu servicio, te agradecemos realizar el pago a tiempo.\n\n¡Gracias por tu preferencia!\n\nSynergy Light Team`;
+          break;
+          
+        case 'pago_recibido':
+          mensaje = `Hola ${client.name},\n\n✅ ¡PAGO RECIBIDO!\n\nHemos recibido tu pago de $${parseFloat(invoice.total).toFixed(2)} correspondiente a la factura #${invoice.invoiceNumber}.\n\n📅 Fecha de pago: ${new Date().toLocaleDateString('es-ES')}\n\nTu servicio está al día. ¡Gracias por tu puntualidad!\n\nSynergy Light Team\nIlumina Tu Vida 💡`;
+          break;
+          
+        case 'ofertas':
+          mensaje = `Hola ${client.name},\n\n🎁 ¡OFERTA ESPECIAL PARA TI!\n\nEn Synergy Light queremos premiar tu lealtad.\n\n✨ BENEFICIOS:\n• 30% de descuento en tu próxima renovación\n• Programa de referidos: gana descuentos invitando amigos\n• Servicio prioritario\n\n📞 Contáctanos:\n+1 (409) 280-0661\nsynergylightservices@gmail.com\n\n¡Aprovecha esta oportunidad!\n\nSynergy Light Team`;
+          break;
+          
+        case 'reconexion':
+          mensaje = `Hola ${client.name},\n\n⚠️ AVISO IMPORTANTE\n\nTu servicio de Synergy Light está programado para reconexión.\n\n📋 Factura: #${invoice.invoiceNumber}\n💰 Monto pendiente: $${parseFloat(invoice.total).toFixed(2)}\n\nPara evitar la desconexión del servicio, por favor regulariza tu situación a la brevedad.\n\nEstamos aquí para ayudarte.\n\nSynergy Light Team\n📞 +1 (409) 280-0661`;
+          break;
+      }
+      
+      document.getElementById('whatsappVistaPrevia').textContent = mensaje;
+    }
+    
+    // Enviar WhatsApp
+    function enviarWhatsApp() {
+      const telefono = document.getElementById('whatsappTelefono').value;
+      const invoiceNumber = document.getElementById('whatsappFacturaSelect').value;
+      const tipoMensaje = document.querySelector('input[name="tipoMensaje"]:checked').value;
+      
+      if (!telefono || !invoiceNumber) {
+        alert('⚠️ Por favor seleccione una factura y verifique el teléfono');
+        return;
+      }
+      
+      // Obtener mensaje de la vista previa
+      const mensaje = document.getElementById('whatsappVistaPrevia').textContent;
+      
+      // Codificar para URL
+      const mensajeCodificado = encodeURIComponent(mensaje);
+      
+      // URL de WhatsApp
+      const whatsappURL = `https://wa.me/${telefono}?text=${mensajeCodificado}`;
+      
+      // Abrir WhatsApp
+      window.open(whatsappURL, '_blank');
+      
+      // Si es tipo PDF, generar el PDF también
+      if (tipoMensaje === 'pdf') {
+        setTimeout(() => {
+          const invoices = JSON.parse(localStorage.getItem('invoices') || '[]');
+          const invoice = invoices.find(inv => inv.invoiceNumber === invoiceNumber);
+          
+          const datosCodificados = btoa(unescape(encodeURIComponent(JSON.stringify(invoice))));
+          const templateURL = 'components/pdf/invoice-template.html?data=' + datosCodificados;
+          window.open(templateURL, '_blank');
+          
+          alert('📄 El PDF se abrió en otra pestaña.\n\nDescárgalo y adjúntalo manualmente en WhatsApp.');
+        }, 1000);
+      }
+      
+      cerrarModalWhatsApp();
+    }
+    
+    // Hacer funciones globales
+    window.abrirModalWhatsApp = abrirModalWhatsApp;
+    window.cerrarModalWhatsApp = cerrarModalWhatsApp;
+    window.cargarDatosWhatsApp = cargarDatosWhatsApp;
+    window.actualizarVistaPrevia = actualizarVistaPrevia;
+    window.enviarWhatsApp = enviarWhatsApp;
+    
+    // ========================
+    // FUNCIONES PDF FACTURA Y CONTRATO
+    // ========================
+    
+    function generarPDFFactura() {
+      console.log('📄 Generando PDF de factura...');
+      const invoices = JSON.parse(localStorage.getItem('invoices') || '[]');
+      if (invoices.length === 0) { alert('⚠️ No hay facturas registradas'); return; }
+      if (invoices.length === 1) { descargarPDF(invoices[0].invoiceNumber); return; }
+      const lista = document.getElementById('listaFacturas');
+      lista.innerHTML = invoices.map(inv => '<div style="background:rgba(255,255,255,0.05);padding:20px;border-radius:10px;border:1px solid rgba(3,188,137,0.3);display:flex;justify-content:space-between;align-items:center;cursor:pointer;transition:all 0.3s ease;" onmouseover="this.style.background=\'rgba(3,188,137,0.1)\'" onmouseout="this.style.background=\'rgba(255,255,255,0.05)\'" onclick="seleccionarFacturaPDF(\'' + inv.invoiceNumber + '\')"><div><div style="font-weight:bold;color:#03bc89;margin-bottom:5px;">Factura #' + inv.invoiceNumber + '</div><div style="color:#B0B0B0;font-size:0.9rem;">' + inv.clientName + '</div></div><div style="font-size:1.5rem;font-weight:bold;color:#03bc89;">$' + parseFloat(inv.total).toFixed(2) + '</div></div>').join('');
+      document.getElementById('modalSelectorFacturas').style.display = 'block';
+    }
+    
+    function generarPDFContrato() {
+      console.log('📄 Generando PDF de contrato...');
+      const contratos = JSON.parse(localStorage.getItem('contratos') || '[]');
+      if (contratos.length === 0) { alert('⚠️ No hay contratos registrados.\n\nPrimero crea un contrato en la sección "Contratos".'); return; }
+      const modalHTML = '<div id="modalSeleccionContrato" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.9);backdrop-filter:blur(10px);z-index:9999;display:flex;align-items:center;justify-content:center;"><div style="background:linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);padding:35px;border:2px solid #0066cc;border-radius:20px;max-width:600px;width:90%;max-height:80vh;overflow-y:auto;"><h2 style="color:#0066cc;margin-bottom:20px;">📄 Seleccionar Contrato</h2><div style="display:grid;gap:10px;max-height:400px;overflow-y:auto;">' + contratos.map(c => '<div onclick="abrirContratoPDF(\'' + c.numeroContrato + '\')" style="padding:15px;background:rgba(0,102,204,0.1);border:1px solid rgba(0,102,204,0.3);border-radius:10px;cursor:pointer;transition:all 0.3s;" onmouseover="this.style.background=\'rgba(0,102,204,0.2)\'" onmouseout="this.style.background=\'rgba(0,102,204,0.1)\'"><strong style="color:#0066cc;">' + c.clientName + '</strong><div style="font-size:0.85rem;color:#888;margin-top:5px;">' + c.numeroContrato + ' | ' + (c.tipo === 'kwh' ? 'Tarifa kWh' : 'Tarifa Fija') + ' | Inicio: ' + new Date(c.fechaInicio).toLocaleDateString('es-ES') + '</div></div>').join('') + '</div><button onclick="document.getElementById(\'modalSeleccionContrato\').remove()" style="margin-top:20px;padding:12px 25px;background:#666;color:white;border:none;border-radius:10px;cursor:pointer;width:100%;">Cancelar</button></div></div>';
+      document.body.insertAdjacentHTML('beforeend', modalHTML);
+    }
+    
+    function abrirContratoPDF(numeroContrato) {
+      const contratos = JSON.parse(localStorage.getItem('contratos') || '[]');
+      const contrato = contratos.find(c => c.numeroContrato === numeroContrato);
+      if (!contrato) { alert('❌ Contrato no encontrado'); return; }
+      const modal = document.getElementById('modalSeleccionContrato');
+      if (modal) modal.remove();
+      const datosCodificados = btoa(unescape(encodeURIComponent(JSON.stringify(contrato))));
+      const templateURL = 'components/pdf/contract-template.html?data=' + datosCodificados;
+      window.open(templateURL, '_blank');
+    }
+    
+    window.generarPDFFactura = generarPDFFactura;
+    window.generarPDFContrato = generarPDFContrato;
+    window.abrirContratoPDF = abrirContratoPDF;
     
     function exportarExcel() {
-      alert('📊 Exportar Excel - Función en desarrollo');
+      console.log('📊 Exportando a Excel...');
+      
+      const invoices = JSON.parse(localStorage.getItem('invoices') || '[]');
+      const clients = JSON.parse(localStorage.getItem('clients') || '[]');
+      
+      if (invoices.length === 0) {
+        alert('⚠️ No hay facturas para exportar');
+        return;
+      }
+      
+      // Preparar datos para Excel
+      const datosExcel = invoices.map(inv => {
+        const client = clients.find(c => c.clientId === inv.clientId);
+        const issueDate = new Date(inv.issueDate);
+        const dueDate = new Date(issueDate);
+        dueDate.setDate(dueDate.getDate() + 30);
+        
+        return {
+          'Factura #': inv.invoiceNumber,
+          'Cliente': client ? client.name : 'N/A',
+          'ID Cliente': inv.clientId,
+          'Teléfono': client ? client.phone : 'N/A',
+          'Email': client ? client.email : 'N/A',
+          'Dirección': client ? client.address : 'N/A',
+          'Tarifa': client ? client.contractType : 'N/A',
+          'Agente': client ? client.salesAgent : 'N/A',
+          'Ingreso': parseFloat(inv.income || 0).toFixed(2),
+          'Costos Fijos': parseFloat(inv.fixedCosts || inv.fixed || 0).toFixed(2),
+          'Total': parseFloat(inv.total || 0).toFixed(2),
+          'Estado': inv.status || 'N/A',
+          'Método Pago': inv.paymentMethod || 'N/A',
+          'Fecha Emisión': issueDate.toLocaleDateString('es-ES'),
+          'Fecha Corte': dueDate.toLocaleDateString('es-ES'),
+          'SSID': client ? client.ssid : 'N/A'
+        };
+      });
+      
+      // Crear workbook
+      const wb = XLSX.utils.book_new();
+      const ws = XLSX.utils.json_to_sheet(datosExcel);
+      
+      // Ajustar ancho de columnas
+      ws['!cols'] = [
+        {wch: 12}, {wch: 25}, {wch: 12}, {wch: 15}, 
+        {wch: 25}, {wch: 35}, {wch: 12}, {wch: 20},
+        {wch: 10}, {wch: 12}, {wch: 10}, {wch: 12},
+        {wch: 12}, {wch: 15}, {wch: 15}, {wch: 20}
+      ];
+      
+      XLSX.utils.book_append_sheet(wb, ws, 'Ventas');
+      
+      // Agregar hoja de resumen
+      const totalVentas = invoices.reduce((sum, inv) => sum + parseFloat(inv.total || 0), 0);
+      const totalIngresos = invoices.reduce((sum, inv) => sum + parseFloat(inv.income || 0), 0);
+      const totalCostos = invoices.reduce((sum, inv) => sum + parseFloat(inv.fixedCosts || inv.fixed || 0), 0);
+      
+      const resumen = [
+        {'Concepto': 'Total de Facturas', 'Valor': invoices.length},
+        {'Concepto': 'Total Ventas', 'Valor': '$' + totalVentas.toFixed(2)},
+        {'Concepto': 'Total Ingresos', 'Valor': '$' + totalIngresos.toFixed(2)},
+        {'Concepto': 'Total Costos', 'Valor': '$' + totalCostos.toFixed(2)},
+        {'Concepto': 'Ganancia Neta', 'Valor': '$' + (totalIngresos - totalCostos).toFixed(2)},
+        {'Concepto': 'Promedio por Factura', 'Valor': '$' + (totalVentas / invoices.length).toFixed(2)},
+        {'Concepto': 'Fecha de Exportación', 'Valor': new Date().toLocaleDateString('es-ES')}
+      ];
+      
+      const wsResumen = XLSX.utils.json_to_sheet(resumen);
+      wsResumen['!cols'] = [{wch: 25}, {wch: 20}];
+      XLSX.utils.book_append_sheet(wb, wsResumen, 'Resumen');
+      
+      // Descargar archivo
+      const fecha = new Date().toISOString().split('T')[0];
+      XLSX.writeFile(wb, `SynergyLight_Ventas_${fecha}.xlsx`);
+      
+      console.log('✅ Excel exportado exitosamente');
+      alert('✅ Archivo Excel exportado exitosamente\n\n📄 Archivo: SynergyLight_Ventas_' + fecha + '.xlsx\n\nIncluye:\n• Hoja "Ventas": Todas las facturas\n• Hoja "Resumen": Estadísticas generales');
     }
+    
+    window.exportarExcel = exportarExcel;
     
     function descargarPDF(numeroFactura) {
       console.log('📄 Generando PDF para factura:', numeroFactura);
@@ -354,22 +830,17 @@
         return;
       }
       
-      // Guardar en localStorage para que el template la lea (compartido entre ventanas)
+      // Guardar en localStorage como respaldo
       localStorage.setItem('facturaActual', JSON.stringify(factura));
       
-      // Abrir el template en nueva ventana
-      const templateURL = 'components/pdf/invoice-template.html';
-      const nuevaVentana = window.open(templateURL, '_blank', 'width=900,height=700');
+      // Codificar datos en URL (base64)
+      const datosCodificados = btoa(unescape(encodeURIComponent(JSON.stringify(factura))));
       
-      if (!nuevaVentana) {
-        alert('⚠️ Por favor permite las ventanas emergentes para generar el PDF');
-      } else {
-        console.log('✅ Ventana de PDF abierta');
-        // Limpiar localStorage después de 5 segundos
-        setTimeout(() => {
-          localStorage.removeItem('facturaActual');
-        }, 5000);
-      }
+      // Abrir template en la MISMA pestaña
+      const templateURL = 'components/pdf/invoice-template.html?data=' + datosCodificados;
+      window.location.href = templateURL;
+      
+      console.log('✅ Navegando a PDF en la misma pestaña');
     }
     
     function enviarEmailFactura(email, nombre, numero) {
@@ -405,5 +876,153 @@
     </div>
   </div>
 </div>
+
+<!-- MODAL ENVIAR EMAIL -->
+<div id="modalEmail" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.9);backdrop-filter:blur(10px);z-index:9999;">
+  <div style="background:linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);margin:10% auto;padding:35px;border:2px solid #03bc89;border-radius:20px;max-width:600px;width:90%;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:25px;">
+      <h2 style="color:#03bc89;margin:0;">📧 Enviar Factura por Email</h2>
+      <button onclick="cerrarModalEmail()" style="background:none;border:none;color:#aaa;font-size:2rem;cursor:pointer;">&times;</button>
+    </div>
+    
+    <div style="margin-bottom:20px;">
+      <label style="color:#03bc89;display:block;margin-bottom:8px;font-weight:600;">Factura:</label>
+      <select id="emailFacturaSelect" style="width:100%;padding:12px;background:rgba(42,42,42,0.8);border:2px solid rgba(3,188,137,0.3);color:white;border-radius:10px;">
+        <option value="">Seleccione una factura...</option>
+      </select>
+    </div>
+    
+    <div style="margin-bottom:20px;">
+      <label style="color:#03bc89;display:block;margin-bottom:8px;font-weight:600;">Email del cliente:</label>
+      <input type="email" id="emailDestinatario" placeholder="cliente@ejemplo.com" style="width:100%;padding:12px;background:rgba(42,42,42,0.8);border:2px solid rgba(3,188,137,0.3);color:white;border-radius:10px;">
+    </div>
+    
+    <div style="margin-bottom:20px;">
+      <label style="color:#03bc89;display:block;margin-bottom:8px;font-weight:600;">Asunto:</label>
+      <input type="text" id="emailAsunto" value="Factura Synergy Light" style="width:100%;padding:12px;background:rgba(42,42,42,0.8);border:2px solid rgba(3,188,137,0.3);color:white;border-radius:10px;">
+    </div>
+    
+    <div style="margin-bottom:25px;">
+      <label style="color:#03bc89;display:block;margin-bottom:8px;font-weight:600;">Mensaje:</label>
+      <textarea id="emailMensaje" rows="4" style="width:100%;padding:12px;background:rgba(42,42,42,0.8);border:2px solid rgba(3,188,137,0.3);color:white;border-radius:10px;resize:vertical;">Estimado cliente,
+
+Adjunto encontrará su factura de Synergy Light.
+
+Gracias por su preferencia.
+
+Saludos cordiales,
+Synergy Light Team</textarea>
+    </div>
+    
+    <div style="display:flex;gap:10px;justify-content:flex-end;">
+      <button onclick="cerrarModalEmail()" style="padding:12px 25px;background:#666;color:white;border:none;border-radius:10px;cursor:pointer;">Cancelar</button>
+      <button onclick="enviarEmailConPDF()" style="padding:12px 25px;background:linear-gradient(135deg, #03bc89 0%, #04d99e 100%);color:white;border:none;border-radius:10px;cursor:pointer;font-weight:600;">📧 Enviar Email</button>
+    </div>
+    
+    <div style="margin-top:20px;padding:15px;background:rgba(3,188,137,0.15);border:1px solid rgba(3,188,137,0.3);border-radius:10px;">
+      <small style="color:#03bc89;">
+        ✅ <strong>EmailJS activo:</strong> El email se envía automáticamente desde el servidor de EmailJS.
+        El cliente lo recibirá en su bandeja de entrada (NO en spam).
+      </small>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL WHATSAPP -->
+<div id="modalWhatsApp" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.9);backdrop-filter:blur(10px);z-index:9999;">
+  <div style="background:linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);margin:5% auto;padding:35px;border:2px solid #25D366;border-radius:20px;max-width:700px;width:90%;max-height:90vh;overflow-y:auto;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:25px;padding-bottom:15px;border-bottom:2px solid #25D366;">
+      <h2 style="color:#25D366;margin:0;display:flex;align-items:center;gap:10px;">
+        <span style="font-size:2rem;">💬</span>
+        Enviar por WhatsApp
+      </h2>
+      <button onclick="cerrarModalWhatsApp()" style="background:none;border:none;color:#aaa;font-size:2rem;cursor:pointer;">&times;</button>
+    </div>
+    
+    <!-- SELECCIÓN DE FACTURA Y CLIENTE -->
+    <div style="margin-bottom:25px;">
+      <label style="color:#25D366;display:block;margin-bottom:8px;font-weight:600;">📋 Factura:</label>
+      <select id="whatsappFacturaSelect" onchange="cargarDatosWhatsApp()" style="width:100%;padding:12px;background:rgba(42,42,42,0.8);border:2px solid rgba(37,211,102,0.3);color:white;border-radius:10px;font-size:14px;">
+        <option value="">Seleccione una factura...</option>
+      </select>
+    </div>
+    
+    <!-- TELÉFONO -->
+    <div style="margin-bottom:25px;">
+      <label style="color:#25D366;display:block;margin-bottom:8px;font-weight:600;">📱 Teléfono:</label>
+      <input type="text" id="whatsappTelefono" placeholder="+584123456789" style="width:100%;padding:12px;background:rgba(42,42,42,0.8);border:2px solid rgba(37,211,102,0.3);color:white;border-radius:10px;">
+      <small style="color:#888;display:block;margin-top:5px;">Incluye el código de país (ej: +58 para Venezuela, +1 para USA)</small>
+    </div>
+    
+    <!-- TIPO DE MENSAJE -->
+    <div style="margin-bottom:25px;">
+      <label style="color:#25D366;display:block;margin-bottom:15px;font-weight:600;">📨 Tipo de Mensaje:</label>
+      <div style="display:grid;gap:10px;">
+        <label style="display:flex;align-items:flex-start;gap:12px;padding:15px;background:rgba(37,211,102,0.1);border:2px solid rgba(37,211,102,0.3);border-radius:10px;cursor:pointer;transition:all 0.3s ease;" onmouseover="this.style.background='rgba(37,211,102,0.2)'" onmouseout="this.style.background='rgba(37,211,102,0.1)'">
+          <input type="radio" name="tipoMensaje" value="pdf" checked onchange="actualizarVistaPrevia()" style="margin-top:3px;">
+          <div>
+            <strong style="color:#25D366;display:block;margin-bottom:5px;">📄 Enviar PDF de Factura</strong>
+            <small style="color:#aaa;">Envía la factura en PDF con todos los detalles del pago</small>
+          </div>
+        </label>
+        
+        <label style="display:flex;align-items:flex-start;gap:12px;padding:15px;background:rgba(37,211,102,0.1);border:2px solid rgba(37,211,102,0.3);border-radius:10px;cursor:pointer;transition:all 0.3s ease;" onmouseover="this.style.background='rgba(37,211,102,0.2)'" onmouseout="this.style.background='rgba(37,211,102,0.1)'">
+          <input type="radio" name="tipoMensaje" value="recordatorio" onchange="actualizarVistaPrevia()" style="margin-top:3px;">
+          <div>
+            <strong style="color:#ffc107;display:block;margin-bottom:5px;">⏰ Recordatorio de Vencimiento</strong>
+            <small style="color:#aaa;">Avisa que la factura vence en 3 días</small>
+          </div>
+        </label>
+        
+        <label style="display:flex;align-items:flex-start;gap:12px;padding:15px;background:rgba(37,211,102,0.1);border:2px solid rgba(37,211,102,0.3);border-radius:10px;cursor:pointer;transition:all 0.3s ease;" onmouseover="this.style.background='rgba(37,211,102,0.2)'" onmouseout="this.style.background='rgba(37,211,102,0.1)'">
+          <input type="radio" name="tipoMensaje" value="pago_recibido" onchange="actualizarVistaPrevia()" style="margin-top:3px;">
+          <div>
+            <strong style="color:#00ff00;display:block;margin-bottom:5px;">✅ Confirmación de Pago Recibido</strong>
+            <small style="color:#aaa;">Agradece el pago y confirma la recepción</small>
+          </div>
+        </label>
+        
+        <label style="display:flex;align-items:flex-start;gap:12px;padding:15px;background:rgba(37,211,102,0.1);border:2px solid rgba(37,211,102,0.3);border-radius:10px;cursor:pointer;transition:all 0.3s ease;" onmouseover="this.style.background='rgba(37,211,102,0.2)'" onmouseout="this.style.background='rgba(37,211,102,0.1)'">
+          <input type="radio" name="tipoMensaje" value="ofertas" onchange="actualizarVistaPrevia()" style="margin-top:3px;">
+          <div>
+            <strong style="color:#03bc89;display:block;margin-bottom:5px;">🎁 Saludo y Ofertas Especiales</strong>
+            <small style="color:#aaa;">Mensaje de marketing con promociones</small>
+          </div>
+        </label>
+        
+        <label style="display:flex;align-items:flex-start;gap:12px;padding:15px;background:rgba(37,211,102,0.1);border:2px solid rgba(37,211,102,0.3);border-radius:10px;cursor:pointer;transition:all 0.3s ease;" onmouseover="this.style.background='rgba(37,211,102,0.2)'" onmouseout="this.style.background='rgba(37,211,102,0.1)'">
+          <input type="radio" name="tipoMensaje" value="reconexion" onchange="actualizarVistaPrevia()" style="margin-top:3px;">
+          <div>
+            <strong style="color:#ff6b6b;display:block;margin-bottom:5px;">⚠️ Aviso de Reconexión</strong>
+            <small style="color:#aaa;">Notificación importante sobre el servicio</small>
+          </div>
+        </label>
+      </div>
+    </div>
+    
+    <!-- VISTA PREVIA -->
+    <div style="margin-bottom:25px;">
+      <label style="color:#25D366;display:block;margin-bottom:8px;font-weight:600;">👁️ Vista Previa:</label>
+      <div id="whatsappVistaPrevia" style="padding:15px;background:rgba(255,255,255,0.05);border:1px solid rgba(37,211,102,0.3);border-radius:10px;min-height:150px;white-space:pre-wrap;font-size:13px;color:#e0e0e0;line-height:1.6;"></div>
+    </div>
+    
+    <!-- BOTONES -->
+    <div style="display:flex;gap:10px;justify-content:flex-end;">
+      <button onclick="cerrarModalWhatsApp()" style="padding:12px 25px;background:#666;color:white;border:none;border-radius:10px;cursor:pointer;">Cancelar</button>
+      <button onclick="enviarWhatsApp()" style="padding:12px 25px;background:linear-gradient(135deg, #25D366 0%, #128C7E 100%);color:white;border:none;border-radius:10px;cursor:pointer;font-weight:600;display:flex;align-items:center;gap:8px;">
+        <span>💬</span>
+        <span>Enviar por WhatsApp</span>
+      </button>
+    </div>
+    
+    <div style="margin-top:20px;padding:15px;background:rgba(255,193,7,0.1);border:1px solid rgba(255,193,7,0.3);border-radius:10px;">
+      <small style="color:#ffc107;">
+        💡 <strong>Nota:</strong> Se abrirá WhatsApp Web o la app para enviar el mensaje.
+        El PDF se generará en otra pestaña para que lo descargues y adjuntes.
+      </small>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>

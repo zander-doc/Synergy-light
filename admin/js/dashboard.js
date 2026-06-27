@@ -55,9 +55,14 @@ function renderRecentClients(clients) {
       <td>${client.contractType}</td>
       <td class="status ${getStatusClass(client.status)}">${client.status}</td>
       <td>
-        <button class="btn-action" onclick="editClient('${client.clientId}')" title="Editar">✏️</button>
-        <button class="btn-action" onclick="createInvoice('${client.clientId}')" title="Generar Factura">📄</button>
-        <button class="btn-action" onclick="sendWhatsApp('${client.phone}','${client.name}')" title="WhatsApp">💬</button>
+        <div style="font-size:0.85rem;color:#888;">
+          ${client.startDate ? new Date(client.startDate).toLocaleDateString() : '-'}
+        </div>
+      </td>
+      <td>
+        <div style="font-size:0.85rem;color:#888;">
+          ${client.salesAgent || '-'}
+        </div>
       </td>
     `;
     tbody.appendChild(row);

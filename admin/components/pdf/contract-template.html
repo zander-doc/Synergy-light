@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contract - Synergy Light</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <style>
+    @media print {
+      @page { margin: 0; size: auto; }
+      * {
+        color: #000000 !important;
+      }
+      body, .contract-container, .contract-container * {
+        background: white !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+      body {
+        padding-top: 0 !important;
+      }
+      .top-toolbar { display: none !important; }
+      .contract-container {
+        box-shadow: none !important;
+        border: none !important;
+      }
+    }
+    
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: 'Arial', sans-serif;
+      background: #0a0a0a;
+      padding: 20px;
+      padding-top: 70px;
+      color: #ffffff;
+    }
+    
+    /* BARRA SUPERIOR FIJA */
+    .top-toolbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      background: rgba(10, 10, 10, 0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(3, 188, 137, 0.3);
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+    }
+    
+    .toolbar-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 25px;
+    }
+    
+    .toolbar-left {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+    
+    .toolbar-logo {
+      color: #03bc89;
+      font-weight: bold;
+      font-size: 16px;
+      letter-spacing: 1px;
+    }
+    
+    .toolbar-divider {
+      width: 1px;
+      height: 20px;
+      background: rgba(3, 188, 137, 0.3);
+    }
+    
+    .toolbar-title {
+      color: #ffffff;
+      font-size: 14px;
+      opacity: 0.8;
+    }
+    
+    .toolbar-right {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    
+    .toolbar-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      color: #ffffff;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+    
+    .toolbar-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.2);
+      transform: translateY(-1px);
+    }
+    
+    .toolbar-btn-primary {
+      background: rgba(3, 188, 137, 0.2);
+      border-color: rgba(3, 188, 137, 0.4);
+      color: #03bc89;
+    }
+    
+    .toolbar-btn-primary:hover {
+      background: rgba(3, 188, 137, 0.3);
+      border-color: #03bc89;
+      box-shadow: 0 0 20px rgba(3, 188, 137, 0.3);
+    }
+    
+    .toolbar-btn-secondary {
+      background: rgba(0, 102, 204, 0.2);
+      border-color: rgba(0, 102, 204, 0.4);
+      color: #66b3ff;
+    }
+    
+    .toolbar-btn-secondary:hover {
+      background: rgba(0, 102, 204, 0.3);
+      border-color: #0066cc;
+      box-shadow: 0 0 20px rgba(0, 102, 204, 0.3);
+    }
+    
+    .toolbar-btn-danger {
+      background: rgba(255, 68, 68, 0.2);
+      border-color: rgba(255, 68, 68, 0.4);
+      color: #ff6666;
+    }
+    
+    .toolbar-btn-danger:hover {
+      background: rgba(255, 68, 68, 0.3);
+      border-color: #ff4444;
+      box-shadow: 0 0 20px rgba(255, 68, 68, 0.3);
+    }
+    
+    .btn-icon { font-size: 16px; }
+    .btn-text { font-size: 13px; }
+    
+    /* CONTENEDOR DEL CONTRATO */
+    .contract-container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: #1a1a1a;
+      box-shadow: 0 0 40px rgba(3,188,137,0.3);
+      border: 2px solid #03bc89;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    
+    .banner {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+    
+    .content {
+      padding: 20px 25px;
+    }
+    
+    /* HEADER COMPACTO */
+    .header {
+      background: linear-gradient(135deg, #03bc89 0%, #04d99e 100%);
+      color: white;
+      padding: 12px 15px;
+      text-align: center;
+      margin-bottom: 15px;
+      border-radius: 6px;
+    }
+    
+    .header h1 {
+      font-size: 18px;
+      margin-bottom: 3px;
+    }
+    
+    .header h2 {
+      font-size: 12px;
+      font-weight: normal;
+    }
+    
+    /* TIPO DE SERVICIO */
+    .service-type {
+      background: linear-gradient(135deg, #03bc89 0%, #04d99e 100%);
+      color: white;
+      padding: 8px 12px;
+      margin-bottom: 15px;
+      border-radius: 5px;
+      font-weight: bold;
+      text-align: center;
+      font-size: 12px;
+      box-shadow: 0 0 10px rgba(3, 188, 137, 0.4);
+    }
+    
+    /* CAJA DE INFORMACIÓN COMPACTA (como factura) */
+    .info-section {
+      background: #0d1f17;
+      border: 2px solid #03bc89;
+      padding: 12px 15px;
+      margin-bottom: 15px;
+      border-radius: 6px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px 15px;
+    }
+    
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      color: #e0e0e0;
+      line-height: 1.4;
+    }
+    
+    .info-label {
+      font-weight: bold;
+      color: #03bc89;
+      flex-shrink: 0;
+    }
+    
+    .info-value {
+      color: #ffffff;
+      text-align: right;
+      word-break: break-word;
+    }
+    
+    /* SECCIONES DEL CONTRATO */
+    .section {
+      margin: 15px 0;
+    }
+    
+    .section h3 {
+      color: #03bc89;
+      border-bottom: 1px solid #03bc89;
+      padding-bottom: 5px;
+      margin-bottom: 8px;
+      font-size: 13px;
+    }
+    
+    .section p, .section ul {
+      font-size: 10px;
+      line-height: 1.5;
+      color: #e0e0e0;
+      margin-bottom: 6px;
+    }
+    
+    .section ul {
+      padding-left: 15px;
+    }
+    
+    .section li {
+      margin-bottom: 3px;
+    }
+    
+    /* FIRMAS */
+    .signatures {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 60px;
+      gap: 20px;
+    }
+    
+    .signature-box {
+      flex: 1;
+      text-align: center;
+    }
+    
+    .signature-line {
+      border-top: 2px solid #03bc89;
+      padding-top: 8px;
+      margin-top: 50px;
+    }
+    
+    .signature-img {
+      max-width: 120px;
+      height: auto;
+      margin-bottom: 3px;
+      position: relative;
+      top: -45px;
+    }
+    
+    .signature-name {
+      font-weight: bold;
+      font-size: 12px;
+      color: #ffffff;
+      margin-top: 3px;
+    }
+    
+    .signature-title {
+      font-size: 9px;
+      color: #03bc89;
+    }
+    
+    /* FOOTER */
+    .footer {
+      background: #000;
+      color: #ffffff;
+      text-align: center;
+      padding: 10px 15px;
+      margin-top: 20px;
+      font-size: 9px;
+      border-top: 2px solid #03bc89;
+    }
+    
+    .footer a {
+      color: #03bc89;
+      text-decoration: underline;
+    }
+    
+    @media (max-width: 768px) {
+      .btn-text { display: none; }
+      .toolbar-btn { padding: 8px 12px; }
+      .toolbar-logo { font-size: 14px; }
+      .toolbar-title { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <!-- BARRA SUPERIOR FIJA -->
+  <div class="top-toolbar no-print">
+    <div class="toolbar-container">
+      <div class="toolbar-left">
+        <div class="toolbar-logo">SYNERGY LIGHT</div>
+        <div class="toolbar-divider"></div>
+        <div class="toolbar-title">Electricity Service Contract</div>
+      </div>
+      <div class="toolbar-right">
+        <button class="toolbar-btn" onclick="window.location.href='../../contratos.html'" title="Volver">
+          <span class="btn-icon">←</span>
+          <span class="btn-text">Volver</span>
+        </button>
+        <button class="toolbar-btn toolbar-btn-primary" onclick="window.print()" title="Descargar PDF">
+          <span class="btn-icon">📄</span>
+          <span class="btn-text">Descargar PDF</span>
+        </button>
+        <button id="btnGuardarContrato" class="toolbar-btn toolbar-btn-secondary" onclick="guardarAutomaticoContrato()" title="Guardar en carpeta">
+          <span class="btn-icon">📂</span>
+          <span class="btn-text">Guardar</span>
+        </button>
+        <button class="toolbar-btn toolbar-btn-danger" onclick="window.location.href='../../dashboard.html'" title="Cerrar">
+          <span class="btn-icon">✖</span>
+          <span class="btn-text">Cerrar</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="contract-container">
+    <img src="../../assets/img/banner_contrato.webp" alt="Synergy Light" class="banner" onerror="this.style.display='none'">
+    
+    <div class="content">
+      <div class="header">
+        <h1>ELECTRICITY SERVICE CONTRACT</h1>
+        <h2>Synergy Light - Ilumina Tu Vida</h2>
+      </div>
+
+      <div class="service-type" id="field-serviceType">
+        VARIABLE RATE PLAN (Per kWh)
+      </div>
+
+      <!-- CAJA DE INFORMACIÓN COMPACTA -->
+      <div class="info-section">
+        <div class="info-row">
+          <span class="info-label">CONTRACT #:</span>
+          <span class="info-value" id="field-contractNumber"></span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">CUSTOMER ID:</span>
+          <span class="info-value" id="field-clientId"></span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">NAME:</span>
+          <span class="info-value" id="field-clientName"></span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">ADDRESS:</span>
+          <span class="info-value" id="field-address"></span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">PHONE:</span>
+          <span class="info-value" id="field-phone"></span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">EMAIL:</span>
+          <span class="info-value" id="field-email"></span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">START DATE:</span>
+          <span class="info-value" id="field-startDate"></span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">END DATE:</span>
+          <span class="info-value" id="field-endDate"></span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">DURATION:</span>
+          <span class="info-value" id="field-duration"></span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">DEPOSIT:</span>
+          <span class="info-value" id="field-deposit"></span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">AGENT:</span>
+          <span class="info-value" id="field-agent"></span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">SSID:</span>
+          <span class="info-value" id="field-ssid"></span>
+        </div>
+      </div>
+
+      <div class="section">
+        <h3>1. Purpose of the Contract</h3>
+        <p>Synergy Light agrees to supply electricity to the Customer at the property located at the address indicated above, according to the terms and conditions established in this contract and in compliance with Texas Business and Commerce Code.</p>
+      </div>
+
+      <div class="section">
+        <h3>2. Service Description</h3>
+        <p>The Customer subscribes to the Synergy Light electricity service plan as specified in Section 3 of this contract. Service will be provided in accordance with applicable Texas regulations.</p>
+      </div>
+
+      <div class="section">
+        <h3>3. Rates and Charges</h3>
+        <div id="field-ratesContent"></div>
+      </div>
+
+      <div class="section">
+        <h3>4. Billing and Payment</h3>
+        <p><strong>4.1 Monthly Billing:</strong> Customer will receive a monthly invoice via email or mail.</p>
+        <p><strong>4.2 Payment Due Date:</strong> Payment is due within 30 days from invoice date.</p>
+        <p><strong>4.3 Payment Methods:</strong> Zelle, Cash App, Money Order, or other agreed methods.</p>
+        <p><strong>4.4 Late Payment:</strong> Failure to pay on time may result in service suspension after proper notice as required by Texas law.</p>
+      </div>
+
+      <div class="section">
+        <h3>5. Deposit Requirements</h3>
+        <p><strong>5.1 Initial Deposit:</strong> A deposit of $<span id="field-depositAmount"></span> is required at contract signing.</p>
+        <p><strong>5.2 Deposit Refund:</strong> Deposit will be refunded after 12 months of on-time payments, minus any outstanding balances.</p>
+        <p><strong>5.3 Deposit Protection:</strong> Deposit is held in accordance with Texas regulations.</p>
+      </div>
+
+      <div class="section">
+        <h3>6. Term and Termination</h3>
+        <p><strong>6.1 Initial Term:</strong> This contract has an initial term of <span id="field-termMonths"></span> months, beginning on <span id="field-termStart"></span> and ending on <span id="field-termEnd"></span>.</p>
+        <p><strong>6.2 Automatic Renewal:</strong> Contract will automatically renew unless either party provides written notice at least 5 business days before the end of the term.</p>
+        <p><strong>6.3 Early Termination:</strong> Either party may terminate this contract with 5 business days written notice. No early termination fee applies.</p>
+        <p><strong>6.4 Termination for Cause:</strong> Synergy Light may suspend service for non-payment after providing proper notice as required by law.</p>
+      </div>
+
+      <div class="section">
+        <h3>7. Refund Policy</h3>
+        <p><strong>7.1 Billing Disputes:</strong> If Customer detects an incorrect charge, they must notify Synergy Light within 15 days from the date of the charge.</p>
+        <p><strong>7.2 Refund Processing:</strong> Synergy Light will review the complaint and, if error is detected, will issue refund within maximum 15 days.</p>
+        <p><strong>7.3 Administrative Fee:</strong> Synergy Light may deduct up to 10% of refund amount for administrative expenses, if applicable.</p>
+      </div>
+
+      <div class="section">
+        <h3>8. Limitations and Conditions</h3>
+        <p><strong>8.1 Service Limitations:</strong> The 30% promotional rate applies only to fixed-rate programs. Charges for special connections not included.</p>
+        <p><strong>8.2 Customer Responsibilities:</strong> Provide accurate meter readings, maintain safe access to meter, report outages immediately.</p>
+        <p><strong>8.3 Force Majeure:</strong> Synergy Light is not liable for service interruptions due to circumstances beyond reasonable control.</p>
+      </div>
+
+      <div class="section">
+        <h3>9. Texas Business and Commerce Code</h3>
+        <p>This contract is governed by and construed in accordance with the laws of the State of Texas and the Texas Business and Commerce Code. Any disputes arising from this contract shall be resolved in the courts of the corresponding territorial organization in Texas.</p>
+      </div>
+
+      <div class="section">
+        <h3>10. Other Terms and Conditions</h3>
+        <p><strong>10.1 Entire Agreement:</strong> This contract constitutes the entire agreement between the parties and supersedes all prior agreements.</p>
+        <p><strong>10.2 Modifications:</strong> Any modifications must be in writing and signed by both parties.</p>
+        <p><strong>10.3 Notices:</strong> All notices must be in writing and delivered to the addresses specified in this contract.</p>
+        <p><strong>10.4 Contact Information:</strong> Synergy Light | Phone: +1 (409) 280-0661 | Email: synergylightservices@gmail.com | Web: synergylightservices.com</p>
+      </div>
+
+      <!-- FIRMAS -->
+      <div class="signatures" style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 0px; gap: 10px;">
+  <div class="signature-box" style="flex: 1; text-align: center;">
+    <img src="../../assets/img/firma.webp" alt="Mick Edwards Signature" style="max-width: 120px; height: auto; display: block; margin: 0 auto -20px auto;" onerror="this.style.display='none'">
+    <div style="border-top: 2px solid #03bc89; padding-top: 10px;">
+      <div style="font-weight: bold; font-size: 12px; color: #ffffff; margin-top: 5px;">Mick Edwards</div>
+      <div style="font-size: 9px; color: #03bc89;">Supplier's Signature<br>Synergy Light</div>
+    </div>
+  </div>
+  <div class="signature-box" style="flex: 1; text-align: center;">
+    <div style="height: 60px;"></div>
+    <div style="border-top: 2px solid #03bc89; padding-top: 10px;">
+      <div style="font-weight: bold; font-size: 12px; color: #ffffff; margin-top: 15px;" id="field-clientSignature"></div>
+      <div style="font-size: 9px; color: #03bc89;">Client's Signature</div>
+    </div>
+  </div>
+</div>
+
+      <div class="footer">
+        <p><strong>SYNERGY LIGHT</strong> - Ilumina Tu Vida</p>
+        <p>📞 +1 (409) 280-0661 | ✉️ synergylightservices@gmail.com |  <a href="https://synergylightservices.com">synergylightservices.com</a></p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function cargarDatosContrato() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const dataParam = urlParams.get('data');
+      
+      if (!dataParam) return;
+      
+      try {
+        const data = JSON.parse(decodeURIComponent(escape(atob(dataParam))));
+        
+        document.getElementById('field-contractNumber').textContent = data.numeroContrato || 'N/A';
+        document.getElementById('field-clientId').textContent = data.clientId || 'N/A';
+        document.getElementById('field-clientName').textContent = data.clientName || 'N/A';
+        document.getElementById('field-address').textContent = data.clientAddress || 'N/A';
+        document.getElementById('field-phone').textContent = data.clientPhone || 'N/A';
+        document.getElementById('field-email').textContent = data.clientEmail || 'N/A';
+        document.getElementById('field-startDate').textContent = new Date(data.fechaInicio).toLocaleDateString('en-US');
+        document.getElementById('field-endDate').textContent = new Date(data.fechaFin).toLocaleDateString('en-US');
+        document.getElementById('field-duration').textContent = (data.duracion || '12') + ' months';
+        document.getElementById('field-deposit').textContent = '$' + (data.deposito || '50');
+        document.getElementById('field-agent').textContent = data.agente || 'AGENTE CARMEN VARGAS';
+        document.getElementById('field-ssid').textContent = data.ssid || 'N/A';
+        document.getElementById('field-clientSignature').textContent = data.clientName || '';
+        
+        const serviceTypeEl = document.getElementById('field-serviceType');
+        if (data.tipo === 'fija') {
+          serviceTypeEl.textContent = 'FIXED RATE PLAN (Monthly Flat Rate)';
+        } else {
+          serviceTypeEl.textContent = 'VARIABLE RATE PLAN (Per kWh)';
+        }
+        
+        const ratesContent = document.getElementById('field-ratesContent');
+        const deposit = data.deposito || '50';
+        
+        if (data.tipo === 'fija') {
+          ratesContent.innerHTML = `
+            <p>The Customer agrees to subscribe to the Synergy Light <strong>Fixed Rate Plan</strong>, which consists of:</p>
+            <ul>
+              <li><strong>Fixed Monthly Payment:</strong> To be determined based on average consumption</li>
+              <li><strong>Base Charge:</strong> $4.95 per month</li>
+              <li><strong>AEP Texas Central Delivery Charges:</strong> $3.21 per month and 6.0380¢ per kWh</li>
+              <li><strong>Deposit:</strong> $${deposit}</li>
+            </ul>
+            <p><em>Fixed monthly payment regardless of consumption. 30% discount during promotional period (first 3 months).</em></p>
+          `;
+        } else {
+          ratesContent.innerHTML = `
+            <p>The Customer agrees to subscribe to the Synergy Light <strong>Variable Rate Plan</strong>, which consists of:</p>
+            <ul>
+              <li><strong>Energy Charge:</strong> 10.0039¢ per kWh</li>
+              <li><strong>Base Charge:</strong> $4.95 per month</li>
+              <li><strong>AEP Texas Central Delivery Charges:</strong> $3.21 per month and 6.0380¢ per kWh</li>
+              <li><strong>Deposit:</strong> $${deposit} per kilowatt-hour (kWh) usage</li>
+            </ul>
+            <p><em>Rates may vary monthly based on market conditions and regulatory changes. Customer pays for actual consumption.</em></p>
+          `;
+        }
+        
+        document.getElementById('field-termMonths').textContent = data.duracion || '12';
+        document.getElementById('field-termStart').textContent = new Date(data.fechaInicio).toLocaleDateString('en-US');
+        document.getElementById('field-termEnd').textContent = new Date(data.fechaFin).toLocaleDateString('en-US');
+        document.getElementById('field-depositAmount').textContent = deposit;
+        
+      } catch (error) {
+        console.error('Error loading contract data:', error);
+      }
+    }
+    
+    async function guardarAutomaticoContrato() {
+      console.log('📂 Iniciando guardado automático de contrato...');
+      
+      try {
+        if (typeof html2pdf === 'undefined') {
+          alert('❌ Error: La librería de PDF no está cargada.\n\nRecarga la página (Ctrl+Shift+R)');
+          return;
+        }
+        
+        if (!window.showDirectoryPicker) {
+          alert('⚠️ Tu navegador no soporta guardado automático.\n\nUsa Chrome o Edge.');
+          return;
+        }
+        
+        const contractNumber = document.getElementById('field-contractNumber').textContent;
+        const clientName = document.getElementById('field-clientName').textContent;
+        const clientId = document.getElementById('field-clientId').textContent;
+        
+        alert('📂 Selecciona la carpeta BASE donde se guardarán los contratos.');
+        const carpetaBaseHandle = await window.showDirectoryPicker();
+        
+        const carpetaCliente = await carpetaBaseHandle.getDirectoryHandle(
+          clientName + ' (' + clientId + ')', 
+          { create: true }
+        );
+        
+        const fileName = 'Contrato_' + contractNumber + '_' + clientName.replace(/\s+/g, '_') + '.pdf';
+        
+        const btnGuardar = document.getElementById('btnGuardarContrato');
+        const textoOriginal = btnGuardar.innerHTML;
+        btnGuardar.innerHTML = '<span class="btn-icon">⏳</span><span class="btn-text">Generando...</span>';
+        btnGuardar.disabled = true;
+        
+        const element = document.querySelector('.contract-container');
+        
+        if (!element) {
+          throw new Error('No se encontró el elemento .contract-container');
+        }
+        
+        const opt = {
+          margin: 0,
+          filename: fileName,
+          image: { type: 'jpeg', quality: 0.98 },
+          html2canvas: { 
+            scale: 2, 
+            useCORS: true, 
+            logging: false,
+            backgroundColor: '#ffffff'
+          },
+          jsPDF: { 
+            unit: 'mm', 
+            format: 'a4', 
+            orientation: 'portrait'
+          }
+        };
+        
+        console.log('🎨 Generando PDF del contrato...');
+        const pdfBlob = await html2pdf().set(opt).from(element).outputPdf('blob');
+        
+        console.log('✅ PDF generado, tamaño:', pdfBlob.size, 'bytes');
+        
+        if (pdfBlob.size === 0) {
+          throw new Error('El PDF generado está vacío');
+        }
+        
+        console.log('💾 Escribiendo archivo...');
+        const fileHandle = await carpetaCliente.getFileHandle(fileName, { create: true });
+        const writable = await fileHandle.createWritable();
+        await writable.write(pdfBlob);
+        await writable.close();
+        
+        btnGuardar.innerHTML = textoOriginal;
+        btnGuardar.disabled = false;
+        
+        alert('✅ Contrato guardado exitosamente\n\n📁 ' + carpetaCliente.name + '\n📄 ' + fileName);
+        
+      } catch (error) {
+        console.error('❌ Error guardando contrato:', error);
+        
+        const btnGuardar = document.getElementById('btnGuardarContrato');
+        if (btnGuardar) {
+          btnGuardar.innerHTML = '<span class="btn-icon">📂</span><span class="btn-text">Guardar</span>';
+          btnGuardar.disabled = false;
+        }
+        
+        if (error.name !== 'AbortError') {
+          alert('❌ Error al guardar:\n\n' + error.message);
+        }
+      }
+    }
+    
+    window.addEventListener('load', cargarDatosContrato);
+    window.guardarAutomaticoContrato = guardarAutomaticoContrato;
+  </script>
+</body>
+</html>

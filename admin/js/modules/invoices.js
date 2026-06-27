@@ -322,9 +322,7 @@ function renderizarTablaFacturas() {
       '<td>' + new Date(inv.issueDate).toLocaleDateString() + '</td>' +
       '<td><span class="status-badge ' + statusClass + '">' + inv.status + '</span></td>' +
       '<td style="display:flex;gap:5px;justify-content:center;">' +
-      '<button class="btn-action" onclick="descargarFactura(\'' + inv.invoiceNumber + '\')" title="Descargar PDF">📄</button>' +
-      '<button class="btn-action" onclick="enviarFacturaEmail(\'' + inv.clientEmail + '\', \'' + inv.clientName + '\', \'' + inv.invoiceNumber + '\')" title="Enviar Email">📧</button>' +
-      '<button class="btn-action" onclick="enviarFacturaWhatsApp(\'' + inv.clientPhone + '\', \'' + inv.clientName + '\', \'' + inv.invoiceNumber + '\', \'' + inv.total + '\')" title="Enviar WhatsApp">💬</button>' +
+      '<button class="btn-action btn-view" onclick="verFactura(\'' + inv.invoiceNumber + '\')" title="Ver Factura">👁️</button>' +
       '<button class="btn-action btn-delete" onclick="eliminarFactura(\'' + inv.invoiceNumber + '\')" title="Eliminar">🗑️</button>' +
       '</td>' +
       '</tr>';
@@ -370,7 +368,28 @@ function eliminarFactura(numeroFactura) {
   }
 }
 
+// ========================
+// VER FACTURA (navegar al template PDF)
+// ========================
+function verFactura(numeroFactura) {
+  console.log('👁️ Viendo factura:', numeroFactura);
+  
+  const invoices = JSON.parse(localStorage.getItem('invoices') || '[]');
+  const factura = invoices.find(inv => inv.invoiceNumber === numeroFactura);
+  
+  if (!factura) {
+    alert('❌ Factura no encontrada');
+    return;
+  }
+  
+  // Codificar datos en URL
+  const datosCodificados = btoa(unescape(encodeURIComponent(JSON.stringify(factura))));
+  const templateURL = 'components/pdf/invoice-template.html?data=' + datosCodificados;
+  window.location.href = templateURL;
+}
+
 // Hacer funciones globales
+window.verFactura = verFactura;
 window.loadInvoiceModal = loadInvoiceModal;
 window.eliminarFactura = eliminarFactura;
 window.abrirModalFactura = abrirModalFactura;

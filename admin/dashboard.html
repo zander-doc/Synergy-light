@@ -32,7 +32,8 @@
         <h2>Panel Administrativo</h2>
         <div>
           <button class="btn-primary" onclick="window.location.href='clients.html?new=1'" style="margin-right:10px;">+ Nuevo Cliente</button>
-          <span id="adminUser" class="admin-user">Administrador</span>
+          <span id="currentUser" class="admin-user"></span>
+          <button onclick="cerrarSesion()" style="padding:8px 16px;background:rgba(255,68,68,0.2);border:1px solid rgba(255,68,68,0.4);color:#ff6666;border-radius:8px;cursor:pointer;font-size:13px;">Cerrar Sesión</button>
         </div>
       </section>
 

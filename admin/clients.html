@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
@@ -314,7 +314,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h2 id="modalTitle">➕ Nuevo Cliente</h2>
-        <button class="btn-close" onclick="cerrarModalCliente()">×</button>
+        <button class="btn-close" onclick="cancelarEdicion()">×</button>
       </div>
       
       <form id="formCliente">
@@ -406,7 +406,7 @@
         </div>
         
         <div class="form-actions">
-          <button type="button" class="btn-cancel" onclick="cerrarModalCliente()">Cancelar</button>
+          <button type="button" class="btn-cancel" onclick="cancelarEdicion()">Cancelar</button>
           <button type="submit" class="btn-save">💾 Guardar Cliente</button>
         </div>
       </form>
@@ -422,27 +422,58 @@
   <script src="js/modules/invoices.js"></script>
 
   <script>
+    // ═══════════════════════════════════════════════════════
+    // VARIABLES GLOBALES
+    // ═══════════════════════════════════════════════════════
+
+    let editMode = false;
+    let editingClientId = '';
+
+    // ═══════════════════════════════════════════════════════
+    // FUNCIONES DEL MODAL
+    // ═══════════════════════════════════════════════════════
+
     function abrirModalNuevoCliente() {
+      editMode = false;
+      editingClientId = '';
+      
       document.getElementById('modalTitle').textContent = '➕ Nuevo Cliente';
       document.getElementById('formCliente').reset();
       document.getElementById('clienteId').value = '';
       document.getElementById('modalCliente').style.display = 'block';
       document.body.style.overflow = 'hidden';
     }
-    
+
     function cerrarModalCliente() {
       document.getElementById('modalCliente').style.display = 'none';
       document.body.style.overflow = 'auto';
       document.getElementById('formCliente').reset();
+      editMode = false;
+      editingClientId = '';
     }
-    
+
+    function cancelarEdicion() {
+      console.log('❌ Cancelando edición...');
+      document.getElementById('modalCliente').style.display = 'none';
+      document.body.style.overflow = 'auto';
+      document.getElementById('formCliente').reset();
+      editMode = false;
+      editingClientId = '';
+      document.getElementById('modalTitle').textContent = '➕ Nuevo Cliente';
+      console.log('✅ Modal cerrado y estado limpiado');
+    }
+
     window.onclick = function(event) {
       const modal = document.getElementById('modalCliente');
       if (event.target === modal) {
-        cerrarModalCliente();
+        cancelarEdicion();
       }
     }
-    
+
+    // ═══════════════════════════════════════════════════════
+    // GENERAR ID AUTOMÁTICO
+    // ═══════════════════════════════════════════════════════
+
     function generarIdCliente(nombreCompleto) {
       if (!nombreCompleto || nombreCompleto.trim().length < 3) {
         return '';
@@ -478,21 +509,68 @@
       
       return nuevoId;
     }
-    
+
+    // Auto-generar ID cuando escribe el nombre
     document.getElementById('clienteNombre').addEventListener('input', function() {
       const nombre = this.value.trim();
-      if (nombre.length >= 3) {
+      if (nombre.length >= 3 && !editMode) {
         const generatedId = generarIdCliente(nombre);
         document.getElementById('clienteId').value = generatedId;
-      } else {
-        document.getElementById('clienteId').value = '';
       }
     });
-    
+
+    // ═══════════════════════════════════════════════════════
+    // EDITAR CLIENTE (CORREGIDO)
+    // ═══════════════════════════════════════════════════════
+
+    function editarCliente(clientId) {
+      console.log('✏️ Editando cliente:', clientId);
+      
+      const clientes = JSON.parse(localStorage.getItem('clients') || '[]');
+      const client = clientes.find(function(c) { return c.clientId === clientId; });
+      
+      if (!client) {
+        alert('❌ Cliente no encontrado');
+        return;
+      }
+      
+      // Marcar modo edición
+      editMode = true;
+      editingClientId = clientId;
+      
+      // Abrir modal
+      document.getElementById('modalTitle').textContent = '✏️ Editar Cliente: ' + client.name;
+      document.getElementById('modalCliente').style.display = 'block';
+      document.body.style.overflow = 'hidden';
+      
+      // Llenar campos
+      document.getElementById('clienteId').value = client.clientId;
+      document.getElementById('clienteNombre').value = client.name;
+      document.getElementById('clienteTelefono').value = client.phone;
+      document.getElementById('clienteDireccion').value = client.address;
+      document.getElementById('clienteEmail').value = client.email || '';
+      document.getElementById('clienteContrato').value = client.contractType;
+      document.getElementById('clienteSsid').value = client.ssid;
+      document.getElementById('clienteAgente').value = client.salesAgent;
+      document.getElementById('clientePago').value = client.paymentMethod;
+      document.getElementById('clienteDeposito').value = client.deposit || 50;
+      document.getElementById('clienteFechaInicio').value = client.startDate;
+      document.getElementById('clienteFechaFin').value = client.endDate;
+      document.getElementById('clienteStatus').value = client.status;
+      
+      console.log('✅ Cliente cargado en modal');
+    }
+
+    // ═══════════════════════════════════════════════════════
+    // GUARDAR CLIENTE (CREAR O ACTUALIZAR)
+    // ═══════════════════════════════════════════════════════
+
     document.getElementById('formCliente').addEventListener('submit', function(e) {
       e.preventDefault();
       
-      const clientId = document.getElementById('clienteId').value;
+      console.log('💾 Guardando cliente... Modo:', editMode ? 'EDICIÓN' : 'CREACIÓN');
+      
+      const clientId = document.getElementById('clienteId').value.trim();
       const nombre = document.getElementById('clienteNombre').value.trim();
       const telefono = document.getElementById('clienteTelefono').value.trim();
       const direccion = document.getElementById('clienteDireccion').value.trim();
@@ -506,47 +584,107 @@
       const fechaFin = document.getElementById('clienteFechaFin').value;
       const status = document.getElementById('clienteStatus').value;
       
+      // Validar campos obligatorios
       if (!nombre || !telefono || !direccion || !contrato || !ssid || !agente || !pago || !fechaInicio || !fechaFin || !status) {
         alert('❌ Por favor complete todos los campos obligatorios marcados con *');
         return;
       }
       
-      const clientes = JSON.parse(localStorage.getItem('clients') || '[]');
+      let clientes = JSON.parse(localStorage.getItem('clients') || '[]');
       
-      const existeMismoNombre = clientes.find(function(c) { 
-        return c.name.toLowerCase() === nombre.toLowerCase() && c.phone === telefono; 
-      });
-      
-      if (existeMismoNombre) {
-        alert('⚠️ Ya existe un cliente registrado con este nombre y teléfono.\n\nCliente existente:\nID: ' + existeMismoNombre.clientId + '\nNombre: ' + existeMismoNombre.name);
-        return;
+      if (editMode && editingClientId) {
+        // ═══════════════════════════════════════════════════
+        // MODO EDICIÓN: Actualizar cliente existente
+        // ═══════════════════════════════════════════════════
+        
+        const index = clientes.findIndex(function(c) { return c.clientId === editingClientId; });
+        
+        if (index === -1) {
+          alert('❌ Cliente no encontrado para actualizar');
+          return;
+        }
+        
+        // Verificar que no haya otro cliente con el mismo nombre/teléfono
+        const existeMismoNombre = clientes.find(function(c) { 
+          return c.name.toLowerCase() === nombre.toLowerCase() && 
+                 c.phone === telefono && 
+                 c.clientId !== editingClientId; 
+        });
+        
+        if (existeMismoNombre) {
+          alert('⚠️ Ya existe un cliente registrado con este nombre y teléfono.\n\nCliente existente:\nID: ' + existeMismoNombre.clientId + '\nNombre: ' + existeMismoNombre.name);
+          return;
+        }
+        
+        // Actualizar cliente
+        clientes[index] = {
+          clientId: editingClientId,
+          name: nombre,
+          phone: telefono,
+          email: email,
+          address: direccion,
+          contractType: contrato,
+          ssid: ssid,
+          salesAgent: agente,
+          paymentMethod: pago,
+          deposit: deposito,
+          startDate: fechaInicio,
+          endDate: fechaFin,
+          status: status,
+          createdAt: clientes[index].createdAt,
+          updatedAt: new Date().toISOString()
+        };
+        
+        localStorage.setItem('clients', JSON.stringify(clientes));
+        alert('✅ Cliente actualizado exitosamente');
+        
+      } else {
+        // ═══════════════════════════════════════════════════
+        // MODO CREACIÓN: Agregar nuevo cliente
+        // ═══════════════════════════════════════════════════
+        
+        // Verificar si ya existe un cliente con el mismo nombre y teléfono
+        const existeMismoNombre = clientes.find(function(c) { 
+          return c.name.toLowerCase() === nombre.toLowerCase() && c.phone === telefono; 
+        });
+        
+        if (existeMismoNombre) {
+          alert('⚠️ Ya existe un cliente registrado con este nombre y teléfono.\n\nCliente existente:\nID: ' + existeMismoNombre.clientId + '\nNombre: ' + existeMismoNombre.name);
+          return;
+        }
+        
+        // Crear nuevo cliente
+        const newClient = {
+          clientId: clientId || generarIdCliente(nombre),
+          name: nombre,
+          phone: telefono,
+          email: email,
+          address: direccion,
+          contractType: contrato,
+          ssid: ssid,
+          salesAgent: agente,
+          paymentMethod: pago,
+          deposit: deposito,
+          startDate: fechaInicio,
+          endDate: fechaFin,
+          status: status,
+          createdAt: new Date().toISOString()
+        };
+        
+        clientes.push(newClient);
+        localStorage.setItem('clients', JSON.stringify(clientes));
+        alert('✅ Cliente guardado exitosamente\n\nID: ' + newClient.clientId + '\nNombre: ' + newClient.name);
       }
       
-      const newClient = {
-        clientId: clientId || generarIdCliente(nombre),
-        name: nombre,
-        phone: telefono,
-        email: email,
-        address: direccion,
-        contractType: contrato,
-        ssid: ssid,
-        salesAgent: agente,
-        paymentMethod: pago,
-        deposit: deposito,
-        startDate: fechaInicio,
-        endDate: fechaFin,
-        status: status
-      };
-      
-      clientes.push(newClient);
-      localStorage.setItem('clients', JSON.stringify(clientes));
-      
-      alert('✅ Cliente guardado exitosamente\n\nID: ' + newClient.clientId + '\nNombre: ' + newClient.name);
-      
-      cerrarModalCliente();
+      // Cerrar modal y limpiar
+      cancelarEdicion();
       cargarClientes();
     });
-    
+
+    // ═══════════════════════════════════════════════════════
+    // CARGAR CLIENTES
+    // ═══════════════════════════════════════════════════════
+
     function cargarClientes() {
       console.log('🚀 Cargando clientes...');
       
@@ -583,65 +721,11 @@
       
       console.log('✅', clientes.length, 'clientes cargados');
     }
-    
-    function editarCliente(clientId) {
-      const clientes = JSON.parse(localStorage.getItem('clients') || '[]');
-      const client = clientes.find(function(c) { return c.clientId === clientId; });
-      
-      if (!client) {
-        alert('❌ Cliente no encontrado');
-        return;
-      }
-      
-      document.getElementById('modalTitle').textContent = '✏️ Editar Cliente';
-      document.getElementById('clienteId').value = client.clientId;
-      document.getElementById('clienteNombre').value = client.name;
-      document.getElementById('clienteTelefono').value = client.phone;
-      document.getElementById('clienteDireccion').value = client.address;
-      document.getElementById('clienteEmail').value = client.email || '';
-      document.getElementById('clienteContrato').value = client.contractType;
-      document.getElementById('clienteSsid').value = client.ssid;
-      document.getElementById('clienteAgente').value = client.salesAgent;
-      document.getElementById('clientePago').value = client.paymentMethod;
-      document.getElementById('clienteDeposito').value = client.deposit || 50;
-      document.getElementById('clienteFechaInicio').value = client.startDate;
-      document.getElementById('clienteFechaFin').value = client.endDate;
-      document.getElementById('clienteStatus').value = client.status;
-      
-      document.getElementById('modalCliente').style.display = 'block';
-      document.body.style.overflow = 'hidden';
-      
-      const form = document.getElementById('formCliente');
-      form.onsubmit = function(e) {
-        e.preventDefault();
-        
-        const updatedClient = {
-          clientId: client.clientId,
-          name: document.getElementById('clienteNombre').value.trim(),
-          phone: document.getElementById('clienteTelefono').value.trim(),
-          email: document.getElementById('clienteEmail').value.trim(),
-          address: document.getElementById('clienteDireccion').value.trim(),
-          contractType: document.getElementById('clienteContrato').value,
-          ssid: document.getElementById('clienteSsid').value.trim(),
-          salesAgent: document.getElementById('clienteAgente').value,
-          paymentMethod: document.getElementById('clientePago').value,
-          deposit: parseFloat(document.getElementById('clienteDeposito').value) || 50,
-          startDate: document.getElementById('clienteFechaInicio').value,
-          endDate: document.getElementById('clienteFechaFin').value,
-          status: document.getElementById('clienteStatus').value
-        };
-        
-        const index = clientes.findIndex(function(c) { return c.clientId === clientId; });
-        if (index !== -1) {
-          clientes[index] = updatedClient;
-          localStorage.setItem('clients', JSON.stringify(clientes));
-          alert('✅ Cliente actualizado exitosamente');
-          cerrarModalCliente();
-          cargarClientes();
-        }
-      };
-    }
-    
+
+    // ═══════════════════════════════════════════════════════
+    // ELIMINAR CLIENTE
+    // ═══════════════════════════════════════════════════════
+
     function eliminarCliente(clientId) {
       if (!confirm('⚠️ ¿Está seguro de eliminar este cliente?\n\nEsta acción no se puede deshacer.')) {
         return;
@@ -660,7 +744,11 @@
       alert('✅ Cliente eliminado exitosamente');
       cargarClientes();
     }
-    
+
+    // ═══════════════════════════════════════════════════════
+    // ENVIAR WHATSAPP
+    // ═══════════════════════════════════════════════════════
+
     function enviarWhatsApp(phone, name) {
       const synergyPhone = '14092800661';
       const message = 'Hola ' + name + ', le contactamos de Synergy Light. ¿En qué podemos ayudarle?';
@@ -676,7 +764,11 @@
       
       window.open(url, '_blank');
     }
-    
+
+    // ═══════════════════════════════════════════════════════
+    // ENVIAR EMAIL
+    // ═══════════════════════════════════════════════════════
+
     function enviarEmail(email, name) {
       if (!email) {
         alert('⚠️ Este cliente no tiene email registrado');
@@ -690,29 +782,11 @@
       const mailtoUrl = 'mailto:' + synergyEmail + '?to=' + email + '&subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
       window.open(mailtoUrl, '_blank');
     }
-    
-    function abrirFacturaDesdeCliente(clientId) {
-      const url = 'invoices.html?client=' + encodeURIComponent(clientId);
-      window.location.href = url;
-    }
-    
-    window.addEventListener('load', function() {
-      console.log('🚀 Cargando página de clientes...');
-      cargarClientes();
-      console.log('✅ Clientes cargados correctamente');
-    });
-    
-    window.abrirModalNuevoCliente = abrirModalNuevoCliente;
-    window.cerrarModalCliente = cerrarModalCliente;
-    window.editarCliente = editarCliente;
-    window.eliminarCliente = eliminarCliente;
-    window.enviarWhatsApp = enviarWhatsApp;
-    window.enviarEmail = enviarEmail;
-    window.generarIdCliente = generarIdCliente;
-    window.abrirFacturaDesdeCliente = abrirFacturaDesdeCliente;
-    window.cargarClientes = cargarClientes;
-    
-    // Función mejorada para enviar email con mejor formato
+
+    // ═══════════════════════════════════════════════════════
+    // ENVIAR EMAIL MEJORADO (CON FORMATO PROFESIONAL)
+    // ═══════════════════════════════════════════════════════
+
     function enviarEmailMejorado(email, name, facturaData) {
       if (!email) {
         alert('⚠️ Este cliente no tiene email registrado');
@@ -767,6 +841,38 @@
       const mailtoUrl = 'mailto:' + email + '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
       window.open(mailtoUrl, '_blank');
     }
+
+    // ═══════════════════════════════════════════════════════
+    // ABRIR FACTURA DESDE CLIENTE
+    // ═══════════════════════════════════════════════════════
+
+    function abrirFacturaDesdeCliente(clientId) {
+      const url = 'invoices.html?client=' + encodeURIComponent(clientId);
+      window.location.href = url;
+    }
+
+    // ═══════════════════════════════════════════════════════
+    // INICIALIZACIÓN
+    // ═══════════════════════════════════════════════════════
+
+    window.addEventListener('load', function() {
+      console.log('🚀 Cargando página de clientes...');
+      cargarClientes();
+      console.log('✅ Clientes cargados correctamente');
+    });
+
+    // Exportar funciones globales
+    window.abrirModalNuevoCliente = abrirModalNuevoCliente;
+    window.cerrarModalCliente = cerrarModalCliente;
+    window.cancelarEdicion = cancelarEdicion;
+    window.editarCliente = editarCliente;
+    window.eliminarCliente = eliminarCliente;
+    window.enviarWhatsApp = enviarWhatsApp;
+    window.enviarEmail = enviarEmail;
+    window.enviarEmailMejorado = enviarEmailMejorado;
+    window.generarIdCliente = generarIdCliente;
+    window.abrirFacturaDesdeCliente = abrirFacturaDesdeCliente;
+    window.cargarClientes = cargarClientes;
   </script>
 </body>
 </html>

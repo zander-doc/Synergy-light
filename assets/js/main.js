@@ -1,6 +1,6 @@
 /* ============================================================
    SYNERGY LIGHT - Main JavaScript
-   Empresa de Energía Eléctrica Residencial en Texas
+   Empresa de EnergÃ­a ElÃ©ctrica Residencial en Texas
    ============================================================ */
 
 'use strict';
@@ -130,9 +130,9 @@ function initParticles() {
   }
 }
 
-/* ═══════════════════════════════════════════════════════
+/* â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�
    HEADER PREMIUM - FUNCIONALIDAD
-   ═══════════════════════════════════════════════════════ */
+   â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•� */
 
 function initHeaderPremium() {
   const header = document.getElementById('header');
@@ -150,7 +150,7 @@ function initHeaderPremium() {
     });
   }
   
-  // Menú hamburguesa funcionalidad
+  // MenÃº hamburguesa funcionalidad
   if (hamburger && navMenu) {
     hamburger.addEventListener('click', function() {
       this.classList.toggle('active');
@@ -158,7 +158,7 @@ function initHeaderPremium() {
       document.body.style.overflow = navMenu.classList.contains('active') ? 'hidden' : '';
     });
     
-    // Cerrar menú al hacer click en un link
+    // Cerrar menÃº al hacer click en un link
     const navLinks = navMenu.querySelectorAll('.nav-link');
     navLinks.forEach(link => {
       link.addEventListener('click', () => {
@@ -168,7 +168,7 @@ function initHeaderPremium() {
       });
     });
     
-    // Cerrar menú al hacer click fuera
+    // Cerrar menÃº al hacer click fuera
     document.addEventListener('click', (e) => {
       if (!navMenu.contains(e.target) && !hamburger.contains(e.target)) {
         hamburger.classList.remove('active');
@@ -187,18 +187,18 @@ function initHeaderPremium() {
       // Remover active de todos los botones
       langBtns.forEach(b => b.classList.remove('active'));
       
-      // Agregar active al botón clickeado
+      // Agregar active al botÃ³n clickeado
       this.classList.add('active');
       
-      // Aquí puedes agregar la lógica de traducción
+      // AquÃ­ puedes agregar la lÃ³gica de traducciÃ³n
       console.log(`Idioma cambiado a: ${lang}`);
     });
   });
 }
 
-/* ═══════════════════════════════════════════════════════
+/* â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�
    EFECTO RIPPLE EN BOTONES PREMIUM
-   ═══════════════════════════════════════════════════════ */
+   â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•� */
 
 document.addEventListener('DOMContentLoaded', function() {
   document.querySelectorAll('.btn-hero-premium').forEach(button => {
@@ -225,41 +225,41 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 });
 
-/* ═══════════════════════════════════════════════════════
-   VERIFICACIÓN DE CÓDIGO POSTAL
-   ═══════════════════════════════════════════════════════ */
+/* â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�
+   VERIFICACIÃ“N DE CÃ“DIGO POSTAL
+   â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•� */
 
 function verificarCodigo() {
   const zipInput = document.getElementById('zipCode');
   const zipStatus = document.getElementById('zipStatus');
   const zip = zipInput.value.trim();
   
-  // Validar formato (5 dígitos)
+  // Validar formato (5 dÃ­gitos)
   const zipRegex = /^\d{5}$/;
   
   if (!zip) {
-    zipStatus.textContent = '⚠️ Ingresa un código postal';
+    zipStatus.textContent = 'âš ï¸� Ingresa un cÃ³digo postal';
     zipStatus.className = 'paso-status error';
     return;
   }
   
   if (!zipRegex.test(zip)) {
-    zipStatus.textContent = '❌ Código postal inválido (5 dígitos)';
+    zipStatus.textContent = 'â�Œ CÃ³digo postal invÃ¡lido (5 dÃ­gitos)';
     zipStatus.className = 'paso-status error';
     return;
   }
   
-  // Simular verificación (en producción, conectar con API)
-  zipStatus.textContent = '⏳ Verificando...';
+  // Simular verificaciÃ³n (en producciÃ³n, conectar con API)
+  zipStatus.textContent = 'â�³ Verificando...';
   zipStatus.className = 'paso-status';
   
   setTimeout(() => {
-    // Simulación: códigos de Texas comienzan con 75, 76, 77, 78, 79
+    // SimulaciÃ³n: cÃ³digos de Texas comienzan con 75, 76, 77, 78, 79
     const texasPrefixes = ['75', '76', '77', '78', '79'];
     const isTexas = texasPrefixes.some(prefix => zip.startsWith(prefix));
     
     if (isTexas) {
-      zipStatus.innerHTML = '✅ ¡Excelente! Estás en nuestra zona de cobertura';
+      zipStatus.innerHTML = 'âœ… Â¡Excelente! EstÃ¡s en nuestra zona de cobertura';
       zipStatus.className = 'paso-status success';
       
       // Scroll suave al paso 2
@@ -274,7 +274,7 @@ function verificarCodigo() {
         }
       }, 1000);
     } else {
-      zipStatus.innerHTML = '⚠️ Código fuera de Texas. Contáctanos para más info';
+      zipStatus.innerHTML = 'âš ï¸� CÃ³digo fuera de Texas. ContÃ¡ctanos para mÃ¡s info';
       zipStatus.className = 'paso-status error';
     }
   }, 1500);
@@ -291,16 +291,16 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     });
     
-    // Solo permitir números
+    // Solo permitir nÃºmeros
     zipInput.addEventListener('input', function(e) {
       this.value = this.value.replace(/[^0-9]/g, '');
     });
   }
 });
 
-/* ═══════════════════════════════════════════════════════
+/* â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�
    CONTADOR ANIMADO DE CLIENTES
-   ═══════════════════════════════════════════════════════ */
+   â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•� */
 
 function animateCounter() {
   const counter = document.querySelector('.counter-number');
@@ -334,12 +334,12 @@ function animateCounter() {
   observer.observe(counter);
 }
 
-// Iniciar contador cuando cargue la página
+// Iniciar contador cuando cargue la pÃ¡gina
 document.addEventListener('DOMContentLoaded', animateCounter);
 
-/* ═══════════════════════════════════════════════════════
-   SCROLL SUAVE A VERIFICACIÓN
-   ═══════════════════════════════════════════════════════ */
+/* â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�
+   SCROLL SUAVE A VERIFICACIÃ“N
+   â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•� */
 
 function scrollToVerification() {
   const zipInput = document.getElementById('zipCode');
@@ -349,9 +349,9 @@ function scrollToVerification() {
   }
 }
 
-/* ═══════════════════════════════════════════════════════
+/* â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�
    MAPA INTERACTIVO - TOOLTIP Y HOVER
-   ═══════════════════════════════════════════════════════ */
+   â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•� */
 
 document.addEventListener('DOMContentLoaded', function() {
   const zones = document.querySelectorAll('.zone');
@@ -404,18 +404,18 @@ document.addEventListener('DOMContentLoaded', function() {
       tooltip.classList.remove('active');
     });
     
-    // Click - scroll a información de la zona
+    // Click - scroll a informaciÃ³n de la zona
     zone.addEventListener('click', function() {
       const zoneName = this.getAttribute('data-zone');
       console.log('Zona seleccionada:', zoneName);
-      // Aquí puedes agregar navegación o modal
+      // AquÃ­ puedes agregar navegaciÃ³n o modal
     });
   });
 });
 
-/* ═══════════════════════════════════════════════════════
+/* â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�
    SLIDER DE TESTIMONIOS
-   ═══════════════════════════════════════════════════════ */
+   â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•� */
 
 let currentTestimonialGroup = 1;
 const totalTestimonialGroups = 3;
@@ -482,3 +482,204 @@ setInterval(() => {
   changeTestimonialGroup(1);
 }, 6000); // Cambia cada 6 segundos
 */
+
+// -------------------------------------------------------
+// ANIMACIONES AL SCROLL - SOPORTE TÉCNICO
+// -------------------------------------------------------
+
+function initSoporteAnimations() {
+  const cards = document.querySelectorAll('.soporte-card');
+  if (cards.length === 0) return;
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, {
+    threshold: 0.2,
+    rootMargin: '0px 0px -50px 0px'
+  });
+
+  cards.forEach(card => observer.observe(card));
+}
+
+document.addEventListener('DOMContentLoaded', initSoporteAnimations);
+
+// -------------------------------------------------------
+// CREAR PARTÍCULAS DINÁMICAMENTE
+// -------------------------------------------------------
+
+function createSoporteParticles() {
+  const container = document.querySelector('.soporte-particles');
+  if (!container) return;
+
+  for (let i = 0; i < 15; i++) {
+    const particle = document.createElement('div');
+    particle.classList.add('soporte-particle');
+
+    const size = Math.random() * 4 + 2;
+    const left = Math.random() * 100;
+    const duration = Math.random() * 15 + 10;
+    const delay = Math.random() * 5;
+
+    particle.style.width = size + 'px';
+    particle.style.height = size + 'px';
+    particle.style.left = left + '%';
+    particle.style.animationDuration = duration + 's';
+    particle.style.animationDelay = delay + 's';
+
+    container.appendChild(particle);
+  }
+}
+
+document.addEventListener('DOMContentLoaded', createSoporteParticles);
+
+// ============================================================
+// MODALES - CONSULTA DE FACTURAS Y CITAS
+// ============================================================
+
+// Modal Consulta de Facturas
+function abrirModalFacturas() {
+  const modal = document.getElementById('modalFacturas');
+  if (modal) {
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+}
+
+function cerrarModalFacturas(event) {
+  if (!event || event.target.id === 'modalFacturas') {
+    const modal = document.getElementById('modalFacturas');
+    if (modal) {
+      modal.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+  }
+}
+
+function enviarConsultaFacturas(e) {
+  e.preventDefault();
+
+  const nombre = document.getElementById('facturaNombre').value;
+  const email = document.getElementById('facturaEmail').value;
+  const telefono = document.getElementById('facturaTelefono').value;
+  const ssid = document.getElementById('facturaSSID').value || 'No especificado';
+  const tipo = document.getElementById('facturaTipo').value;
+  const mensaje = document.getElementById('facturaMensaje').value || 'Sin mensaje adicional';
+
+  const tiposConsulta = {
+    'factura': 'Información de factura',
+    'pago': 'Métodos de pago',
+    'historial': 'Historial de pagos',
+    'otro': 'Otro'
+  };
+
+  // Abrir mailto
+  const subject = `Consulta de Facturas - ${nombre}`;
+  const body = `Hola Synergy Light,%0D%0A%0D%0A` +
+    `Solicito información sobre: ${tiposConsulta[tipo]}%0D%0A%0D%0A` +
+    `Mis datos:%0D%0A` +
+    `• Nombre: ${nombre}%0D%0A` +
+    `• Email: ${email}%0D%0A` +
+    `• Teléfono: ${telefono}%0D%0A` +
+    `• SSID: ${ssid}%0D%0A%0D%0A` +
+    `Mensaje: ${mensaje}%0D%0A%0D%0A` +
+    `Gracias.`;
+
+  window.location.href = `mailto:synergylightservices@gmail.com?subject=${subject}&body=${body}`;
+
+  cerrarModalFacturas();
+
+  if (typeof showToast === 'function') {
+    showToast('Se abrirá tu cliente de correo. Te responderemos en menos de 24 horas.', 'success');
+  }
+
+  document.getElementById('formConsultaFacturas').reset();
+}
+
+// Modal Programación de Citas
+function abrirModalCitas() {
+  const modal = document.getElementById('modalCitas');
+  if (modal) {
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+}
+
+function cerrarModalCitas(event) {
+  if (!event || event.target.id === 'modalCitas') {
+    const modal = document.getElementById('modalCitas');
+    if (modal) {
+      modal.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+  }
+}
+
+function agendarCitaWhatsApp(e) {
+  e.preventDefault();
+
+  const nombre = document.getElementById('citaNombre').value;
+  const telefono = document.getElementById('citaTelefono').value;
+  const fecha = document.getElementById('citaFecha').value;
+  const tipo = document.getElementById('citaTipo').value;
+  const mensajeAdicional = document.getElementById('citaMensaje').value;
+
+  const tiposAsesoria = {
+    'conexion': 'Asesoría para nueva conexión',
+    'cambio': 'Cambio de plan',
+    'renovacion': 'Renovación de contrato',
+    'otro': 'Otro'
+  };
+
+  // Formatear fecha
+  const fechaObj = new Date(fecha + 'T12:00:00');
+  const fechaFormateada = fechaObj.toLocaleDateString('es-ES', {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  });
+
+  // Crear mensaje de WhatsApp
+  const mensaje = `Hola Synergy Light! 👋%0D%0A%0D%0A` +
+    `Quiero agendar una cita para:%0D%0A` +
+    ` ${tiposAsesoria[tipo]}%0D%0A` +
+    `️ Fecha preferida: ${fechaFormateada}%0D%0A%0D%0A` +
+    `Mis datos:%0D%0A` +
+    `👤 Nombre: ${nombre}%0D%0A` +
+    `📞 Teléfono: ${telefono}%0D%0A%0D%0A` +
+    (mensajeAdicional ? `💬 Mensaje: ${mensajeAdicional}%0D%0A%0D%0A` : '') +
+    `Gracias!`;
+
+  // Redirigir a WhatsApp
+  const whatsappUrl = `https://wa.me/14092800661?text=${mensaje}`;
+  window.open(whatsappUrl, '_blank');
+
+  cerrarModalCitas();
+
+  if (typeof showToast === 'function') {
+    showToast('Te redirigimos a WhatsApp para confirmar tu cita.', 'success');
+  }
+
+  document.getElementById('formAgendaCita').reset();
+}
+
+// Cerrar modales con tecla ESC
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    cerrarModalFacturas();
+    cerrarModalCitas();
+  }
+});
+
+// Hacer funciones globales
+window.abrirModalFacturas = abrirModalFacturas;
+window.cerrarModalFacturas = cerrarModalFacturas;
+window.enviarConsultaFacturas = enviarConsultaFacturas;
+window.abrirModalCitas = abrirModalCitas;
+window.cerrarModalCitas = cerrarModalCitas;
+window.agendarCitaWhatsApp = agendarCitaWhatsApp;

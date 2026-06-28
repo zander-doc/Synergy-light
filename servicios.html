@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+﻿﻿﻿﻿﻿﻿﻿﻿<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
@@ -6,14 +6,723 @@
   <title>Servicios - Synergy Light | Energía Residencial en Texas</title>
   <meta name="description" content="Conoce todos los servicios de Synergy Light: energía residencial, comercial, asesoría energética y soporte técnico 24/7 en Texas.">
   <link rel="canonical" href="https://synergylight.com/servicios.html">
-  <link rel="icon" type="image/webp" href="fivicon.webp">
+  <link rel="icon" type="image/webp" href="/favicon.webp">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Open+Sans:wght@400;500;600;700&family=Orbitron:wght@400;600;700;900&display=swap" rel="stylesheet">
-    <link rel="icon" type="image/webp" href="fivicon.webp">
-  <link rel="shortcut icon" type="image/webp" href="fivicon.webp">
-  <link rel="apple-touch-icon" sizes="180x180" href="fivicon.webp">
+    <link rel="icon" type="image/webp" href="/favicon.webp">
+  <link rel="shortcut icon" type="image/webp" href="/favicon.webp">
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon.webp">
 <link rel="stylesheet" href="assets/css/style.css"><link rel="stylesheet" href="assets/css/components.css"><link rel="stylesheet" href="assets/css/sections.css"><link rel="stylesheet" href="assets/css/animations.css"><link rel="stylesheet" href="assets/css/responsive.css">
+<style>
+/* HERO DE SERVICIOS CON IMAGEN */
+.servicios-hero {
+  position: relative;
+  min-height: 500px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background: linear-gradient(135deg, rgba(0,0,0,0.85) 0%, rgba(10,58,42,0.9) 100%),
+              url('assets/images/services/Casa-moderna-iluminada-hero.webp');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  padding: 100px 20px;
+}
+
+.servicios-hero::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: radial-gradient(circle at 50% 50%, transparent 0%, rgba(0,0,0,0.4) 100%);
+  pointer-events: none;
+}
+
+.servicios-hero-content {
+  position: relative;
+  z-index: 2;
+  max-width: 800px;
+}
+
+.servicios-hero h1 {
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-weight: 900;
+  color: #FFFFFF;
+  margin-bottom: 20px;
+  text-shadow: 0 0 30px rgba(3, 188, 137, 0.6), 0 0 60px rgba(3, 188, 137, 0.4);
+}
+
+.servicios-hero h1 span {
+  color: #03bc89;
+  text-shadow: 0 0 40px rgba(3, 188, 137, 0.8), 0 0 80px rgba(3, 188, 137, 0.6);
+}
+
+.servicios-hero p {
+  font-size: 1.3rem;
+  color: #E0E0E0;
+  margin-bottom: 30px;
+  text-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+}
+
+.btn-hero-premium {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 32px;
+  background: linear-gradient(135deg, #03bc89 0%, #04d99e 100%);
+  color: #FFFFFF;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 1.1rem;
+  border-radius: 50px;
+  transition: all 0.3s ease;
+  box-shadow: 0 10px 30px rgba(3, 188, 137, 0.4);
+  border: none;
+  cursor: pointer;
+}
+
+.btn-hero-premium:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 15px 40px rgba(3, 188, 137, 0.6);
+  background: linear-gradient(135deg, #04d99e 0%, #03bc89 100%);
+}
+
+/* ENERGÍA RESIDENCIAL */
+.energia-residencial {
+  background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+  padding: 100px 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.energia-residencial::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: radial-gradient(circle at 20% 50%, rgba(3, 188, 137, 0.05) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.energia-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  position: relative;
+  z-index: 2;
+}
+
+.energia-text h2 {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: #FFFFFF;
+  margin-bottom: 20px;
+}
+
+.energia-text h2 span {
+  color: #03bc89;
+  text-shadow: 0 0 20px rgba(3, 188, 137, 0.5);
+}
+
+.energia-text p {
+  font-size: 1.1rem;
+  color: #B0B0B0;
+  line-height: 1.8;
+  margin-bottom: 30px;
+}
+
+.energia-features {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 30px 0;
+}
+
+.energia-features li {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 15px 20px;
+  margin-bottom: 10px;
+  background: rgba(3, 188, 137, 0.05);
+  border: 1px solid rgba(3, 188, 137, 0.2);
+  border-radius: 12px;
+  color: #E0E0E0;
+  transition: all 0.3s ease;
+}
+
+.energia-features li:hover {
+  background: rgba(3, 188, 137, 0.1);
+  border-color: #03bc89;
+  transform: translateX(10px);
+  box-shadow: 0 5px 20px rgba(3, 188, 137, 0.2);
+}
+
+.energia-features li::before {
+  content: '✓';
+  color: #03bc89;
+  font-weight: bold;
+  font-size: 1.3rem;
+  flex-shrink: 0;
+}
+
+.energia-imagen {
+  position: relative;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(3, 188, 137, 0.3);
+  border: 3px solid rgba(3, 188, 137, 0.3);
+}
+
+.energia-imagen img {
+  width: 100%;
+  height: auto;
+  display: block;
+  transition: transform 0.5s ease;
+}
+
+.energia-imagen:hover img {
+  transform: scale(1.05);
+}
+
+/* PROCESO DE CONEXIÓN - TIMELINE HORIZONTAL */
+.proceso-conexion {
+  background: #000000;
+  padding: 100px 0;
+  position: relative;
+}
+.proceso-timeline {
+  display: flex;
+  justify-content: space-between;
+  max-width: 1200px;
+  margin: 60px auto;
+  padding: 0 20px;
+  position: relative;
+}
+.proceso-timeline::before {
+  content: '';
+  position: absolute;
+  top: 50px;
+  left: 10%;
+  right: 10%;
+  height: 4px;
+  background: linear-gradient(90deg, #03bc89 0%, #04d99e 100%);
+  border-radius: 2px;
+  box-shadow: 0 0 20px rgba(3, 188, 137, 0.5);
+}
+.proceso-step {
+  flex: 1;
+  text-align: center;
+  position: relative;
+  padding: 0 20px;
+}
+.proceso-step-number {
+  width: 100px;
+  height: 100px;
+  margin: 0 auto 30px;
+  background: linear-gradient(135deg, #03bc89 0%, #04d99e 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.5rem;
+  font-weight: 900;
+  color: #FFFFFF;
+  box-shadow: 0 0 40px rgba(3, 188, 137, 0.6);
+  position: relative;
+  z-index: 2;
+  transition: all 0.3s ease;
+}
+.proceso-step:hover .proceso-step-number {
+  transform: scale(1.1) rotate(5deg);
+  box-shadow: 0 0 60px rgba(3, 188, 137, 0.8);
+}
+.proceso-step h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #FFFFFF;
+  margin-bottom: 15px;
+}
+.proceso-step p {
+  font-size: 1rem;
+  color: #B0B0B0;
+  line-height: 1.6;
+}
+
+/* SOPORTE TÉCNICO - GLASSMORPHISM */
+.soporte-tecnico {
+  background: linear-gradient(135deg, rgba(0,0,0,0.9) 0%, rgba(10,58,42,0.8) 100%),
+              url('assets/images/services/Técnico-trabajando.webp');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  padding: 100px 0;
+  position: relative;
+}
+.soporte-tecnico::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  pointer-events: none;
+}
+.soporte-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 30px;
+  max-width: 1200px;
+  margin: 60px auto;
+  padding: 0 20px;
+  position: relative;
+  z-index: 2;
+}
+.soporte-card {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 2px solid rgba(3, 188, 137, 0.3);
+  border-radius: 20px;
+  padding: 40px 30px;
+  text-align: center;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+.soporte-card:hover {
+  transform: translateY(-10px);
+  border-color: #03bc89;
+  box-shadow: 0 20px 50px rgba(3, 188, 137, 0.4);
+  background: rgba(255, 255, 255, 0.08);
+}
+.soporte-icon {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 25px;
+  background: linear-gradient(135deg, rgba(3, 188, 137, 0.2) 0%, rgba(4, 217, 158, 0.1) 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.5rem;
+  border: 2px solid rgba(3, 188, 137, 0.5);
+  box-shadow: 0 0 30px rgba(3, 188, 137, 0.4);
+  transition: all 0.3s ease;
+}
+.soporte-card:hover .soporte-icon {
+  transform: scale(1.1) rotate(5deg);
+  box-shadow: 0 0 50px rgba(3, 188, 137, 0.6);
+}
+.soporte-card h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #FFFFFF;
+  margin-bottom: 15px;
+}
+.soporte-card p {
+  font-size: 1rem;
+  color: #B0B0B0;
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+.badge-disponible {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: rgba(3, 188, 137, 0.2);
+  border: 1px solid #03bc89;
+  border-radius: 20px;
+  color: #03bc89;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+.badge-disponible::before {
+  content: '';
+  width: 10px;
+  height: 10px;
+  background: #03bc89;
+  border-radius: 50%;
+  animation: pulse 2s ease-in-out infinite;
+  box-shadow: 0 0 10px #03bc89;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.7; transform: scale(1.2); }
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .energia-content {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+  .proceso-timeline {
+    flex-direction: column;
+    gap: 40px;
+  }
+  .proceso-timeline::before {
+    top: 0;
+    bottom: 0;
+    left: 50px;
+    right: auto;
+    width: 4px;
+    height: 100%;
+  }
+  .proceso-step {
+    text-align: left;
+    padding-left: 120px;
+  }
+  .proceso-step-number {
+    position: absolute;
+    left: 0;
+    margin: 0;
+  }
+  .soporte-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════
+SECCIÓN SOPORTE TÉCNICO - PREMIUM
+═══════════════════════════════════════════════════════ */
+.soporte-tecnico-section {
+  position: relative;
+  padding: 120px 0;
+  overflow: hidden;
+  background: #000000;
+}
+
+.soporte-tecnico-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background:
+    linear-gradient(135deg, rgba(0,0,0,0.85) 0%, rgba(10,58,42,0.75) 50%, rgba(0,0,0,0.9) 100%),
+    url('assets/images/services/Técnico-trabajando.webp');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  z-index: 0;
+}
+
+.soporte-tecnico-section::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at 50% 50%, transparent 0%, rgba(0,0,0,0.4) 100%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.soporte-tecnico-section .container {
+  position: relative;
+  z-index: 2;
+}
+
+.soporte-particles {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.soporte-particle {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  background: #03bc89;
+  border-radius: 50%;
+  box-shadow: 0 0 10px #03bc89, 0 0 20px #03bc89;
+  animation: floatParticle linear infinite;
+  opacity: 0;
+}
+
+.soporte-particle:nth-child(1) { left: 10%; animation-duration: 15s; animation-delay: 0s; }
+.soporte-particle:nth-child(2) { left: 25%; animation-duration: 20s; animation-delay: 2s; }
+.soporte-particle:nth-child(3) { left: 40%; animation-duration: 18s; animation-delay: 4s; }
+.soporte-particle:nth-child(4) { left: 55%; animation-duration: 22s; animation-delay: 1s; }
+.soporte-particle:nth-child(5) { left: 70%; animation-duration: 25s; animation-delay: 3s; }
+.soporte-particle:nth-child(6) { left: 85%; animation-duration: 17s; animation-delay: 5s; }
+.soporte-particle:nth-child(7) { left: 95%; animation-duration: 21s; animation-delay: 2.5s; }
+.soporte-particle:nth-child(8) { left: 5%; animation-duration: 19s; animation-delay: 4.5s; }
+
+@keyframes floatParticle {
+  0% { transform: translateY(100vh) translateX(0); opacity: 0; }
+  10% { opacity: 0.8; }
+  90% { opacity: 0.8; }
+  100% { transform: translateY(-100px) translateX(100px); opacity: 0; }
+}
+
+.soporte-tecnico-section .section-header {
+  text-align: center;
+  margin-bottom: 60px;
+  opacity: 0;
+  transform: translateY(30px);
+  animation: fadeInUp 0.8s ease forwards;
+}
+
+.soporte-tecnico-section .section-tag {
+  display: inline-block;
+  background: rgba(3, 188, 137, 0.15);
+  color: #03bc89;
+  padding: 8px 20px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 15px;
+  border: 2px solid rgba(3, 188, 137, 0.4);
+  box-shadow: 0 0 20px rgba(3, 188, 137, 0.3);
+}
+
+.soporte-tecnico-section .section-title {
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 800;
+  color: #FFFFFF;
+  margin-bottom: 15px;
+  font-family: 'Montserrat', sans-serif;
+  text-shadow: 0 0 30px rgba(3, 188, 137, 0.5);
+}
+
+.soporte-tecnico-section .section-title .text-green {
+  color: #03bc89;
+  text-shadow: 0 0 40px rgba(3, 188, 137, 0.8);
+  animation: glowPulse 2s ease-in-out infinite;
+}
+
+@keyframes glowPulse {
+  0%, 100% { text-shadow: 0 0 20px rgba(3, 188, 137, 0.5); }
+  50% { text-shadow: 0 0 40px rgba(3, 188, 137, 0.9), 0 0 60px rgba(3, 188, 137, 0.6); }
+}
+
+.soporte-tecnico-section .section-subtitle {
+  font-size: 1.1rem;
+  color: #B0B0B0;
+  max-width: 600px;
+  margin: 0 auto 20px;
+  line-height: 1.6;
+}
+
+.soporte-card {
+  position: relative;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 2px solid rgba(3, 188, 137, 0.3);
+  border-radius: 20px;
+  padding: 40px 30px;
+  text-align: center;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.3),
+    inset 0 0 20px rgba(3, 188, 137, 0.05);
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+.soporte-card.visible {
+  opacity: 1;
+  transform: translateY(0);
+  transition: all 0.6s ease;
+}
+
+.soporte-card:nth-child(1) { transition-delay: 0.1s; }
+.soporte-card:nth-child(2) { transition-delay: 0.2s; }
+.soporte-card:nth-child(3) { transition-delay: 0.3s; }
+.soporte-card:nth-child(4) { transition-delay: 0.4s; }
+
+.soporte-card:hover {
+  transform: translateY(-15px) scale(1.02);
+  border-color: #03bc89;
+  box-shadow:
+    0 20px 50px rgba(3, 188, 137, 0.4),
+    inset 0 0 30px rgba(3, 188, 137, 0.1);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.soporte-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(3, 188, 137, 0.1), transparent);
+  transition: left 0.6s ease;
+  pointer-events: none;
+}
+
+.soporte-card:hover::before {
+  left: 100%;
+}
+
+.soporte-icon {
+  width: 90px;
+  height: 90px;
+  margin: 0 auto 25px;
+  background: linear-gradient(135deg, rgba(3, 188, 137, 0.25) 0%, rgba(4, 217, 158, 0.1) 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.5rem;
+  border: 3px solid rgba(3, 188, 137, 0.5);
+  box-shadow: 0 0 30px rgba(3, 188, 137, 0.4);
+  transition: all 0.4s ease;
+  position: relative;
+}
+
+.soporte-icon::after {
+  content: '';
+  position: absolute;
+  top: -5px;
+  left: -5px;
+  right: -5px;
+  bottom: -5px;
+  border: 2px solid rgba(3, 188, 137, 0.3);
+  border-radius: 50%;
+  animation: ringPulse 2s ease-in-out infinite;
+}
+
+@keyframes ringPulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.15); opacity: 0.3; }
+}
+
+.soporte-card:hover .soporte-icon {
+  transform: scale(1.15) rotate(5deg);
+  box-shadow: 0 0 50px rgba(3, 188, 137, 0.7);
+  border-color: #03bc89;
+}
+
+.soporte-card:hover .soporte-icon::after {
+  animation: none;
+}
+
+.soporte-card h3 {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #FFFFFF;
+  margin-bottom: 15px;
+  font-family: 'Montserrat', sans-serif;
+  transition: color 0.3s ease;
+}
+
+.soporte-card:hover h3 {
+  color: #03bc89;
+  text-shadow: 0 0 15px rgba(3, 188, 137, 0.5);
+}
+
+.soporte-card p {
+  font-size: 0.95rem;
+  color: #B0B0B0;
+  line-height: 1.6;
+  margin-bottom: 25px;
+}
+
+.soporte-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  background: rgba(3, 188, 137, 0.15);
+  border: 2px solid rgba(3, 188, 137, 0.4);
+  border-radius: 30px;
+  color: #03bc89;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.soporte-btn:hover {
+  background: #03bc89;
+  color: #000000;
+  border-color: #03bc89;
+  box-shadow: 0 0 25px rgba(3, 188, 137, 0.6);
+  transform: translateY(-2px);
+}
+
+.badge-disponible {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 20px;
+  background: rgba(3, 188, 137, 0.15);
+  border: 2px solid #03bc89;
+  border-radius: 30px;
+  color: #03bc89;
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  box-shadow: 0 0 20px rgba(3, 188, 137, 0.3);
+  animation: badgePulse 2s ease-in-out infinite;
+}
+
+.badge-disponible::before {
+  content: '';
+  width: 12px;
+  height: 12px;
+  background: #03bc89;
+  border-radius: 50%;
+  animation: pulseDot 1.5s ease-in-out infinite;
+  box-shadow: 0 0 10px #03bc89, 0 0 20px #03bc89;
+}
+
+@keyframes badgePulse {
+  0%, 100% { box-shadow: 0 0 20px rgba(3, 188, 137, 0.3); }
+  50% { box-shadow: 0 0 30px rgba(3, 188, 137, 0.6); }
+}
+
+@keyframes pulseDot {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.3); opacity: 0.7; }
+}
+
+@media (max-width: 768px) {
+  .soporte-tecnico-section {
+    padding: 80px 0;
+  }
+  .soporte-tecnico-section::before {
+    background-attachment: scroll;
+  }
+  .soporte-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  .soporte-card {
+    padding: 30px 20px;
+  }
+  .soporte-icon {
+    width: 70px;
+    height: 70px;
+    font-size: 2rem;
+  }
+  .badge-disponible {
+    font-size: 0.8rem;
+    padding: 8px 16px;
+  }
+}
+</style>
 </head>
 <body>
 <!-- ═══════════════════════════════════════════════════
@@ -41,9 +750,9 @@
       <button class="lang-btn" data-lang="en" aria-label="English">EN</button>
     </div>
         <!-- Botón WhatsApp Header - Solo Icono -->
-    <a href="https://wa.me/14092800661?text=Hola,%20quiero%20informaci%C3%B3n%20sobre%20sus%20planes%20de%20energ%C3%ADa" 
-       class="cta-button-whatsapp" 
-       target="_blank" 
+    <a href="https://wa.me/14092800661?text=Hola,%20quiero%20informaci%C3%B3n%20sobre%20sus%20planes%20de%20energ%C3%ADa"
+       class="cta-button-whatsapp"
+       target="_blank"
        rel="noopener noreferrer"
        aria-label="Cotizar por WhatsApp">
       <svg class="whatsapp-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
@@ -59,102 +768,148 @@
   <div class="header-accent-line"></div>
 </header>
 
-<section class="page-hero">
-  <div class="container">
-    <h1>Nuestros <span class="gradient-text">Servicios</span></h1>
+<section class="servicios-hero">
+  <div class="servicios-hero-content">
+    <h1>Nuestros <span>Servicios</span></h1>
     <p>Soluciones energéticas completas para tu hogar en Texas</p>
+    <a href="#energia-residencial" class="btn-hero-premium btn-hero-primary">
+      <span class="btn-icon">⚡</span>
+      <span class="btn-text">Ver Servicios</span>
+    </a>
   </div>
 </section>
 
-<section class="section">
-  <div class="container">
-    <div class="section-header fade-in">
-      <span class="section-badge">Principal</span>
-      <h2>Energía <span class="gradient-text">Residencial</span></h2>
-      <p>El servicio que hace la diferencia en tu hogar</p>
+<section class="energia-residencial" id="energia-residencial">
+  <div class="energia-content">
+    <div class="energia-text fade-in-left">
+      <h2>Energía <span>Residencial</span></h2>
+      <p>En Synergy Light ofrecemos energía eléctrica residencial de calidad con las tarifas más competitivas de Texas. Nuestro servicio está diseñado pensando en las necesidades de las familias hispanas.</p>
+      <p><strong>Beneficios de nuestro servicio residencial:</strong></p>
+      <ul class="energia-features">
+        <li>kWh desde 8¢ - los precios más bajos del mercado</li>
+        <li>Depósitos desde $0 - pago inicial mínimo</li>
+        <li>Activación en 24-48 horas - conexión rápida</li>
+        <li>Sin cargos ocultos - total transparencia</li>
+        <li>Atención 100% en español - sin barreras</li>
+        <li>Facturación flexible - paga como quieras</li>
+      </ul>
+      <a href="planes.html" class="btn-hero-premium mt-20">
+        <span class="btn-icon">⚡</span>
+        <span class="btn-text">Ver Planes</span>
+      </a>
     </div>
-    <div class="about-content">
-      <div class="about-text fade-in-left">
-        <p>En Synergy Light ofrecemos energía eléctrica residencial de calidad con las tarifas más competitivas de Texas. Nuestro servicio está diseñado pensando en las necesidades de las familias hispanas.</p>
-        <p><strong>Beneficios de nuestro servicio residencial:</strong></p>
-        <ul style="list-style:disc;padding-left:20px;color:var(--text-gray);">
-          <li class="mb-10">✓ kWh desde 8¢ - los precios más bajos del mercado</li>
-          <li class="mb-10">✓ Depósitos desde $0 - pago inicial mínimo</li>
-          <li class="mb-10">✓ Activación en 24-48 horas - conexión rápida</li>
-          <li class="mb-10">✓ Sin cargos ocultos - total transparencia</li>
-          <li class="mb-10">✓ Atención 100% en español - sin barreras</li>
-          <li class="mb-10">✓ Facturación flexible - paga como quieras</li>
-        </ul>
-        <a href="planes.html" class="btn btn-primary mt-20">Ver Planes</a>
-      </div>
-      <div class="about-image fade-in-right">
-        <img src="assets/images/services/residential.jpg" alt="Energía Residencial" onerror="this.style.display='none'" style="height:350px;object-fit:cover;border-radius:var(--border-radius-lg);">
-      </div>
+    <div class="energia-imagen fade-in-right">
+      <img src="assets/images/services/Familia-feliz-en-sala-iluminada.webp" alt="Familia feliz en sala iluminada" onerror="this.style.display='none'">
     </div>
   </div>
 </section>
 
-<section class="section" style="background:var(--dark-bg-secondary);">
+<section class="proceso-conexion">
   <div class="container">
-    <div class="section-header fade-in">
+    <div class="section-header fade-in" style="text-align:center;max-width:800px;margin:0 auto 40px;">
       <span class="section-badge">Proceso</span>
-      <h2>Proceso de <span class="gradient-text">Conexión</span></h2>
-      <p>Conectarte es más fácil de lo que imaginas</p>
+      <h2 style="font-size:2.5rem;font-weight:800;color:#FFFFFF;margin-bottom:15px;">Proceso de <span style="color:#03bc89;text-shadow:0 0 20px rgba(3,188,137,0.5);">Conexión</span></h2>
+      <p style="font-size:1.1rem;color:#B0B0B0;">Conectarte es más fácil de lo que imaginas</p>
     </div>
-    <div class="process-steps" style="display:grid;grid-template-columns:repeat(4,1fr);gap:24px;">
-      <div class="process-step text-center fade-in">
-        <div class="process-step-number">1</div>
-        <h4>Cotización</h4>
+    <div class="proceso-timeline">
+      <div class="proceso-step fade-in">
+        <div class="proceso-step-number">1</div>
+        <h3>Cotización</h3>
         <p>Solicita tu cotización sin compromiso por web o WhatsApp</p>
       </div>
-      <div class="process-step text-center fade-in">
-        <div class="process-step-number">2</div>
-        <h4>Documentación</h4>
+      <div class="proceso-step fade-in">
+        <div class="proceso-step-number">2</div>
+        <h3>Documentación</h3>
         <p>Envíanos tus documentos de forma segura y rápida</p>
       </div>
-      <div class="process-step text-center fade-in">
-        <div class="process-step-number">3</div>
-        <h4>Activación</h4>
+      <div class="proceso-step fade-in">
+        <div class="proceso-step-number">3</div>
+        <h3>Activación</h3>
         <p>Activamos tu servicio en 24-48 horas hábiles</p>
       </div>
-      <div class="process-step text-center fade-in">
-        <div class="process-step-number">4</div>
-        <h4>Disfruta</h4>
+      <div class="proceso-step fade-in">
+        <div class="proceso-step-number">4</div>
+        <h3>Disfruta</h3>
         <p>Disfruta de tu nueva energía con ahorros garantizados</p>
       </div>
     </div>
   </div>
 </section>
 
-<section class="section">
+<section class="soporte-tecnico-section" id="soporte">
+  <div class="soporte-particles"></div>
   <div class="container">
-    <div class="section-header fade-in">
-      <span class="section-badge">Soporte</span>
-      <h2>Soporte Técnico <span class="gradient-text">24/7</span></h2>
-      <p>Siempre estamos aquí para ayudarte</p>
+    <div class="section-header">
+      <span class="section-tag">SOPORTE</span>
+      <h2 class="section-title">
+        Soporte Técnico <span class="text-green">24/7</span>
+      </h2>
+      <p class="section-subtitle">
+        Siempre estamos aquí para ayudarte
+      </p>
+      <div class="badge-disponible">
+        Disponible Ahora
+      </div>
     </div>
-    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:24px;">
-      <div class="card fade-in text-center">
-        <div class="card-icon" style="margin:0 auto 16px;">📞</div>
+    <div class="soporte-grid">
+      <div class="soporte-card">
+        <div class="soporte-icon">📞</div>
         <h3>Atención Telefónica</h3>
-        <p>Línea de atención 24/7 para emergencias y consultas. +1 (409) 655-2420</p>
+        <p>Línea de atención 24/7 para emergencias y consultas al +1 (409) 655-2420</p>
+        <a href="tel:+14096552420" class="soporte-btn">
+          <span>📞</span>
+          <span>Contactar Ahora</span>
+        </a>
       </div>
-      <div class="card fade-in text-center">
-        <div class="card-icon" style="margin:0 auto 16px;">💬</div>
+      <div class="soporte-card">
+        <div class="soporte-icon">💬</div>
         <h3>Atención WhatsApp</h3>
-        <p>Chatea con nosotros por WhatsApp y recibe respuesta inmediata.</p>
+        <p>Chatea con nosotros por WhatsApp y recibe respuesta inmediata</p>
+        <a href="https://wa.me/14092800661" target="_blank" class="soporte-btn">
+          <span>💬</span>
+          <span>Contactar Ahora</span>
+        </a>
       </div>
-      <div class="card fade-in text-center">
-        <div class="card-icon" style="margin:0 auto 16px;">🔧</div>
+      <div class="soporte-card">
+        <div class="soporte-icon">🔧</div>
         <h3>Resolución de Problemas</h3>
-        <p>Equipo técnico especializado para resolver cualquier inconveniente.</p>
+        <p>Equipo técnico especializado para resolver cualquier inconveniente</p>
+        <a href="https://wa.me/14092800661?text=Hola,%20necesito%20soporte%20técnico" target="_blank" class="soporte-btn">
+          <span>🔧</span>
+          <span>Contactar Ahora</span>
+        </a>
       </div>
-      <div class="card fade-in text-center">
-        <div class="card-icon" style="margin:0 auto 16px;">📋</div>
-        <h3>Asesoría Energética</h3>
-        <p>Consultoría gratuita para optimizar tu consumo y ahorrar más.</p>
+        <div class="soporte-card">
+          <div class="soporte-icon">📊</div>
+          <h3>Asesoría Energética</h3>
+          <p>Consultoría gratuita para optimizar tu consumo y ahorrar más</p>
+          <a href="https://wa.me/14092800661?text=Hola,%20quiero%20asesoría%20energética" target="_blank" class="soporte-btn">
+            <span>📊</span>
+            <span>Contactar Ahora</span>
+          </a>
+        </div>
+        <!-- Tarjeta 5: Consulta de Facturas -->
+        <div class="soporte-card">
+          <div class="soporte-icon">📄</div>
+          <h3>Consulta de Facturas</h3>
+          <p>Información sobre tu facturación, pagos y métodos de pago disponibles</p>
+          <button onclick="abrirModalFacturas()" class="soporte-btn">
+            <span>📄</span>
+            <span>Consultar Ahora</span>
+          </button>
+        </div>
+
+        <!-- Tarjeta 6: Agenda tu Cita -->
+        <div class="soporte-card">
+          <div class="soporte-icon">📅</div>
+          <h3>Agenda tu Cita</h3>
+          <p>Programa una asesoría personalizada para tu conexión</p>
+          <button onclick="abrirModalCitas()" class="soporte-btn">
+            <span>📅</span>
+            <span>Agendar Cita</span>
+          </button>
+        </div>
       </div>
-    </div>
   </div>
 </section>
 
@@ -181,6 +936,108 @@
 <button class="back-to-top">↑</button>
 <div class="nav-overlay"></div>
 <script src="assets/js/main.js"></script><script src="assets/js/navigation.js"></script><script src="assets/js/animations.js"></script>
+
+<!-- MODAL CONSULTA DE FACTURAS -->
+<div id="modalFacturas" class="modal-overlay" onclick="cerrarModalFacturas(event)">
+  <div class="modal" onclick="event.stopPropagation()">
+    <button class="modal-close" onclick="cerrarModalFacturas()"></button>
+    <h2> Consulta de Facturas</h2>
+    <p style="color: var(--text-gray); margin-bottom: 25px;">
+      Solicita información sobre tu facturación y te la enviaremos a tu correo en menos de 24 horas.
+    </p>
+
+    <form id="formConsultaFacturas" onsubmit="enviarConsultaFacturas(event)">
+      <div class="form-group">
+        <label for="facturaNombre">Nombre completo *</label>
+        <input type="text" id="facturaNombre" required placeholder="Ej: Juan Pérez">
+      </div>
+
+      <div class="form-group">
+        <label for="facturaEmail">Email *</label>
+        <input type="email" id="facturaEmail" required placeholder="tu@email.com">
+      </div>
+
+      <div class="form-group">
+        <label for="facturaTelefono">Teléfono *</label>
+        <input type="tel" id="facturaTelefono" required placeholder="Ej: 8174894853">
+      </div>
+
+      <div class="form-group">
+        <label for="facturaSSID">SSID (opcional)</label>
+        <input type="text" id="facturaSSID" placeholder="Ej: 10443720002157800">
+      </div>
+
+      <div class="form-group">
+        <label for="facturaTipo">Tipo de consulta *</label>
+        <select id="facturaTipo" required>
+          <option value="">Selecciona...</option>
+          <option value="factura">Información de factura</option>
+          <option value="pago">Métodos de pago</option>
+          <option value="historial">Historial de pagos</option>
+          <option value="otro">Otro</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="facturaMensaje">Mensaje (opcional)</label>
+        <textarea id="facturaMensaje" rows="3" placeholder="Describe tu consulta..."></textarea>
+      </div>
+
+      <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 10px;">
+        Enviar Consulta
+      </button>
+    </form>
+  </div>
+</div>
+
+<!-- MODAL AGENDA TU CITA -->
+<div id="modalCitas" class="modal-overlay" onclick="cerrarModalCitas(event)">
+  <div class="modal" onclick="event.stopPropagation()">
+    <button class="modal-close" onclick="cerrarModalCitas()">✕</button>
+    <h2>📅 Agenda tu Cita</h2>
+    <p style="color: var(--text-gray); margin-bottom: 25px;">
+      Completa el formulario y te redirigiremos a WhatsApp para confirmar tu cita.
+    </p>
+
+    <form id="formAgendaCita" onsubmit="agendarCitaWhatsApp(event)">
+      <div class="form-group">
+        <label for="citaNombre">Nombre completo *</label>
+        <input type="text" id="citaNombre" required placeholder="Ej: María González">
+      </div>
+
+      <div class="form-group">
+        <label for="citaTelefono">Teléfono *</label>
+        <input type="tel" id="citaTelefono" required placeholder="Ej: 8174894853">
+      </div>
+
+      <div class="form-group">
+        <label for="citaFecha">Fecha preferida *</label>
+        <input type="date" id="citaFecha" required>
+      </div>
+
+      <div class="form-group">
+        <label for="citaTipo">Tipo de asesoría *</label>
+        <select id="citaTipo" required>
+          <option value="">Selecciona...</option>
+          <option value="conexion">Asesoría para nueva conexión</option>
+          <option value="cambio">Cambio de plan</option>
+          <option value="renovacion">Renovación de contrato</option>
+          <option value="otro">Otro</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="citaMensaje">Mensaje adicional (opcional)</label>
+        <textarea id="citaMensaje" rows="2" placeholder="¿Algo más que quieras compartir?"></textarea>
+      </div>
+
+      <button type="submit" class="btn btn-whatsapp" style="width: 100%; margin-top: 10px;">
+        💬 Enviar por WhatsApp
+      </button>
+    </form>
+  </div>
+</div>
+
 </body>
 </html>
 

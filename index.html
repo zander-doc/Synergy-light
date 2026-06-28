@@ -8,7 +8,6 @@
   <meta name="keywords" content="energía eléctrica Texas, luz residencial, electricidad Houston, Dallas, Austin, ahorrar luz, Synergy Light">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://synergylight.com/">
-  <link rel="icon" type="image/webp" href="fivicon.webp">
 
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website">
@@ -28,14 +27,13 @@
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Open+Sans:wght@400;500;600;700&family=Orbitron:wght@400;600;700;900&display=swap" rel="stylesheet">
 
   <!-- Favicon -->
-  <link rel="icon" type="image/webp" href="fivicon.webp">
-  <link rel="shortcut icon" type="image/webp" href="fivicon.webp">
-  <link rel="apple-touch-icon" sizes="180x180" href="fivicon.webp">
+  <link rel="icon" type="image/webp" href="favicon.webp">
+  <link rel="shortcut icon" type="image/webp" href="favicon.webp">
+  <link rel="apple-touch-icon" sizes="180x180" href="favicon.webp">
   
   <!-- CSS -->
   <link rel="stylesheet" href="assets/css/style.css?v=2.0">
   <link rel="stylesheet" href="assets/css/components.css?v=2.0">
-  <link rel="stylesheet" href="assets/css/sections.css?v=2.0">
   <link rel="stylesheet" href="assets/css/animations.css?v=2.0">
   <link rel="stylesheet" href="assets/css/responsive.css?v=2.0">
 
@@ -249,67 +247,161 @@
 </section>
 
 <!-- ═══════════════════════════════════════════════════════
-     CÓMO FUNCIONA - 3 PASOS
+     SECCIÓN: 3 PASOS PARA AHORRAR
      ═══════════════════════════════════════════════════════ -->
-<section class="how-it-works-section">
+<section class="pasos-section" id="como-funciona">
   <div class="container">
+    <!-- Header de sección -->
     <div class="section-header">
       <span class="section-tag">CÓMO FUNCIONA</span>
-      <h2 class="section-title">Así Funciona en <span class="text-green">3 Pasos Simples</span></h2>
-      <p class="section-subtitle">Comienza a ahorrar en la mitad de lo que cuesta de luz</p>
+      <h2 class="section-title">
+        Así Funciona en <span class="text-green">3 Pasos</span> Simples
+      </h2>
+      <p class="section-subtitle">
+        Comienza a ahorrar en tu recibo de luz en menos de 5 minutos
+      </p>
     </div>
     
-    <div class="how-it-works-grid">
-      <!-- Paso 1 -->
-      <div class="how-step">
-        <div class="step-icon">
+    <!-- Contenedor de los 3 pasos -->
+    <div class="pasos-container">
+      
+      <!-- PASO 1: Verifica tu dirección -->
+      <div class="paso-card" data-paso="1">
+        <div class="paso-number">
+          <span class="number">1</span>
+          <div class="number-ring"></div>
+        </div>
+        
+        <div class="paso-icon">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                  d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                  d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
           </svg>
         </div>
-        <div class="step-number">1</div>
-        <h3>Verifica tu Dirección</h3>
-        <p>Ingresa tu código postal y verifica que estás en nuestra área de cobertura</p>
-        <ul class="step-features">
-          <li>Verificación instantánea</li>
-          <li>Sin compromiso</li>
-          <li>100% gratis</li>
+        
+        <h3 class="paso-title">Verifica tu Dirección</h3>
+        <p class="paso-description">
+          Ingresa tu código postal y confirma que estás en nuestra zona de cobertura
+        </p>
+        
+        <!-- Input de código postal -->
+        <div class="zip-verification">
+          <input 
+            type="text" 
+            id="zipCode" 
+            class="zip-input" 
+            placeholder="Ej: 77001" 
+            maxlength="5"
+            pattern="[0-9]{5}"
+          >
+          <button class="zip-btn" onclick="verificarCodigo()">
+            <span class="btn-text">Verificar</span>
+            <span class="btn-icon">→</span>
+          </button>
+        </div>
+        
+        <div class="paso-status" id="zipStatus"></div>
+      </div>
+      
+      <!-- FLECHA VERTICAL 1 -->
+      <div class="paso-arrow-vertical">
+        <div class="arrow-line-vertical"></div>
+        <div class="arrow-icon-vertical">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
+          </svg>
+        </div>
+      </div>
+      
+      <!-- PASO 2: Descubre tus beneficios -->
+      <div class="paso-card" data-paso="2">
+        <div class="paso-number">
+          <span class="number">2</span>
+          <div class="number-ring"></div>
+        </div>
+        
+        <div class="paso-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                  d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+        </div>
+        
+        <h3 class="paso-title">Descubre tus Beneficios</h3>
+        <p class="paso-description">
+          Recibe un plan personalizado con descuentos de hasta 35% según tu zona
+        </p>
+        
+        <!-- Lista de beneficios destacados -->
+        <ul class="beneficios-list">
+          <li><span class="check">✓</span> Hasta 35% de descuento</li>
+          <li><span class="check">✓</span> Depósitos desde $60</li>
+          <li><span class="check">✓</span> kWh desde 8¢</li>
+          <li><span class="check">✓</span> Atención en español</li>
         </ul>
       </div>
       
-      <!-- Paso 2 -->
-      <div class="how-step">
-        <div class="step-icon">
+      <!-- FLECHA VERTICAL 2 -->
+      <div class="paso-arrow-vertical">
+        <div class="arrow-line-vertical"></div>
+        <div class="arrow-icon-vertical">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
           </svg>
         </div>
-        <div class="step-number">2</div>
-        <h3>Descubre tus Beneficios</h3>
-        <p>Revisa los planes disponibles y los ahorros que puedes obtener</p>
-        <ul class="step-features">
-          <li>Hasta 35% de ahorro</li>
-          <li>Sin cargos ocultos</li>
-          <li>Atención en español</li>
-        </ul>
       </div>
       
-      <!-- Paso 3 -->
-      <div class="how-step">
-        <div class="step-icon">
+      <!-- PASO 3: Comienza a ahorrar -->
+      <div class="paso-card featured" data-paso="3">
+        <div class="paso-badge">¡LISTO!</div>
+        
+        <div class="paso-number">
+          <span class="number">3</span>
+          <div class="number-ring"></div>
+        </div>
+        
+        <div class="paso-icon">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                  d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
           </svg>
         </div>
-        <div class="step-number">3</div>
-        <h3>Comienza a Ahorrar</h3>
-        <p>Activa tu servicio en menos de 48 horas y empieza a ahorrar</p>
-        <ul class="step-features">
-          <li>Activación rápida</li>
-          <li>Sin instalación</li>
-          <li>Soporte 24/7</li>
-        </ul>
+        
+        <h3 class="paso-title">Comienza a Ahorrar</h3>
+        <p class="paso-description">
+          Activa tu servicio en 24-48 horas y empieza a disfrutar los ahorros
+        </p>
+        
+        <!-- Botón CTA -->
+        <a href="https://wa.me/14092800661?text=Hola,%20quiero%20contratar%20el%20servicio%20de%20luz" 
+           class="paso-cta" 
+           target="_blank">
+          <span class="cta-icon">💬</span>
+          <span class="cta-text">Contratar Ahora</span>
+        </a>
+        
+        <div class="paso-garantia">
+          <span>✓</span> Sin cargos ocultos
+        </div>
+      </div>
+    </div>
+    
+    <!-- Contador de clientes -->
+    <div class="clientes-counter">
+      <div class="counter-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+        </svg>
+      </div>
+      <div class="counter-text">
+        <span class="counter-number" data-target="15000">0</span>
+        <span class="counter-suffix">+</span>
+      </div>
+      <div class="counter-label">
+        clientes en Texas ya están <span class="text-green">ahorrando</span>
       </div>
     </div>
   </div>
@@ -338,7 +430,7 @@
       <div class="benefit-card fade-in">
         <div class="benefit-icon">💰</div>
         <h3>Pago Inicial Mínimo</h3>
-        <p>Depósitos desde $0 en nuestro plan Premium y desde $30 en el plan Estándar.</p>
+        <p>Depósitos desde $60 en nuestro plan Premium y desde $30 en el plan Estándar.</p>
       </div>
       <div class="benefit-card fade-in">
         <div class="benefit-icon">🏆</div>
@@ -581,178 +673,7 @@
   </div>
 </section>
 
-<section class="cobertura-section" id="cobertura">
-  <div class="container">
-    <!-- Header -->
-    <div class="section-header">
-      <span class="section-tag">COBERTURA</span>
-      <h2 class="section-title">Cubrimos Todo <span class="text-green">Texas</span></h2>
-      <p class="section-subtitle">Servicio disponible en las principales ciudades del estado</p>
-    </div>
-    
-    <!-- Mapa Interactivo de Texas con Imagen Base -->
-    <div class="texas-map-interactive-wrapper">
-      <!-- Imagen base del mapa -->
-      <img src="assets/images/cities/mapa_texas.webp" 
-           alt="Mapa de Texas - Zonas de servicio Synergy Light" 
-           class="texas-map-base">
-      
-      <!-- Capa SVG interactiva superpuesta -->
-      <svg class="texas-map-overlay" viewBox="0 0 800 700" xmlns="http://www.w3.org/2000/svg">
-        
-        <!-- Zona LP&L (Norte - azul oscuro) -->
-        <path class="zone zone-lpl" 
-              data-zone="LP&L"
-              data-info="Lubbock Power & Light - Norte de Texas"
-              d="M 280,60 L 400,60 L 400,200 L 320,220 L 280,200 Z" 
-              fill="transparent" 
-              stroke="transparent" 
-              stroke-width="2"/>
-        
-        <!-- Zona TNMP (Oeste - verde oscuro) -->
-        <path class="zone zone-tnmp" 
-              data-zone="TNMP"
-              data-info="Texas-New Mexico Power - Oeste de Texas"
-              d="M 80,280 L 200,260 L 240,340 L 180,400 L 80,380 Z" 
-              fill="transparent" 
-              stroke="transparent" 
-              stroke-width="2"/>
-        
-        <!-- Zona AEPN (Centro-Oeste - azul) -->
-        <path class="zone zone-aepn" 
-              data-zone="AEPN"
-              data-info="AEP North - Centro-Oeste de Texas"
-              d="M 240,200 L 400,200 L 450,280 L 420,360 L 320,380 L 240,340 Z" 
-              fill="transparent" 
-              stroke="transparent" 
-              stroke-width="2"/>
-        
-        <!-- Zona ONCOR (Noreste - verde claro) -->
-        <path class="zone zone-oncor" 
-              data-zone="ONCOR"
-              data-info="Oncor - Noreste de Texas (Dallas/Fort Worth)"
-              d="M 400,60 L 650,80 L 680,200 L 620,320 L 500,340 L 450,280 L 400,200 Z" 
-              fill="transparent" 
-              stroke="transparent" 
-              stroke-width="2"/>
-        
-        <!-- Zona CENTERPOINT (Este - verde brillante) -->
-        <path class="zone zone-centerpoint" 
-              data-zone="CENTERPOINT"
-              data-info="CenterPoint Energy - Houston y área metropolitana"
-              d="M 620,320 L 720,340 L 740,420 L 680,450 L 620,420 Z" 
-              fill="transparent" 
-              stroke="transparent" 
-              stroke-width="2"/>
-        
-        <!-- Zona AEPC (Sur - verde medio) -->
-        <path class="zone zone-aepc" 
-              data-zone="AEPC"
-              data-info="AEP Central - Sur de Texas (San Antonio/Corpus Christi)"
-              d="M 320,380 L 420,360 L 500,340 L 620,420 L 600,520 L 480,600 L 380,580 L 300,480 Z" 
-              fill="transparent" 
-              stroke="transparent" 
-              stroke-width="2"/>
-        
-        <!-- Etiquetas de zonas (aparecen en hover) -->
-        <g class="zone-labels" opacity="0">
-          <text class="zone-label-text" x="400" y="350" text-anchor="middle"></text>
-        </g>
-      </svg>
-      
-      <!-- Tooltip personalizado -->
-      <div class="map-tooltip" id="mapTooltip">
-        <div class="tooltip-title"></div>
-        <div class="tooltip-info"></div>
-      </div>
-    </div>
-    
-    <!-- Tarjetas de Ciudades con Imágenes -->
-    <div class="cities-grid">
-      <!-- Houston -->
-      <div class="city-card" style="background-image: linear-gradient(135deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.5) 100%), url('assets/images/cities/houston-texas.webp'); background-size: cover; background-position: center;">
-        <div class="city-card-content">
-          <h3>Houston</h3>
-          <p class="city-clients">+3,000 clientes</p>
-          <p class="city-desc">Área metropolitana completa</p>
-          <div class="city-features">
-            <span class="feature-tag">✓ Cobertura total</span>
-            <span class="feature-tag">✓ 24/7</span>
-          </div>
-        </div>
-      </div>
-      
-      <!-- Dallas -->
-      <div class="city-card" style="background-image: linear-gradient(135deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.5) 100%), url('assets/images/cities/dallas.webp'); background-size: cover; background-position: center;">
-        <div class="city-card-content">
-          <h3>Dallas</h3>
-          <p class="city-clients">+2,500 clientes</p>
-          <p class="city-desc">Servicio en toda la región</p>
-          <div class="city-features">
-            <span class="feature-tag">✓ Cobertura total</span>
-            <span class="feature-tag">✓ 24/7</span>
-          </div>
-        </div>
-      </div>
-      
-      <!-- Austin -->
-      <div class="city-card" style="background-image: linear-gradient(135deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.5) 100%), url('assets/images/cities/Austin_Sixth_Street.webp'); background-size: cover; background-position: center;">
-        <div class="city-card-content">
-          <h3>Austin</h3>
-          <p class="city-clients">+2,000 clientes</p>
-          <p class="city-desc">Capital de Texas</p>
-          <div class="city-features">
-            <span class="feature-tag">✓ Cobertura total</span>
-            <span class="feature-tag">✓ 24/7</span>
-          </div>
-        </div>
-      </div>
-      
-      <!-- San Antonio -->
-      <div class="city-card" style="background-image: linear-gradient(135deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.5) 100%), url('assets/images/cities/San Antonio.webp'); background-size: cover; background-position: center;">
-        <div class="city-card-content">
-          <h3>San Antonio</h3>
-          <p class="city-clients">+2,200 clientes</p>
-          <p class="city-desc">Zona sur de Texas</p>
-          <div class="city-features">
-            <span class="feature-tag">✓ Cobertura total</span>
-            <span class="feature-tag">✓ 24/7</span>
-          </div>
-        </div>
-      </div>
-      
-      <!-- Fort Worth -->
-      <div class="city-card" style="background-image: linear-gradient(135deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.5) 100%), url('assets/images/cities/Fort Worth.webp'); background-size: cover; background-position: center;">
-        <div class="city-card-content">
-          <h3>Fort Worth</h3>
-          <p class="city-clients">+1,500 clientes</p>
-          <p class="city-desc">Área metropolitana</p>
-          <div class="city-features">
-            <span class="feature-tag">✓ Cobertura total</span>
-            <span class="feature-tag">✓ 24/7</span>
-          </div>
-        </div>
-      </div>
-      
-      <!-- El Paso -->
-      <div class="city-card" style="background-image: linear-gradient(135deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.5) 100%), url('assets/images/cities/El Paso.webp'); background-size: cover; background-position: center;">
-        <div class="city-card-content">
-          <h3>El Paso</h3>
-          <p class="city-clients">+1,200 clientes</p>
-          <p class="city-desc">Oeste de Texas</p>
-          <div class="city-features">
-            <span class="feature-tag">✓ Cobertura total</span>
-            <span class="feature-tag">✓ 24/7</span>
-          </div>
-        </div>
-      </div>
-    </div>
-    
-    <div class="text-center mt-60">
-      <a href="contacto.html" class="btn-premium">Ver Cobertura Completa</a>
-    </div>
-  </div>
-</section>
+
 
 <section class="testimonios-section" id="testimonios">
   <div class="container">
@@ -1244,7 +1165,6 @@
       <div class="footer-bottom-links">
         <a href="#">Política de Privacidad</a>
         <a href="#">Términos de Servicio</a>
-        <a href="/admin/login.html" style="opacity: 0.4; font-size: 12px; color: #03bc89; text-decoration: none; margin-left: 15px;">🔐 Admin</a>
       </div>
     </div>
   </div>
@@ -1269,6 +1189,5 @@
 
 <!-- Nav overlay for mobile menu -->
 <div class="nav-overlay"></div>
-
 </body>
 </html>

@@ -12,7 +12,7 @@
     <link rel="icon" type="image/webp" href="favicon.webp">
   <link rel="shortcut icon" type="image/webp" href="favicon.webp">
   <link rel="apple-touch-icon" sizes="180x180" href="favicon.webp">
-<link rel="stylesheet" href="assets/css/style.css"><link rel="stylesheet" href="assets/css/components.css"><link rel="stylesheet" href="assets/css/sections.css"><link rel="stylesheet" href="assets/css/animations.css"><link rel="stylesheet" href="assets/css/responsive.css">
+<link rel="stylesheet" href="assets/css/style.css?v=3.0"><link rel="stylesheet" href="assets/css/components.css"><link rel="stylesheet" href="assets/css/sections.css"><link rel="stylesheet" href="assets/css/animations.css"><link rel="stylesheet" href="assets/css/responsive.css">
 </head>
 <body>
 <!-- ═══════════════════════════════════════════════════
@@ -58,65 +58,123 @@
   <div class="header-accent-line"></div>
 </header>
 
-<section class="page-hero">
-  <div class="container">
-    <h1>Planes de <span class="gradient-text">Energía</span></h1>
-    <p>Encuentra el plan perfecto para tu hogar en Texas</p>
+<section class="planes-hero-section">
+  <div class="planes-hero-overlay"></div>
+  <div class="planes-hero-content">
+    <span class="planes-hero-badge">PLANES</span>
+    <h1 class="planes-hero-title">
+      Nuestros <span class="text-green">Planes</span>
+    </h1>
+    <p class="planes-hero-subtitle">
+      Encuentra el plan perfecto para tu hogar en Texas
+    </p>
+    <div class="planes-hero-stats">
+      <div class="stat-item">
+        <span class="stat-number">8¢</span>
+        <span class="stat-label">Desde /kWh</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-number">35%</span>
+        <span class="stat-label">Ahorro</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-number">24/7</span>
+        <span class="stat-label">Soporte</span>
+      </div>
+    </div>
   </div>
 </section>
 
-<section class="planes-section">
+<section class="planes-premium-section">
   <div class="container">
-    <div class="section-header fade-in">
-      <span class="section-badge">Comparativa</span>
-      <h2>Todos Nuestros <span class="gradient-text">Planes</span></h2>
-      <p>Compara y elige el que mejor se adapte a ti</p>
+    <div class="section-header">
+      <span class="section-tag">COMPARATIVA</span>
+      <h2 class="section-title">
+        Todos Nuestros <span class="text-green">Planes</span>
+      </h2>
+      <p class="section-subtitle">
+        Compara y elige el que mejor se adapte a ti
+      </p>
     </div>
-    <div class="plans-grid">
-      <div class="plan-card fade-in">
-        <div class="plan-name">PLAN BÁSICO</div>
-        <div class="plan-price">8¢ <span>/kWh</span></div>
-        <p class="plan-deposit">Depósito: <strong>$50</strong></p>
-        <p style="color:var(--text-gray);font-size:0.9rem;margin-bottom:16px;">Ideal para apartamentos pequeños y consumo básico.</p>
-        <div class="plan-features">
-          <div class="plan-feature"><span class="check">✓</span> Sin contrato a largo plazo</div>
-          <div class="plan-feature"><span class="check">✓</span> Atención al cliente 24/7</div>
-          <div class="plan-feature"><span class="check">✓</span> Facturación mensual</div>
-          <div class="plan-feature"><span class="check">✓</span> Pago en línea</div>
-          <div class="plan-feature"><span class="check">✓</span> Sin cargos ocultos</div>
+
+    <div class="planes-grid-premium">
+      
+      <!-- PLAN BÁSICO -->
+      <div class="plan-card-premium">
+        <div class="plan-icon">⚡</div>
+        <h3 class="plan-name">Plan Básico</h3>
+        <div class="plan-price-container">
+          <span class="plan-price">8¢</span>
+          <span class="plan-price-unit">/kWh</span>
         </div>
-        <a href="https://wa.me/14092800661?text=Hola,%20quiero%20el%20plan%20básico%20de%20Synergy%20Light" target="_blank" class="btn btn-primary">Contratar Plan</a>
+        <p class="plan-deposit">Depósito: <strong>$80</strong></p>
+        <ul class="plan-features">
+          <li><span class="check-icon">✓</span> Sin contrato a largo plazo</li>
+          <li><span class="check-icon">✓</span> Atención al cliente 24/7</li>
+          <li><span class="check-icon">✓</span> Facturación mensual</li>
+          <li><span class="check-icon">✓</span> Pago en línea</li>
+          <li><span class="check-icon">✓</span> Sin cargos ocultos</li>
+          <li><span class="check-icon">✓</span> Noches gratis desde las 8 p.m. hasta las 6 a.m.</li>
+          <li><span class="check-icon">✓</span> Recibo en físico en papel a buzón</li>
+        </ul>
+        <a href="https://wa.me/14092800661?text=Hola,%20quiero%20información%20sobre%20el%20Plan%20Básico%20de%208¢/kWh" 
+           class="plan-button" 
+           target="_blank">
+          Elegir Plan
+        </a>
       </div>
-      <div class="plan-card featured fade-in">
-        <div class="plan-badge">MÁS POPULAR</div>
-        <div class="plan-name">PLAN ESTÁNDAR</div>
-        <div class="plan-price">10¢ <span>/kWh</span></div>
-        <p class="plan-deposit">Depósito: <strong>$30</strong></p>
-        <p style="color:var(--text-gray);font-size:0.9rem;margin-bottom:16px;">Ideal para casas familiares. El equilibrio perfecto.</p>
-        <div class="plan-features">
-          <div class="plan-feature"><span class="check">✓</span> 6 meses de contrato</div>
-          <div class="plan-feature"><span class="check">✓</span> Atención al cliente 24/7</div>
-          <div class="plan-feature"><span class="check">✓</span> Facturación mensual</div>
-          <div class="plan-feature"><span class="check">✓</span> Pago en línea y app</div>
-          <div class="plan-feature"><span class="check">✓</span> Sin cargos ocultos</div>
+
+      <!-- PLAN ESTÁNDAR (DESTACADO) -->
+      <div class="plan-card-premium plan-featured">
+        <div class="popular-badge">MÁS POPULAR</div>
+        <div class="plan-icon">🏆</div>
+        <h3 class="plan-name">Plan Estándar</h3>
+        <div class="plan-price-container">
+          <span class="plan-price">10¢</span>
+          <span class="plan-price-unit">/kWh</span>
         </div>
-        <a href="https://wa.me/14092800661?text=Hola,%20quiero%20el%20plan%20estándar%20de%20Synergy%20Light" target="_blank" class="btn btn-primary">Contratar Plan</a>
+        <p class="plan-deposit">Depósito: <strong>$70</strong></p>
+        <ul class="plan-features">
+          <li><span class="check-icon">✓</span> 6 meses de contrato</li>
+          <li><span class="check-icon">✓</span> Atención al cliente 24/7</li>
+          <li><span class="check-icon">✓</span> Facturación mensual</li>
+          <li><span class="check-icon">✓</span> Pago en línea y app</li>
+          <li><span class="check-icon">✓</span> Sin cargos ocultos</li>
+          <li><span class="check-icon">✓</span> Noches gratis desde las 8 p.m. hasta las 6 a.m.</li>
+          <li><span class="check-icon">✓</span> Recibo en físico en papel a buzón</li>
+        </ul>
+        <a href="https://wa.me/14092800661?text=Hola,%20quiero%20información%20sobre%20el%20Plan%20Estándar%20de%2010¢/kWh" 
+           class="plan-button plan-button-featured" 
+           target="_blank">
+          Elegir Plan
+        </a>
       </div>
-      <div class="plan-card fade-in">
-        <div class="plan-name">PLAN PREMIUM</div>
-        <div class="plan-price">12¢ <span>/kWh</span></div>
-        <p class="plan-deposit">Depósito: <strong>$0</strong></p>
-        <p style="color:var(--text-gray);font-size:0.9rem;margin-bottom:16px;">Ideal para casas grandes. Beneficios exclusivos.</p>
-        <div class="plan-features">
-          <div class="plan-feature"><span class="check">✓</span> 12 meses de contrato</div>
-          <div class="plan-feature"><span class="check">✓</span> Atención al cliente 24/7</div>
-          <div class="plan-feature"><span class="check">✓</span> Facturación mensual</div>
-          <div class="plan-feature"><span class="check">✓</span> Pago en línea y app</div>
-          <div class="plan-feature"><span class="check">✓</span> Sin cargos ocultos</div>
-          <div class="plan-feature"><span class="check">✓</span> Soporte prioritario</div>
+
+      <!-- PLAN PREMIUM -->
+      <div class="plan-card-premium">
+        <div class="plan-icon">👑</div>
+        <h3 class="plan-name">Plan Premium</h3>
+        <div class="plan-price-container">
+          <span class="plan-price">12¢</span>
+          <span class="plan-price-unit">/kWh</span>
         </div>
-        <a href="https://wa.me/14092800661?text=Hola,%20quiero%20el%20plan%20premium%20de%20Synergy%20Light" target="_blank" class="btn btn-primary">Contratar Plan</a>
+        <p class="plan-deposit">Depósito: <strong>$60</strong></p>
+        <ul class="plan-features">
+          <li><span class="check-icon">✓</span> 12 meses de contrato</li>
+          <li><span class="check-icon">✓</span> Atención al cliente 24/7</li>
+          <li><span class="check-icon">✓</span> Facturación mensual</li>
+          <li><span class="check-icon">✓</span> Pago en línea y app</li>
+          <li><span class="check-icon">✓</span> Sin cargos ocultos</li>
+          <li><span class="check-icon">✓</span> Noches gratis desde las 8 p.m. hasta las 6 a.m.</li>
+          <li><span class="check-icon">✓</span> Recibo en físico en papel a buzón</li>
+        </ul>
+        <a href="https://wa.me/14092800661?text=Hola,%20quiero%20información%20sobre%20el%20Plan%20Premium%20de%2012¢/kWh" 
+           class="plan-button" 
+           target="_blank">
+          Elegir Plan
+        </a>
       </div>
+
     </div>
   </div>
 </section>

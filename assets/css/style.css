@@ -1532,32 +1532,61 @@ p {
    SECCIÓN PLANES - FONDO PREMIUM CON GRADIENTE
    ═══════════════════════════════════════════════════════ */
 
-.planes-section {
-background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
-padding: 100px 0;
-position: relative;
-overflow: hidden;
+#planes-premium {
+  position: relative;
+  padding: 100px 0;
+  overflow: hidden;
+  background: #000000;
 }
 
-.planes-section::before {
-content: '';
-position: absolute;
-top: 0;
-left: 0;
-width: 100%;
-height: 100%;
-background:
-radial-gradient(circle at 20% 50%, rgba(3, 188, 137, 0.08) 0%, transparent 50%),
-radial-gradient(circle at 80% 80%, rgba(3, 188, 137, 0.05) 0%, transparent 50%);
-pointer-events: none;
+.ciudad-nocturna-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: url('assets/images/services/Fondo-de-ciudad-nocturna.webp') center center / cover no-repeat;
+  background-attachment: fixed;
+  z-index: 0;
+  opacity: 0.5;
 }
 
-.planes-section .section-title {
-color: #FFFFFF;
+.ciudad-nocturna-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.92) 0%, rgba(10, 10, 10, 0.85) 50%, rgba(0, 0, 0, 0.92) 100%);
+  z-index: 1;
+  pointer-events: none;
 }
 
-.planes-section .section-subtitle {
-color: #B0B0B0;
+#planes-premium .container {
+  position: relative;
+  z-index: 2;
+}
+
+#planes-premium .section-title {
+  color: #FFFFFF;
+}
+
+#planes-premium .section-subtitle,
+#planes-premium .planes-subtitle {
+  color: #B0B0B0;
+}
+
+#planes-premium .plan-icon-wrapper {
+  text-align: center;
+  font-size: 3rem;
+  margin-bottom: 15px;
+  filter: drop-shadow(0 0 15px rgba(3, 188, 137, 0.4));
+  animation: floatIcon 3s ease-in-out infinite;
+}
+
+@keyframes floatIcon {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
 }
 
 /* ═══════════════════════════════════════════════════════
@@ -1639,20 +1668,22 @@ color: #B0B0B0;
 
 /* Badge "Más Popular" */
 .plan-card.featured::before {
-  content: 'MÁS POPULAR';
+  content: '🏆 MÁS POPULAR';
   position: absolute;
-  top: 20px;
-  right: -35px;
+  top: 15px;
+  right: 15px;
   background: linear-gradient(135deg, #03bc89 0%, #04d99e 100%);
   color: #FFFFFF;
-  padding: 6px 45px;
-  transform: rotate(45deg);
-  font-size: 11px;
+  padding: 6px 16px;
+  transform: none;
+  border-radius: 20px;
+  font-size: 10px;
   font-weight: 700;
   font-family: 'Montserrat', sans-serif;
-  letter-spacing: 1px;
+  letter-spacing: 0.5px;
   box-shadow: 0 4px 15px rgba(3, 188, 137, 0.4);
-  z-index: 3;
+  z-index: 1;
+  pointer-events: none;
 }
 
 /* ═══════════════════════════════════════════════════════
@@ -7249,5 +7280,506 @@ SECCIÓN SOPORTE TÉCNICO - PREMIUM
   .badge-disponible {
     font-size: 0.8rem;
     padding: 8px 16px;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════
+HERO SECTION - PLANES CON IMAGEN DE FONDO
+═══════════════════════════════════════════════════════ */
+.planes-hero-section {
+  position: relative;
+  min-height: 500px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 120px 20px 80px;
+  background: url('assets/images/services/Fondo-de-ciudad-nocturna.webp');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  overflow: hidden;
+}
+
+.planes-hero-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    135deg,
+    rgba(0, 0, 0, 0.85) 0%,
+    rgba(10, 58, 42, 0.75) 50%,
+    rgba(0, 0, 0, 0.9) 100%
+  );
+  z-index: 1;
+}
+
+.planes-hero-content {
+  position: relative;
+  z-index: 2;
+  max-width: 800px;
+  animation: fadeInUp 0.8s ease;
+}
+
+.planes-hero-badge {
+  display: inline-block;
+  background: rgba(3, 188, 137, 0.15);
+  color: #03bc89;
+  padding: 10px 25px;
+  border-radius: 30px;
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 20px;
+  border: 2px solid rgba(3, 188, 137, 0.4);
+  box-shadow: 0 0 20px rgba(3, 188, 137, 0.3);
+}
+
+.planes-hero-title {
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-weight: 900;
+  color: #FFFFFF;
+  margin-bottom: 20px;
+  font-family: 'Montserrat', sans-serif;
+  text-shadow: 0 0 30px rgba(3, 188, 137, 0.5);
+}
+
+.planes-hero-title .text-green {
+  color: #03bc89;
+  text-shadow: 0 0 40px rgba(3, 188, 137, 0.8);
+}
+
+.planes-hero-subtitle {
+  font-size: 1.3rem;
+  color: #E0E0E0;
+  margin-bottom: 40px;
+  line-height: 1.6;
+}
+
+.planes-hero-stats {
+  display: flex;
+  justify-content: center;
+  gap: 50px;
+  flex-wrap: wrap;
+}
+
+.planes-hero-stats .stat-item {
+  text-align: center;
+}
+
+.planes-hero-stats .stat-number {
+  display: block;
+  font-size: 3rem;
+  font-weight: 900;
+  color: #03bc89;
+  font-family: 'Orbitron', sans-serif;
+  text-shadow: 0 0 20px rgba(3, 188, 137, 0.6);
+  line-height: 1;
+  margin-bottom: 8px;
+}
+
+.planes-hero-stats .stat-label {
+  font-size: 0.9rem;
+  color: #B0B0B0;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* ═══════════════════════════════════════════════════════
+SECCIÓN PLANES PREMIUM
+═══════════════════════════════════════════════════════ */
+.planes-premium-section {
+  background: 
+    linear-gradient(135deg, rgba(0,0,0,0.85) 0%, rgba(10,58,42,0.75) 50%, rgba(0,0,0,0.9) 100%),
+    url('assets/images/services/Fondo-de-ciudad-nocturna.webp');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  padding: 100px 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.planes-premium-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background:
+    radial-gradient(circle at 20% 50%, rgba(3, 188, 137, 0.08) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(3, 188, 137, 0.05) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.planes-premium-section .section-header {
+  position: relative;
+  z-index: 2;
+  margin-bottom: 60px;
+}
+
+.planes-premium-section .section-title {
+  color: #FFFFFF;
+  font-size: 2.8rem;
+  font-weight: 800;
+  margin-bottom: 15px;
+}
+
+.planes-premium-section .section-subtitle {
+  color: #B0B0B0;
+  font-size: 1.1rem;
+}
+
+/* ═══════════════════════════════════════════════════════
+GRID DE PLANES
+═══════════════════════════════════════════════════════ */
+.planes-grid-premium {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 30px;
+  max-width: 1200px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 2;
+}
+
+/* ═══════════════════════════════════════════════════════
+TARJETA DE PLAN PREMIUM
+═══════════════════════════════════════════════════════ */
+.plan-card-premium {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 2px solid rgba(3, 188, 137, 0.25);
+  border-radius: 25px;
+  padding: 40px 30px;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.3),
+    inset 0 0 20px rgba(3, 188, 137, 0.05);
+  display: flex;
+  flex-direction: column;
+}
+
+.plan-card-premium:hover {
+  transform: translateY(-10px);
+  border-color: rgba(3, 188, 137, 0.6);
+  box-shadow:
+    0 20px 50px rgba(3, 188, 137, 0.3),
+    inset 0 0 30px rgba(3, 188, 137, 0.1);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.plan-card-premium::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(3, 188, 137, 0.1), transparent);
+  transition: left 0.6s ease;
+  pointer-events: none;
+}
+
+.plan-card-premium:hover::before {
+  left: 100%;
+}
+
+/* Plan destacado (Estándar) */
+.plan-card-premium.plan-featured {
+  background: linear-gradient(135deg, rgba(3, 188, 137, 0.12) 0%, rgba(4, 217, 158, 0.06) 100%);
+  border-color: #03bc89;
+  border-width: 3px;
+  box-shadow:
+    0 15px 40px rgba(3, 188, 137, 0.35),
+    inset 0 0 40px rgba(3, 188, 137, 0.15);
+  transform: scale(1.05);
+}
+
+.plan-card-premium.plan-featured:hover {
+  transform: scale(1.05) translateY(-10px);
+  box-shadow:
+    0 25px 60px rgba(3, 188, 137, 0.45),
+    inset 0 0 50px rgba(3, 188, 137, 0.2);
+}
+
+/* Badge "Más Popular" */
+.popular-badge {
+  position: absolute;
+  top: 20px;
+  right: -35px;
+  background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+  color: #000000;
+  padding: 8px 50px;
+  transform: rotate(45deg);
+  font-size: 11px;
+  font-weight: 800;
+  font-family: 'Montserrat', sans-serif;
+  letter-spacing: 1px;
+  box-shadow: 0 4px 15px rgba(255, 215, 0, 0.5);
+  z-index: 3;
+}
+
+/* Icono del plan */
+.plan-icon {
+  font-size: 3.5rem;
+  margin-bottom: 20px;
+  display: block;
+  text-align: center;
+  filter: drop-shadow(0 0 20px rgba(3, 188, 137, 0.5));
+}
+
+/* Nombre del plan */
+.plan-card-premium .plan-name {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #FFFFFF;
+  text-align: center;
+  margin-bottom: 20px;
+  font-family: 'Montserrat', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+/* Precio */
+.plan-price-container {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 5px;
+  margin-bottom: 15px;
+}
+
+.plan-price {
+  font-size: 4.5rem;
+  font-weight: 900;
+  color: #03bc89;
+  font-family: 'Orbitron', sans-serif;
+  line-height: 1;
+  text-shadow: 0 0 30px rgba(3, 188, 137, 0.6);
+}
+
+.plan-price-unit {
+  font-size: 1.3rem;
+  color: #B0B0B0;
+  font-weight: 600;
+}
+
+/* Depósito */
+.plan-card-premium .plan-deposit {
+  text-align: center;
+  font-size: 1rem;
+  color: #B0B0B0;
+  margin-bottom: 30px;
+  padding-bottom: 25px;
+  border-bottom: 2px solid rgba(3, 188, 137, 0.2);
+}
+
+.plan-card-premium .plan-deposit strong {
+  color: #03bc89;
+  font-weight: 700;
+}
+
+/* Lista de características */
+.plan-card-premium .plan-features {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 30px 0;
+  flex-grow: 1;
+}
+
+.plan-card-premium .plan-features li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(3, 188, 137, 0.1);
+  color: #E0E0E0;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+}
+
+.plan-card-premium .plan-features li:last-child {
+  border-bottom: none;
+}
+
+.plan-card-premium .plan-features li:hover {
+  padding-left: 10px;
+  color: #FFFFFF;
+}
+
+.plan-card-premium .plan-features .check-icon {
+  color: #03bc89;
+  font-weight: bold;
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+
+/* Botón del plan */
+.plan-card-premium .plan-button {
+  display: block;
+  width: 100%;
+  padding: 16px 30px;
+  background: rgba(3, 188, 137, 0.15);
+  color: #03bc89;
+  text-align: center;
+  text-decoration: none;
+  border-radius: 50px;
+  font-weight: 700;
+  font-size: 15px;
+  font-family: 'Montserrat', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: all 0.3s ease;
+  border: 2px solid rgba(3, 188, 137, 0.4);
+  position: relative;
+  overflow: hidden;
+}
+
+.plan-card-premium .plan-button:hover {
+  background: #03bc89;
+  color: #000000;
+  border-color: #03bc89;
+  box-shadow: 0 0 30px rgba(3, 188, 137, 0.6);
+  transform: translateY(-3px);
+}
+
+/* Botón del plan destacado */
+.plan-card-premium .plan-button.plan-button-featured {
+  background: linear-gradient(135deg, #03bc89 0%, #04d99e 100%);
+  color: #FFFFFF;
+  border-color: #03bc89;
+  box-shadow:
+    0 8px 25px rgba(3, 188, 137, 0.4),
+    inset 0 2px 0 rgba(255, 255, 255, 0.3);
+}
+
+.plan-card-premium .plan-button.plan-button-featured::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 50%;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0.1) 100%);
+  border-radius: 50px 50px 0 0;
+  pointer-events: none;
+}
+
+.plan-card-premium .plan-button.plan-button-featured:hover {
+  box-shadow:
+    0 12px 35px rgba(3, 188, 137, 0.6),
+    inset 0 2px 0 rgba(255, 255, 255, 0.4);
+}
+
+/* ═══════════════════════════════════════════════════════
+ANIMACIONES DE ENTRADA
+═══════════════════════════════════════════════════════ */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.plan-card-premium {
+  opacity: 0;
+  animation: fadeInUp 0.6s ease forwards;
+}
+
+.plan-card-premium:nth-child(1) {
+  animation-delay: 0.1s;
+}
+
+.plan-card-premium:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.plan-card-premium:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+/* ═══════════════════════════════════════════════════════
+RESPONSIVE
+═══════════════════════════════════════════════════════ */
+@media (max-width: 1024px) {
+  .planes-hero-section {
+    min-height: 400px;
+    padding: 100px 20px 60px;
+  }
+  
+  .planes-hero-stats {
+    gap: 30px;
+  }
+  
+  .planes-hero-stats .stat-number {
+    font-size: 2.5rem;
+  }
+  
+  .plan-card-premium.plan-featured {
+    transform: scale(1);
+  }
+  
+  .plan-card-premium.plan-featured:hover {
+    transform: translateY(-10px);
+  }
+}
+
+@media (max-width: 768px) {
+  .planes-hero-section {
+    min-height: 350px;
+    padding: 90px 20px 50px;
+    background-attachment: scroll;
+  }
+  
+  .planes-hero-title {
+    font-size: 2rem;
+  }
+  
+  .planes-hero-subtitle {
+    font-size: 1rem;
+  }
+  
+  .planes-hero-stats {
+    gap: 20px;
+  }
+  
+  .planes-hero-stats .stat-number {
+    font-size: 2rem;
+  }
+  
+  .planes-premium-section {
+    padding: 60px 0;
+  }
+  
+  .planes-grid-premium {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  
+  .plan-card-premium {
+    padding: 30px 20px;
+  }
+  
+  .plan-price {
+    font-size: 3.5rem;
+  }
+  
+  .popular-badge {
+    top: 15px;
+    right: -40px;
+    padding: 6px 45px;
+    font-size: 10px;
   }
 }

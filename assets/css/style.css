@@ -7415,11 +7415,6 @@ SECCIÓN PLANES PREMIUM
     radial-gradient(circle at 80% 80%, rgba(3, 188, 137, 0.05) 0%, transparent 50%);
   pointer-events: none;
 }
-
-.planes-premium-section .section-header {
-  position: relative;
-  z-index: 2;
-  margin-bottom: 60px;
 }
 
 .planes-premium-section .section-title {

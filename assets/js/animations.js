@@ -14,9 +14,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
 /* ----- COUNTER ANIMATION ----- */
 function initCounters() {
-  const counters = document.querySelectorAll('.stat-number');
+  // Solo animar contadores que tengan data-count
+  const counters = document.querySelectorAll('.stat-number[data-count]');
   if (counters.length === 0) return;
-
+  
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
@@ -27,7 +28,7 @@ function initCounters() {
       }
     });
   }, { threshold: 0.5 });
-
+  
   counters.forEach(counter => observer.observe(counter));
 }
 

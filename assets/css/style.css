@@ -7287,18 +7287,18 @@ SECCIÓN SOPORTE TÉCNICO - PREMIUM
 HERO SECTION - PLANES CON IMAGEN DE FONDO
 ═══════════════════════════════════════════════════════ */
 .planes-hero-section {
-  position: relative;
-  min-height: 500px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: 120px 20px 80px;
-  background: url('assets/images/services/Fondo-de-ciudad-nocturna.webp');
-  background-size: cover;
-  background-position: center;
-  background-attachment: fixed;
-  overflow: hidden;
+  position: relative !important;
+  min-height: 500px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+  padding: 120px 20px 80px !important;
+  background: url('assets/images/services/Fondo-de-ciudad-nocturna.webp') !important;
+  background-size: cover !important;
+  background-position: center !important;
+  background-attachment: fixed !important;
+  overflow: hidden !important;
 }
 
 .planes-hero-overlay {
@@ -7309,9 +7309,9 @@ HERO SECTION - PLANES CON IMAGEN DE FONDO
   height: 100%;
   background: linear-gradient(
     135deg,
-    rgba(0, 0, 0, 0.85) 0%,
-    rgba(10, 58, 42, 0.75) 50%,
-    rgba(0, 0, 0, 0.9) 100%
+    rgba(0, 0, 0, 0.60) 0%,
+    rgba(10, 58, 42, 0.45) 50%,
+    rgba(0, 0, 0, 0.65) 100%
   );
   z-index: 1;
 }

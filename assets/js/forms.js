@@ -91,26 +91,37 @@ function initContactForm() {
 
     if (!isFormValid) return;
 
-    // Simulate form submission
+    // Submit to Formspree
     const submitBtn = form.querySelector('button[type="submit"]');
     const originalText = submitBtn.textContent;
     submitBtn.textContent = 'Enviando...';
     submitBtn.disabled = true;
 
     try {
-      // Here you would integrate with Formspree, Netlify Forms, etc.
-      // For now, we simulate a successful submission
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      const formData = new FormData(form);
+      
+      const response = await fetch('https://formspree.io/f/xrbqpklm', {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'Accept': 'application/json'
+        }
+      });
 
-      form.reset();
-      form.style.display = 'none';
-      if (successMessage) {
-        successMessage.classList.add('show');
+      if (response.ok) {
+        form.reset();
+        form.style.display = 'none';
+        if (successMessage) {
+          successMessage.classList.add('show');
+        }
+        showToast('Mensaje enviado con éxito. Te contactaremos pronto.', 'success');
+      } else {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Error en el envío');
       }
-
-      showToast('Mensaje enviado con éxito. Te contactaremos pronto.', 'success');
     } catch (error) {
-      showToast('Error al enviar el mensaje. Intenta de nuevo.', 'error');
+      console.error('Error:', error);
+      showToast('Error al enviar el mensaje. Por favor, intenta de nuevo o contáctanos por WhatsApp.', 'error');
     } finally {
       submitBtn.textContent = originalText;
       submitBtn.disabled = false;

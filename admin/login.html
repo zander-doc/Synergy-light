@@ -34,29 +34,13 @@
   <div class="login-container">
     <div class="logo"><h1>SYNERGY LIGHT</h1><p>Panel Administrativo</p></div>
     <div id="loginSection">
-      <h2 class="form-title">Iniciar Sesion</h2>
+      <h2 class="form-title">Acceso Administrativo</h2>
       <div class="message error" id="loginError"></div>
       <form id="loginForm">
-        <div class="form-group"><label>Usuario</label><input type="text" id="loginUser" required autocomplete="username"></div>
-        <div class="form-group"><label>Contrasena</label><div class="pw-wrap"><input type="password" id="loginPass" required autocomplete="current-password"><button type="button" class="pw-toggle" onclick="togglePass('loginPass',this)">&#128065;</button></div></div>
+        <div class="form-group"><label>Contrasena Maestra</label><div class="pw-wrap"><input type="password" id="loginPass" required autocomplete="current-password" placeholder="Ingresa la contrasena de acceso"><button type="button" class="pw-toggle" onclick="togglePass('loginPass',this)">&#128065;</button></div></div>
         <button type="submit" class="btn-primary">Ingresar</button>
       </form>
-      <div class="toggle-form">¿No tienes cuenta? <a onclick="showRegister()">Crear usuario</a></div>
-    </div>
-    <div id="registerSection" class="hidden">
-      <h2 class="form-title">Crear Usuario</h2>
-      <div class="message error" id="registerError"></div>
-      <div class="message success" id="registerSuccess"></div>
-      <form id="registerForm">
-        <div class="form-group"><label>Nombre</label><input type="text" id="regName" required></div>
-        <div class="form-group"><label>Usuario</label><input type="text" id="regUser" required minlength="3"></div>
-        <div class="form-group"><label>Email</label><input type="email" id="regEmail" required></div>
-        <div class="form-group"><label>Contrasena</label><div class="pw-wrap"><input type="password" id="regPass" required minlength="6"><button type="button" class="pw-toggle" onclick="togglePass('regPass',this)">&#128065;</button></div></div>
-        <div class="form-group"><label>Confirmar</label><div class="pw-wrap"><input type="password" id="regPassConfirm" required><button type="button" class="pw-toggle" onclick="togglePass('regPassConfirm',this)">&#128065;</button></div></div>
-        <button type="submit" class="btn-primary">Crear</button>
-        <button type="button" class="btn-secondary" onclick="showLogin()">Cancelar</button>
-      </form>
-      <div class="toggle-form">¿Ya tienes cuenta? <a onclick="showLogin()">Iniciar sesion</a></div>
+      <div class="footer" style="margin-top:30px;padding-top:20px;border-top:1px solid rgba(3,188,137,0.3)"><p style="font-size:11px;color:#666">Acceso restringido solo para personal autorizado</p></div>
     </div>
     <div class="footer"><p>C 2026 Synergy Light. Todos los derechos reservados.</p></div>
   </div>
@@ -68,48 +52,65 @@
     }
     function hashPassword(p){var h=0;for(var i=0;i<p.length;i++){h=((h<<5)-h)+p.charCodeAt(i);h=h&h}return'sl_'+Math.abs(h).toString(36)+'_'+p.length}
     function generateToken(){return'token_'+Date.now()+'_'+Math.random().toString(36).substr(2,9)}
-    function showRegister(){document.getElementById('loginSection').classList.add('hidden');document.getElementById('registerSection').classList.remove('hidden');clearMessages()}
-    function showLogin(){document.getElementById('registerSection').classList.add('hidden');document.getElementById('loginSection').classList.remove('hidden');clearMessages()}
     function clearMessages(){document.querySelectorAll('.message').forEach(function(el){el.style.display='none';el.textContent=''})}
     function showMessage(id,text,type){var el=document.getElementById(id);el.textContent=text;el.className='message '+type;el.style.display='block'}
-    document.getElementById('registerForm').addEventListener('submit',function(e){
-      e.preventDefault();clearMessages()
-      var n=document.getElementById('regName').value.trim()
-      var u=document.getElementById('regUser').value.trim().toLowerCase()
-      var em=document.getElementById('regEmail').value.trim()
-      var p=document.getElementById('regPass').value
-      var pc=document.getElementById('regPassConfirm').value
-      if(p!==pc){showMessage('registerError','Las contrasenas no coinciden','error');return}
-      if(p.length<6){showMessage('registerError','Minimo 6 caracteres','error');return}
-      if(!/[A-Z]/.test(p)){showMessage('registerError','Falta mayuscula','error');return}
-      if(!/[0-9]/.test(p)){showMessage('registerError','Falta numero','error');return}
-      var users=JSON.parse(localStorage.getItem('synergy_users')||'[]')
-      if(users.find(function(x){return x.username===u})){showMessage('registerError','Usuario ya existe','error');return}
-      users.push({id:Date.now(),name:n,username:u,email:em,passwordHash:hashPassword(p),createdAt:new Date().toISOString(),role:'admin'})
-      localStorage.setItem('synergy_users',JSON.stringify(users))
-      showMessage('registerSuccess','Usuario creado exitosamente','success')
-      document.getElementById('registerForm').reset()
-      setTimeout(function(){showLogin();document.getElementById('loginUser').value=u},2000)
-    })
+    
+    // Contrasena maestra predefinida
+    const MASTER_PASSWORD='Synergy2026@admin!.1';
+    
     document.getElementById('loginForm').addEventListener('submit',function(e){
       e.preventDefault();clearMessages()
-      var u=document.getElementById('loginUser').value.trim().toLowerCase()
       var p=document.getElementById('loginPass').value
+      
+      // Verificar contrasena maestra
+      if(p!==MASTER_PASSWORD){
+        showMessage('loginError','Contrasena incorrecta','error')
+        return
+      }
+      
+      // Crear/actualizar usuario admin
       var users=JSON.parse(localStorage.getItem('synergy_users')||'[]')
-      var found=users.find(function(x){return x.username===u})
-      if(!found){showMessage('loginError','Usuario no encontrado','error');return}
-      if(found.passwordHash!==hashPassword(p)){showMessage('loginError','Contrasena incorrecta','error');return}
-      var ses={token:generateToken(),userId:found.id,username:found.username,name:found.name,email:found.email,role:found.role,loginTime:new Date().toISOString(),expiresAt:new Date(Date.now()+8*60*60*1000).toISOString()}
+      var adminUser=users.find(function(x){return x.username==='admin'})
+      
+      if(!adminUser){
+        // Crear usuario admin si no existe
+        users.push({
+          id:1,
+          name:'Administrador',
+          username:'admin',
+          email:'synergylightservices@gmail.com',
+          passwordHash:hashPassword(p),
+          createdAt:new Date().toISOString(),
+          role:'superadmin'
+        })
+        localStorage.setItem('synergy_users',JSON.stringify(users))
+      }else{
+        // Actualizar contrasena del usuario existente
+        adminUser.passwordHash=hashPassword(p)
+        localStorage.setItem('synergy_users',JSON.stringify(users))
+      }
+      
+      // Crear sesion
+      var ses={
+        token:generateToken(),
+        userId:1,
+        username:'admin',
+        name:'Administrador',
+        email:'synergylightservices@gmail.com',
+        role:'superadmin',
+        loginTime:new Date().toISOString(),
+        expiresAt:new Date(Date.now()+8*60*60*1000).toISOString()
+      }
       localStorage.setItem('synergy_session',JSON.stringify(ses))
       window.location.href='dashboard.html'
     })
+    
     window.addEventListener('load',function(){
       var ses=JSON.parse(localStorage.getItem('synergy_session')||'null')
       if(ses&&new Date(ses.expiresAt)>new Date()){window.location.href='dashboard.html'}
     })
-    if(!JSON.parse(localStorage.getItem('synergy_users')||'[]').length){
-      localStorage.setItem('synergy_users',JSON.stringify([{id:1,name:'Administrador',username:'admin',email:'synergylightservices@gmail.com',passwordHash:hashPassword('Synergy2026'),createdAt:new Date().toISOString(),role:'superadmin'}]))
-    }
   </script>
+</body>
+</html>
 </body>
 </html>
